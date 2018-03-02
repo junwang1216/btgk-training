@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgStudentsMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgStudents">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="realName" jdbcType="VARCHAR" property="realName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="idCard" jdbcType="VARCHAR" property="idCard" />
+    <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
+    <result column="lastLoginTime" jdbcType="VARCHAR" property="lastLoginTime" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, realName, password, mobile, idCard, birthday, sex, height, weight, lastLoginTime, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_students
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_students
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgStudents">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_students (realName, password, mobile, idCard,
+      birthday, sex, height, weight, lastLoginTime, createTime, updateTime)
+    values (#{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},
+      #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{height,jdbcType=INTEGER}, 
+      #{weight,jdbcType=INTEGER}, #{lastLoginTime,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgStudents">
+    update org_students
+    set realName = #{realName,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      idCard = #{idCard,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      height = #{height,jdbcType=INTEGER},
+      weight = #{weight,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_students
+    where 1 = 1
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="realName != null">
+      and realName LIKE CONCAT('%',#{realName,jdbcType=INTEGER},'%')
+    </if>
+    <if test="start != null and offset != null">
+      limit #{start}, #{offset}
+    </if>
+    order by updateTime DESC
+  </select>
+  <select id="innerLogin" parameterType="com.training.core.repo.query.OrgStudentRequest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_students
+    where mobile = #{mobile,jdbcType=VARCHAR} AND password = #{password,jdbcType=VARCHAR}
+  </select>
+  <update id="setLastLoginTime" parameterType="Map">
+    update org_students
+    set lastLoginTime = #{lastTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

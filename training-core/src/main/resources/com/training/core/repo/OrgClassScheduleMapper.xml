@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgClassScheduleMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgClassSchedule">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="classId" jdbcType="INTEGER" property="classId" />
+    <result column="startTime" jdbcType="VARCHAR" property="startTime" />
+    <result column="endTime" jdbcType="VARCHAR" property="endTime" />
+    <result column="classDate" jdbcType="VARCHAR" property="classDate" />
+    <result column="startDate" jdbcType="VARCHAR" property="startDate" />
+    <result column="endDate" jdbcType="VARCHAR" property="endDate" />
+    <result column="classWeek" jdbcType="VARCHAR" property="classWeek" />
+    <result column="coachId" jdbcType="INTEGER" property="coachId" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, classId, startTime, endTime, classDate, startDate, endDate, classWeek, coachId, 
+    createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_class_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_class_schedule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgClassSchedule">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class_schedule (classId, startTime, endTime, 
+      classDate, startDate, endDate, 
+      classWeek, coachId, createTime
+      )
+    values (#{classId,jdbcType=INTEGER}, #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, 
+      #{classDate,jdbcType=VARCHAR}, #{startDate,jdbcType=VARCHAR}, #{endDate,jdbcType=VARCHAR}, 
+      #{classWeek,jdbcType=VARCHAR}, #{coachId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgClassSchedule">
+    update org_class_schedule
+    set classId = #{classId,jdbcType=INTEGER},
+      startTime = #{startTime,jdbcType=VARCHAR},
+      endTime = #{endTime,jdbcType=VARCHAR},
+      classDate = #{classDate,jdbcType=VARCHAR},
+      classWeek = #{classWeek,jdbcType=VARCHAR},
+      coachId = #{coachId,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAllByClassId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from org_class_schedule
+    where classId = #{classId,jdbcType=INTEGER}
+  </select>
+  <delete id="clearAllByClassId" parameterType="java.lang.Integer">
+    delete from org_class_schedule
+    where classId = #{classId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class_schedule (classId, startTime, endTime, classDate, startDate, endDate, classWeek, coachId, createTime)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.classId,jdbcType=INTEGER}, #{item.startTime,jdbcType=VARCHAR}, #{item.endTime,jdbcType=VARCHAR},
+      #{item.classDate,jdbcType=VARCHAR}, #{item.startDate,jdbcType=VARCHAR}, #{item.endDate,jdbcType=VARCHAR},
+      #{item.classWeek,jdbcType=VARCHAR}, #{item.coachId,jdbcType=INTEGER}, #{item.createTime,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+</mapper>

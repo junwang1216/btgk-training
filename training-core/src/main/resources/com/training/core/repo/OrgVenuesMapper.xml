@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgVenuesMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgVenues">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="orgId" jdbcType="INTEGER" property="orgId" />
+    <result column="venueName" jdbcType="VARCHAR" property="venueName" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="contactName" jdbcType="VARCHAR" property="contactName" />
+    <result column="contactPhone" jdbcType="VARCHAR" property="contactPhone" />
+    <result column="contactMobile" jdbcType="VARCHAR" property="contactMobile" />
+    <result column="contactEmail" jdbcType="VARCHAR" property="contactEmail" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orgId, venueName, province, city, district, address, contactName, contactPhone, contactMobile,
+    contactEmail, createTime, updateTime, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_venues
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_venues
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgVenues">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_venues (orgId, venueName, province, city, district, address,
+      contactName, contactPhone, contactMobile, contactEmail, createTime, updateTime, status)
+    values (#{orgId,jdbcType=INTEGER}, #{venueName,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{contactMobile,jdbcType=VARCHAR},
+      #{contactEmail,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+  </insert>
+  <update id="setVenueStatus" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgVenues">
+    update org_venues
+    set status = #{status,jdbcType=INTEGER},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgVenues">
+    update org_venues
+    set venueName = #{venueName,jdbcType=VARCHAR},
+    province = #{province,jdbcType=VARCHAR},
+    city = #{city,jdbcType=VARCHAR},
+    district = #{district,jdbcType=VARCHAR},
+    address = #{address,jdbcType=VARCHAR},
+    contactName = #{contactName,jdbcType=VARCHAR},
+    contactPhone = #{contactPhone,jdbcType=VARCHAR},
+    contactMobile = #{contactMobile,jdbcType=VARCHAR},
+    contactEmail = #{contactEmail,jdbcType=VARCHAR},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_venues
+    where 1 = 1
+    <if test="orgId != null and orgId != 0">
+      and orgId = #{orgId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,40 @@
+<div class="ui-step-wrapper ui-step-3" v-show="stepsA.show">
+    <div class="ui-step-bg"></div>
+    <div class="ui-step-progress active-step-{{step}}"></div>
+    <ul class="ui-step">
+        <template v-for="(index, item) in stepsA.items">
+            <li class="ui-step-item actived" v-if="(index + 1) < step">
+                <div class="ui-step-item-num"></div>
+                <div class="ui-step-item-title" v-text="item"></div>
+            </li>
+            <li class="ui-step-item active" v-if="(index + 1) == step">
+                <div class="ui-step-item-num"></div>
+                <div class="ui-step-item-title" v-text="item"></div>
+            </li>
+            <li class="ui-step-item inactive" v-if="(index + 1) > step">
+                <div class="ui-step-item-num"></div>
+                <div class="ui-step-item-title" v-text="item"></div>
+            </li>
+        </template>
+    </ul>
+</div>
+<div class="ui-step-wrapper ui-step-4" v-show="stepsB.show">
+    <div class="ui-step-bg"></div>
+    <div class="ui-step-progress active-step-{{step}}"></div>
+    <ul class="ui-step">
+        <template v-for="(index, item) in stepsB.items">
+            <li class="ui-step-item actived" v-if="(index + 1) < step">
+                <div class="ui-step-item-num"></div>
+                <div class="ui-step-item-title" v-text="item"></div>
+            </li>
+            <li class="ui-step-item active" v-if="(index + 1) == step">
+                <div class="ui-step-item-num"></div>
+                <div class="ui-step-item-title" v-text="item"></div>
+            </li>
+            <li class="ui-step-item inactive" v-if="(index + 1) > step">
+                <div class="ui-step-item-num"></div>
+                <div class="ui-step-item-title" v-text="item"></div>
+            </li>
+        </template>
+    </ul>
+</div>

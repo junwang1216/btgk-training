@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgSportsMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgSports">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="orgId" jdbcType="INTEGER" property="orgId" />
+    <result column="sportName" jdbcType="VARCHAR" property="sportName" />
+    <result column="sportNameEn" jdbcType="VARCHAR" property="sportNameEn" />
+    <result column="sportIcon" jdbcType="VARCHAR" property="sportIcon" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orgId, sportName, sportNameEn, sportIcon, status, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_sports
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_sports
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgSports">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_sports (orgId, sportName, sportNameEn, sportIcon, status, createTime, updateTime)
+    values (#{orgId,jdbcType=INTEGER}, #{sportName,jdbcType=VARCHAR}, #{sportNameEn,jdbcType=VARCHAR}, #{sportIcon,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_sports (orgId, sportName, sportNameEn, sportIcon, status, createTime, updateTime)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.orgId,jdbcType=INTEGER}, #{item.sportName,jdbcType=VARCHAR}, #{item.sportNameEn,jdbcType=VARCHAR}, #{item.sportIcon,jdbcType=VARCHAR},
+      #{item.status,jdbcType=INTEGER}, #{item.createTime,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgSports">
+    update org_sports
+    set orgId = #{orgId,jdbcType=INTEGER},
+      sportName = #{sportName,jdbcType=VARCHAR},
+      sportNameEn = #{sportNameEn,jdbcType=VARCHAR},
+      sportIcon = #{sportIcon,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_sports
+    where 1 = 1
+    <if test="orgId != null">
+      and orgId = #{orgId,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,19 @@
+{
+  "name": "training-h5-bower",
+  "version": "0.1.0",
+  "authors": "",
+  "description": "bower for web",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "Content/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue": "^1.0.26",
+    "vue-resource": "^1.0.3"
+  }
+}

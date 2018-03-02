@@ -1,0 +1,22 @@
+@require '../base'
+
+.course-item
+    color #EBEBEB
+    text-align center
+    margin-bottom rem(2)
+    background #FF7256 url("/Content/images/course/image1.jpg") 50% 50% no-repeat
+    background-size 100%
+    .course-info
+        background linear-gradient(to bottom, #FF7256, rgba(0, 0, 255, 0.5));
+        padding rem(46) rem(14) rem(14)
+        .course-title
+            font-size $font-size-large
+        .course-teacher
+            font-size $font-size-base
+            margin rem(20) 0
+        .course-date
+            font-size $font-size-tip
+            text-align right
+.course-detail
+    .weui-media-box__desc
+        margin-bottom rem(14)

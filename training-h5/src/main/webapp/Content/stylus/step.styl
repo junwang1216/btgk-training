@@ -1,0 +1,84 @@
+@require './mixin'
+@require './module'
+@require './base'
+
+.ui-step-wrapper
+    position relative
+    width 100%
+    margin rem(36) 0
+    padding 0
+    .ui-step-bg
+    .ui-step-progress
+        position absolute
+        top rem(13)
+        left rem(39)
+        height rem(3)
+        width rem(672)
+    .ui-step-bg
+        background #d1d1d6
+    .ui-step
+        position relative
+        z-index 1
+        list-style none
+        padding 0 rem(39)
+        &:after
+            clear both
+            content ''
+            display table
+        .ui-step-item
+            width rem(224)
+            float left
+            .ui-step-item-num
+                width rem(30)
+                height rem(30)
+                margin 0 auto
+                margin-bottom rem(26)
+            div
+                text-align center
+            &.actived
+                color $text-color
+                font-size $font-size-small
+                .ui-step-item-num
+                    background url("/Content/images/icon-actived.png") no-repeat center
+                    background-size 100% 100%
+                    background-color $body-bg
+            &.active
+                color $highlight
+                font-size $font-size-small
+                .ui-step-item-num
+                    background url("/Content/images/icon-active.png") no-repeat center
+                    background-size 100% 100%
+                    background-color $body-bg
+            &.inactive
+                color $tip-color
+                font-size $font-size-small
+                .ui-step-item-num
+                    background url("/Content/images/icon-inactive.png") no-repeat center
+                    background-size 100% 100%
+                    background-color $body-bg
+    &.ui-step-3
+        .ui-step-progress
+            width rem(224)
+            background $highlight
+            &.active-step-1
+                width rem(112)
+            &.active-step-2
+                width rem(336)
+            &.active-step-3
+                width rem(448)
+        .ui-step-item
+            width rem(224)
+    &.ui-step-4
+        .ui-step-progress
+            width rem(168)
+            background $highlight
+            &.active-step-1
+                width rem(84)
+            &.active-step-2
+                width rem(252)
+            &.active-step-3
+                width rem(420)
+            &.active-step-4
+                width rem(588)
+        .ui-step-item
+            width rem(168)

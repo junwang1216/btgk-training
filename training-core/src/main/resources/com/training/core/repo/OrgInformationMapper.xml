@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgInformationMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgInformation">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="orgName" jdbcType="VARCHAR" property="orgName" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="contactName" jdbcType="VARCHAR" property="contactName" />
+    <result column="contactPhone" jdbcType="VARCHAR" property="contactPhone" />
+    <result column="contactMobile" jdbcType="VARCHAR" property="contactMobile" />
+    <result column="contactEmail" jdbcType="VARCHAR" property="contactEmail" />
+    <result column="orgNote" jdbcType="VARCHAR" property="orgNote" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orgName, province, city, district, address, contactName, contactPhone, contactMobile, 
+    contactEmail, orgNote, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_information
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_information
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgInformation">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_information (orgName, province, city, district, address, contactName, contactPhone,
+      contactMobile, contactEmail, orgNote, createTime, updateTime)
+    values (#{orgName,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{district,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
+      #{contactPhone,jdbcType=VARCHAR}, #{contactMobile,jdbcType=VARCHAR}, #{contactEmail,jdbcType=VARCHAR}, 
+      #{orgNote,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgInformation">
+    update org_information
+    set orgName = #{orgName,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      contactName = #{contactName,jdbcType=VARCHAR},
+      contactPhone = #{contactPhone,jdbcType=VARCHAR},
+      contactMobile = #{contactMobile,jdbcType=VARCHAR},
+      contactEmail = #{contactEmail,jdbcType=VARCHAR},
+      orgNote = #{orgNote,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

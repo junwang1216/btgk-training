@@ -1,0 +1,75 @@
+@require './mixin'
+@require './module'
+@require './base'
+
+.protocols-bg
+    position fixed
+    opacity 0.6
+    background #000
+    z-index 800
+    top 0
+    left 0
+    right 0
+    bottom 0
+.protocols
+    position fixed
+    left 0
+    right 0
+    bottom 0
+    z-index 801
+    width 100%
+    .protocol-header
+        background #f4f4f4
+        .row
+            margin 0
+            position relative
+            padding rem(24)
+            line-height rem(40)
+            text-align center
+            a
+                display block
+                position absolute
+                top rem(16)
+                right rem(20)
+                color $tip-color
+                font-size $font-size-h1
+                line-height rem(56)
+                width rem(56)
+    .protocol-body
+        background $white
+        .row
+            margin 0
+            padding rem(24)
+            text-align center
+            line-height rem(40)
+            border-bottom 1px solid #E0E0E0
+            a
+                display block
+                color $link-tip-color
+                font-size $font-size-base
+    .protocol-footer
+        background $btn-primary-bg
+        .row
+            margin 0
+            padding rem(24)
+            text-align center
+            line-height rem(48)
+            a
+                display block
+                font-size rem(34)
+                color $white
+.protocols-enter
+    animation(protocols-in .5s)
+.protocols-leave
+    animation(protocols-out .5s)
+@keyframes protocols-in
+    from
+        transform(translateY(rem(750)))
+    to
+        transform(translateY(0))
+
+@keyframes protocols-out
+    from
+        transform(translateY(0))
+    to
+        transform(translateY(rem(750)))

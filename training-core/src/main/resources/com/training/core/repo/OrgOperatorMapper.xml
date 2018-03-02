@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgOperatorMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgOperator">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userNo" jdbcType="VARCHAR" property="userNo" />
+    <result column="userName" jdbcType="VARCHAR" property="userName" />
+    <result column="realName" jdbcType="VARCHAR" property="realName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="idCard" jdbcType="VARCHAR" property="idCard" />
+    <result column="birthday" jdbcType="VARCHAR" property="birthday" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="roleId" jdbcType="INTEGER" property="roleId" />
+    <result column="orgId" jdbcType="INTEGER" property="orgId" />
+    <result column="lastLoginTime" jdbcType="VARCHAR" property="lastLoginTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userNo, userName, realName, password, mobile, email, idCard, birthday, sex, address, 
+    roleId, orgId, lastLoginTime, status, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_operator
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_operator
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgOperator">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_operator (userNo, userName, realName, password, mobile, email, idCard, birthday, sex, address, roleId,
+      orgId, lastLoginTime, status, createTime, updateTime)
+    values (#{userNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{idCard,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{roleId,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER}, 
+      #{lastLoginTime,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgOperator">
+    update org_operator
+    set realName = #{realName,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      idCard = #{idCard,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="innerLogin" parameterType="com.training.core.repo.query.OrgOperatorRequest" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_operator
+    where userName = #{userName,jdbcType=VARCHAR} AND password = #{password,jdbcType=VARCHAR}
+  </select>
+  <update id="setLastLoginTime" parameterType="Map">
+    update org_operator
+    set lastLoginTime = #{lastTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_operator
+    where orgId = #{orgId,jdbcType=INTEGER}
+    <if test="roleId != null and roleId != 0">
+      and roleId  &lt;= #{roleId,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

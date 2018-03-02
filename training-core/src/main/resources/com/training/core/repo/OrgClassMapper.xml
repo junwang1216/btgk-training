@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgClassMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgClass">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="className" jdbcType="VARCHAR" property="className" />
+    <result column="classPrice" jdbcType="INTEGER" property="classPrice" />
+    <result column="classHours" jdbcType="INTEGER" property="classHours" />
+    <result column="venueId" jdbcType="INTEGER" property="venueId" />
+    <result column="courseId" jdbcType="INTEGER" property="courseId" />
+    <result column="coachId" jdbcType="INTEGER" property="coachId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, className, classPrice, classHours, venueId, courseId, coachId, status, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_class
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_class
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClass">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class (className, classPrice, classHours, venueId, courseId, coachId, status, createTime, updateTime)
+    values (#{className,jdbcType=VARCHAR}, #{classPrice,jdbcType=INTEGER}, #{classHours,jdbcType=INTEGER}, #{venueId,jdbcType=INTEGER},
+      #{courseId,jdbcType=INTEGER}, #{coachId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateStatusByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClass">
+    update org_class
+    set status = #{status,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClass">
+    update org_class
+    set className = #{className,jdbcType=VARCHAR},
+    classPrice = #{classPrice,jdbcType=INTEGER},
+    classHours = #{classHours,jdbcType=INTEGER},
+    venueId = #{venueId,jdbcType=INTEGER},
+    courseId = #{courseId,jdbcType=INTEGER},
+    coachId = #{coachId,jdbcType=INTEGER},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_class
+  </select>
+</mapper>

@@ -1,0 +1,28 @@
+@require '../base'
+
+.attendance-item
+    .weui-picker-calendar
+        height auto
+        .toolbar
+            font-size $font-size-base
+            .toolbar-inner
+                height rem(90)
+                .picker-calendar-month-picker
+                .picker-calendar-year-picker
+                    height rem(90)
+                    line-height rem(90)
+                    a.icon-only
+                        height rem(90)
+                        line-height rem(90)
+                    .current-year-value
+                    .current-month-value
+                        height rem(90)
+                        line-height rem(90)
+        .picker-modal-inner
+            height auto
+            .picker-calendar-week-days+.picker-calendar-months
+                height rem(460)
+
+.attendance-rewards
+    img
+        width rem(60)

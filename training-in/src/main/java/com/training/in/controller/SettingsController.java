@@ -1,0 +1,235 @@
+package com.training.in.controller;
+
+import com.training.core.common.annotation.Desc;
+import com.training.core.common.bean.ResponseBean;
+import com.training.core.common.constant.IPlatformConstant;
+import com.training.core.common.enums.RoleEnum;
+import com.training.core.common.enums.StatusEnum;
+import com.training.core.common.exception.MessageException;
+import com.training.core.common.util.DataCryptUtil;
+import com.training.core.common.util.DateUtil;
+import com.training.core.repo.po.OrgOperator;
+import com.training.core.service.OrgOperatorService;
+import org.apache.commons.lang3.EnumUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.annotation.Resource;
+import java.io.*;
+import java.util.*;
+
+/**
+ * Created by wangjun on 2017/5/1.
+ */
+@Controller
+@RequestMapping("/admin/settings")
+public class SettingsController extends BaseController {
+
+    @Resource
+    private OrgOperatorService orgOperatorService;
+
+    private ModelAndView setModelAndView(ModelAndView modelAndView) {
+        return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
+    }
+
+    @Desc("管理员设置")
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public ModelAndView renderSettingsAdmin() {
+        ModelAndView modelAndView = new ModelAndView("Settings/Admin");
+
+        int orgId = getLoginUser().getOrgId();
+        int roleId = getLoginUser().getRoleId();
+
+        modelAndView.addObject("RoleTypeEnum", EnumUtils.getEnumList(RoleEnum.class));
+        modelAndView.addObject("RoleTypeStart", RoleEnum.ROLE_OPERATOR);
+
+        List<OrgOperator> orgOperatorList = orgOperatorService.queryOrgOperatorList(orgId, roleId);
+        modelAndView.addObject("orgOperatorList", orgOperatorList);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("查询某管理员")
+    @ResponseBody
+    @RequestMapping(value = "/getAdmin", method = RequestMethod.GET)
+    public ResponseBean getSettingsAdmin(int adminId) {
+        try {
+
+            Map<String, Object> map = new HashMap<>();
+
+            OrgOperator orgOperator = orgOperatorService.selectByPrimaryKey(adminId);
+            map.put("orgOperator", orgOperator);
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("保存管理员")
+    @ResponseBody
+    @RequestMapping(value = "/saveAdmin", method = RequestMethod.POST)
+    public ResponseBean saveSettingsAdmin(OrgOperator orgOperator) {
+        try {
+
+            int result;
+            if (orgOperator.getId() != null) {
+                orgOperator.setUpdateTime(DateUtil.getNowDate());
+                result = orgOperatorService.saveOrgOperator(orgOperator);
+            }
+            else {
+                int orgId = getLoginUser().getOrgId();
+
+                orgOperator.setOrgId(orgId);
+                orgOperator.setPassword(DataCryptUtil.encrypt("123456"));
+                orgOperator.setStatus(StatusEnum.STATUS_OK.getCode());
+                orgOperator.setCreateTime(DateUtil.getNowDate());
+                orgOperator.setUpdateTime(DateUtil.getNowDate());
+                result = orgOperatorService.addOrgOperator(orgOperator);
+            }
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("我的信息修改")
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String renderSettingsProfile() {
+        return "Settings/Profile";
+    }
+
+    @Desc("系统日志")
+    @RequestMapping(value = "/log", method = RequestMethod.GET)
+    public String renderSettingsLog() {
+        return "Settings/Log";
+    }
+
+    @Desc("数据库备份")
+    @RequestMapping(value = "/database", method = RequestMethod.GET)
+    public ModelAndView renderSettingsDatabase() {
+
+        ModelAndView modelAndView = new ModelAndView("Settings/Database");
+
+        String backupPath = System.getProperty("user.home") + "/btgk-training-backup";
+        List<File> fileList = new ArrayList<>();
+
+        File directory = new File(backupPath);
+        if (!directory.exists()) {
+            boolean fileValid = directory.mkdir();
+            if (!fileValid) {
+                modelAndView.addObject("error", "创建备份目录失败！！请手动创建'btgk-training-backup'");
+                return setModelAndView(modelAndView);
+            }
+        }
+
+        File[] listFiles = directory.listFiles();// 获取目录下的所有文件或文件夹
+        if (listFiles == null) {// 如果目录为空，直接退出
+            modelAndView.addObject("fileList", fileList);
+            return setModelAndView(modelAndView);
+        }
+
+        // 遍历，目录下的所有文件
+        for (File f : listFiles) {
+            if (f.isFile() && f.getName().contains("btgk-training")) {
+                fileList.add(f);
+            }
+        }
+
+        modelAndView.addObject("fileList", fileList);
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("数据库备份")
+    @ResponseBody
+    @RequestMapping(value = "/backup", method = RequestMethod.POST)
+    public ResponseBean backupSettingsDatabase() {
+        try {
+            Runtime rt = Runtime.getRuntime();
+            String backupPath = System.getProperty("user.home") + "/btgk-training-backup";
+
+            // 调用 调用mysql的安装目录的命令
+            Process child = rt.exec("mysqldump -h localhost -uroot -p123456 btgk-training");
+
+            // 设置导出编码为utf-8。这里必须是utf-8
+            // 把进程执行中的控制台输出信息写入.sql文件，即生成了备份文件。注：如果不对控制台信息进行读出，则会导致进程堵塞无法运行
+            InputStream in = child.getInputStream();// 控制台的输出信息作为输入流
+            // 设置输出流编码为utf-8。这里必须是utf-8，否则从流中读入的是乱码
+            InputStreamReader xx = new InputStreamReader(in, "utf-8");
+
+            String inStr;
+            StringBuffer sb = new StringBuffer("");
+            String outStr;
+            // 组合控制台输出信息字符串
+            BufferedReader br = new BufferedReader(xx);
+            while ((inStr = br.readLine()) != null) {
+                sb.append(inStr + "\r\n");
+            }
+            outStr = sb.toString();
+
+            // 要用来做导入用的sql目标文件：
+            String currentDate = DateUtil.dateToString(new Date(), "yyyyMMddHHmmss");
+            FileOutputStream fout = new FileOutputStream(backupPath + "/btgk-training_" + currentDate + ".sql");
+            OutputStreamWriter writer = new OutputStreamWriter(fout, "utf-8");
+            writer.write(outStr);
+            writer.flush();
+            in.close();
+            xx.close();
+            br.close();
+            writer.close();
+            fout.close();
+
+            System.out.println("OK");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseBean(true);
+    }
+
+    @Desc("数据库备份")
+    @ResponseBody
+    @RequestMapping(value = "/restore", method = RequestMethod.POST)
+    public ResponseBean restoreSettingsDatabase(String databaseName) {
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            Process process = runtime.exec("mysql -h localhost -uroot -p123456 --default-character-set=utf8 " + databaseName);
+            OutputStream outputStream = process.getOutputStream();
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\test.sql"), "utf-8"));
+            String str = null;
+            StringBuffer sb = new StringBuffer();
+            while ((str = br.readLine()) != null) {
+                sb.append(str + "\r\n");
+            }
+            str = sb.toString();
+            // System.out.println(str);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream, "utf-8");
+            writer.write(str);
+            writer.flush();
+            outputStream.close();
+            br.close();
+            writer.close();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseBean(true);
+    }
+
+}

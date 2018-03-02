@@ -1,0 +1,158 @@
+@require './mixin'
+@require './module'
+@require './vars'
+
+@font-face
+    font-family: FontAwesome
+    src: url('/Content/fonts/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0')
+    src: url('/Content/fonts/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),url('/Content/fonts/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0') format('woff'),url('/Content/fonts/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),url('/Content/fonts/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg')
+    font-weight: 400
+    font-style: normal
+
+html, body
+    background-color $body-bg
+    font-family 'PingFangSC-Regular'\, 'Heiti SC'\,'Heiti TC'\, 'STHeitiTC-Light'\, 'SimHei'\, 'Microsoft YaHei'\, 'Helvetica'\, 'sans-serif'
+    font-smoothing antialiased
+html, body, p
+    margin 0
+    padding 0
+    font-size $font-size-base
+body
+    max-width rem(750)
+    margin 0 auto
+*:not(input, textarea)
+    user-select(none)
+select
+    appearance(none)
+input
+    outline none
+a
+    text-decoration none
+    color $link-color
+    font-size $font-size-base
+input::-webkit-input-placeholder {
+    color: #CCCCCC !important;
+}
+.text-center
+    text-align center
+
+/**覆盖weui**/
+.weui-panel
+    margin-top rem(20)
+    box-shadow 0 rem(4) rem(6) 0 $border-color
+.weui-panel__hd
+    padding rem(28) rem(30) rem(20)
+    font-size $font-size-base
+    color $tip-color
+.weui-media-box
+    padding rem(30)
+.weui-media-box__desc
+    font-size $font-size-base
+.weui-btn
+    position relative
+    margin 0 auto
+    box-sizing border-box
+    color #fff
+    -webkit-tap-highlight-color rgba(0, 0, 0, 0)
+    overflow hidden
+    display block
+    font-size $font-size-large
+    width 100%
+    border none
+    border-radius rem(10)
+    text-decoration none
+    @extend .text-center
+.weui-btn_primary
+    background-color $btn-primary-bg
+    background linear-gradient(to bottom, $btn-primary-bg, rgba(0,0,255,.5))
+    color $btn-primary-color
+    &.weui-btn_disabled
+        background-color $btn-disabled-bg
+        background linear-gradient(to bottom, $btn-disabled-bg, rgba(0,0,0,.5))
+        color $btn-disabled-color
+.weui-btn_warn
+    background-color $btn-warn-bg
+    background linear-gradient(to bottom, $btn-warn-bg, rgba(0,0,255,.5))
+    color $btn-warn-color
+.weui-cells__title
+    margin-top rem(20)
+    margin-bottom rem(8)
+    padding-left rem(30)
+    padding-right rem(30)
+    color $tip-color
+    font-size $font-size-base
+.weui-cells
+    font-size $font-size-base
+    margin-top rem(40)
+.weui-cell
+    padding rem(20) rem(30)
+.weui-label
+    width rem(210)
+input.weui-input
+    height rem(30)
+.weui-agree
+    padding: rem(12) rem(30)
+    font-size $font-size-tip
+.weui-navbar__item
+    padding rem(26) 0
+    font-size $font-size-30
+    color $text-color
+    &.weui-bar__item--on
+        color $link-color
+        background-color #f1f1f1
+.weui-cell__hd
+    img
+        margin-right rem(10)
+        width rem(38)
+.weui-cell_access
+    .weui-cell__ft
+        padding-right rem(26)
+.picker-calendar-day
+    &.picker-calendar-day-selected
+        span
+            background-color $btn-primary-bg
+            background linear-gradient(to bottom, $btn-primary-bg, rgba(0,0,255,.5))
+            color $btn-primary-color
+i.icon.icon-prev
+    background url("/Content/images/icon-left.png") no-repeat center
+    background-size auto 100%
+i.icon.icon-next
+    background url("/Content/images/icon-right.png") no-repeat center
+    background-size auto 100%
+.weui-picker-modal
+    height rem(300)
+.toolbar, .toolbar .title
+    font-size $font-size-base
+.toolbar .toolbar-inner
+    height rem(70)
+.toolbar .picker-button
+    height rem(70)
+    line-height rem(70)
+    padding 0 rem(24)
+.toolbar .title
+    line-height rem(70)
+.weui-picker-modal .picker-modal-inner
+    height rem(230)
+    font-size $font-size-base
+.weui-picker-modal .picker-item
+    height rem(64)
+    line-height rem(64)
+    padding: 0 rem(20)
+.weui-picker-modal .picker-center-highlight
+    height rem(64)
+    margin-top rem(-32)
+.toolbar .picker-button
+    color $link-color
+.weui-actionsheet__title
+    padding rem(30)
+    font-size $font-size-base
+    height auto
+.weui-actionsheet__cell
+    font-size $font-size-base
+    padding rem(20) 0
+.weui-actionsheet__action
+    margin-top rem(12)
+.weui-mask
+    visibility visible
+    opacity 1
+    display none

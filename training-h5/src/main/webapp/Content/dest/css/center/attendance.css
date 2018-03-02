@@ -1,0 +1,287 @@
+.topH {
+  background: url("/Content/images/icon-h1.png") left top repeat-x;
+  -webkit-background-size: auto 1px;
+  -moz-background-size: auto 1px;
+  background-size: auto 1px;
+  padding-top: 1px;
+}
+.bottomH {
+  background: url("/Content/images/icon-h.png") left bottom repeat-x;
+  -webkit-background-size: auto 1px;
+  -moz-background-size: auto 1px;
+  background-size: auto 1px;
+  padding-bottom: 1px;
+}
+.leftH {
+  background: url("/Content/images/icon-h2.png") left top repeat-y;
+  -webkit-background-size: 1px auto;
+  -moz-background-size: 1px auto;
+  background-size: 1px auto;
+}
+.rightH {
+  background: url("/Content/images/icon-h2.png") right top repeat-y;
+  -webkit-background-size: 1px auto;
+  -moz-background-size: 1px auto;
+  background-size: 1px auto;
+}
+@charset "utf-8";
+@font-face {
+  font-family: FontAwesome;
+  src: url("/Content/fonts/font-awesome/fonts/fontawesome-webfont.eot?v=4.7.0");
+  src: url("/Content/fonts/font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.7.0") format('embedded-opentype'), url("/Content/fonts/font-awesome/fonts/fontawesome-webfont.woff?v=4.7.0") format('woff'), url("/Content/fonts/font-awesome/fonts/fontawesome-webfont.ttf?v=4.7.0") format('truetype'), url("/Content/fonts/font-awesome/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular") format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+html,
+body {
+  background-color: #fefefe;
+  font-family: 'PingFangSC-Regular' , 'Heiti SC' , 'Heiti TC' , 'STHeitiTC-Light' , 'SimHei' , 'Microsoft YaHei' , 'Helvetica' , 'sans-serif';
+  -webkit-font-smoothing: antialiased;
+}
+html,
+body,
+p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.373333333333333rem;
+}
+body {
+  max-width: 10rem;
+  margin: 0 auto;
+}
+*:not(input,
+textarea) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+input {
+  outline: none;
+}
+a {
+  text-decoration: none;
+  color: #469dff;
+  font-size: 0.373333333333333rem;
+}
+input::-webkit-input-placeholder {
+  color: #ccc !important;
+}
+.text-center,
+.weui-btn {
+  text-align: center;
+}
+.weui-panel {
+  margin-top: 0.266666666666667rem;
+  -webkit-box-shadow: 0 0.053333333333333rem 0.08rem 0 #e5e5e5;
+  box-shadow: 0 0.053333333333333rem 0.08rem 0 #e5e5e5;
+}
+.weui-panel__hd {
+  padding: 0.373333333333333rem 0.4rem 0.266666666666667rem;
+  font-size: 0.373333333333333rem;
+  color: #999;
+}
+.weui-media-box {
+  padding: 0.4rem;
+}
+.weui-media-box__desc {
+  font-size: 0.373333333333333rem;
+}
+.weui-btn {
+  position: relative;
+  margin: 0 auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #fff;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  overflow: hidden;
+  display: block;
+  font-size: 0.453333333333333rem;
+  width: 100%;
+  border: none;
+  border-radius: 0.133333333333333rem;
+  text-decoration: none;
+}
+.weui-btn_primary {
+  background-color: #49f;
+  background: -webkit-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: -moz-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: -o-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: -ms-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: linear-gradient(to bottom, #49f, rgba(0,0,255,0.5));
+  color: #fff;
+}
+.weui-btn_primary.weui-btn_disabled {
+  background-color: #d5d5d5;
+  background: -webkit-linear-gradient(top, #d5d5d5, rgba(0,0,0,0.5));
+  background: -moz-linear-gradient(top, #d5d5d5, rgba(0,0,0,0.5));
+  background: -o-linear-gradient(top, #d5d5d5, rgba(0,0,0,0.5));
+  background: -ms-linear-gradient(top, #d5d5d5, rgba(0,0,0,0.5));
+  background: linear-gradient(to bottom, #d5d5d5, rgba(0,0,0,0.5));
+  color: #ddd;
+}
+.weui-btn_warn {
+  background-color: #e64340;
+  background: -webkit-linear-gradient(top, #e64340, rgba(0,0,255,0.5));
+  background: -moz-linear-gradient(top, #e64340, rgba(0,0,255,0.5));
+  background: -o-linear-gradient(top, #e64340, rgba(0,0,255,0.5));
+  background: -ms-linear-gradient(top, #e64340, rgba(0,0,255,0.5));
+  background: linear-gradient(to bottom, #e64340, rgba(0,0,255,0.5));
+  color: #fff;
+}
+.weui-cells__title {
+  margin-top: 0.266666666666667rem;
+  margin-bottom: 0.106666666666667rem;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+  color: #999;
+  font-size: 0.373333333333333rem;
+}
+.weui-cells {
+  font-size: 0.373333333333333rem;
+  margin-top: 0.533333333333333rem;
+}
+.weui-cell {
+  padding: 0.266666666666667rem 0.4rem;
+}
+.weui-label {
+  width: 2.8rem;
+}
+input.weui-input {
+  height: 0.4rem;
+}
+.weui-agree {
+  padding: 0.16rem 0.4rem;
+  font-size: 0.32rem;
+}
+.weui-navbar__item {
+  padding: 0.346666666666667rem 0;
+  font-size: 0.4rem;
+  color: #333;
+}
+.weui-navbar__item.weui-bar__item--on {
+  color: #469dff;
+  background-color: #f1f1f1;
+}
+.weui-cell__hd img {
+  margin-right: 0.133333333333333rem;
+  width: 0.506666666666667rem;
+}
+.weui-cell_access .weui-cell__ft {
+  padding-right: 0.346666666666667rem;
+}
+.picker-calendar-day.picker-calendar-day-selected span {
+  background-color: #49f;
+  background: -webkit-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: -moz-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: -o-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: -ms-linear-gradient(top, #49f, rgba(0,0,255,0.5));
+  background: linear-gradient(to bottom, #49f, rgba(0,0,255,0.5));
+  color: #fff;
+}
+i.icon.icon-prev {
+  background: url("/Content/images/icon-left.png") no-repeat center;
+  -webkit-background-size: auto 100%;
+  -moz-background-size: auto 100%;
+  background-size: auto 100%;
+}
+i.icon.icon-next {
+  background: url("/Content/images/icon-right.png") no-repeat center;
+  -webkit-background-size: auto 100%;
+  -moz-background-size: auto 100%;
+  background-size: auto 100%;
+}
+.weui-picker-modal {
+  height: 4rem;
+}
+.toolbar,
+.toolbar .title {
+  font-size: 0.373333333333333rem;
+}
+.toolbar .toolbar-inner {
+  height: 0.933333333333333rem;
+}
+.toolbar .picker-button {
+  height: 0.933333333333333rem;
+  line-height: 0.933333333333333rem;
+  padding: 0 0.32rem;
+}
+.toolbar .title {
+  line-height: 0.933333333333333rem;
+}
+.weui-picker-modal .picker-modal-inner {
+  height: 3.066666666666667rem;
+  font-size: 0.373333333333333rem;
+}
+.weui-picker-modal .picker-item {
+  height: 0.853333333333333rem;
+  line-height: 0.853333333333333rem;
+  padding: 0 0.266666666666667rem;
+}
+.weui-picker-modal .picker-center-highlight {
+  height: 0.853333333333333rem;
+  margin-top: -0.426666666666667rem;
+}
+.toolbar .picker-button {
+  color: #469dff;
+}
+.weui-actionsheet__title {
+  padding: 0.4rem;
+  font-size: 0.373333333333333rem;
+  height: auto;
+}
+.weui-actionsheet__cell {
+  font-size: 0.373333333333333rem;
+  padding: 0.266666666666667rem 0;
+}
+.weui-actionsheet__action {
+  margin-top: 0.16rem;
+}
+.weui-mask {
+  visibility: visible;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  display: none;
+}
+.attendance-item .weui-picker-calendar {
+  height: auto;
+}
+.attendance-item .weui-picker-calendar .toolbar {
+  font-size: 0.373333333333333rem;
+}
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner {
+  height: 1.2rem;
+}
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-month-picker,
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-year-picker {
+  height: 1.2rem;
+  line-height: 1.2rem;
+}
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-month-picker a.icon-only,
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-year-picker a.icon-only {
+  height: 1.2rem;
+  line-height: 1.2rem;
+}
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-month-picker .current-year-value,
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-year-picker .current-year-value,
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-month-picker .current-month-value,
+.attendance-item .weui-picker-calendar .toolbar .toolbar-inner .picker-calendar-year-picker .current-month-value {
+  height: 1.2rem;
+  line-height: 1.2rem;
+}
+.attendance-item .weui-picker-calendar .picker-modal-inner {
+  height: auto;
+}
+.attendance-item .weui-picker-calendar .picker-modal-inner .picker-calendar-week-days+.picker-calendar-months {
+  height: 6.133333333333334rem;
+}
+.attendance-rewards img {
+  width: 0.8rem;
+}

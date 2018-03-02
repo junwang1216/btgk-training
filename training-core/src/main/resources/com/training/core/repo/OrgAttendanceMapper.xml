@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgAttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgAttendance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="inDate" jdbcType="VARCHAR" property="inDate" />
+    <result column="inRole" jdbcType="INTEGER" property="inRole" />
+    <result column="inUserId" jdbcType="INTEGER" property="inUserId" />
+    <result column="inClassID" jdbcType="INTEGER" property="inClassID" />
+    <result column="inScheduleId" jdbcType="INTEGER" property="inScheduleId" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, inDate, inRole, inUserId, inClassID, inScheduleId, createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgAttendance">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_attendance (inDate, inRole, inUserId, inClassID, inScheduleId, createTime)
+    values (#{inDate,jdbcType=VARCHAR}, #{inRole,jdbcType=INTEGER}, #{inUserId,jdbcType=INTEGER}, 
+      #{inClassID,jdbcType=INTEGER}, #{inScheduleId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgAttendance">
+    update org_attendance
+    set inDate = #{inDate,jdbcType=VARCHAR},
+      inRole = #{inRole,jdbcType=INTEGER},
+      inUserId = #{inUserId,jdbcType=INTEGER},
+      inClassID = #{inClassID,jdbcType=INTEGER},
+      inScheduleId = #{inScheduleId,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryUserSignLog" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_attendance
+    where 1 = 1
+    <if test="inUserId != null and inUserId != 0">
+      and inUserId = #{inUserId,jdbcType=INTEGER}
+    </if>
+    <if test="inClassID != null and inClassID != 0">
+      and inClassID = #{inClassID,jdbcType=INTEGER}
+    </if>
+    <if test="inRole != null and inRole != 0">
+    and inRole = #{inRole,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="queryClassSignLog" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_attendance
+    where inClassID = #{inClassID,jdbcType=INTEGER}
+    <if test="inRole != null">
+      and inRole = #{inRole,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

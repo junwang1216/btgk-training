@@ -1,0 +1,26 @@
+rem(px)
+    (px/75)rem
+loading(w, h, z)
+    position fixed
+    width rem(w)
+    height rem(h)
+    top 50%
+    left 50%
+    z-index z
+    margin-top rem(h / -2)
+    margin-left rem(w / -2)
+
+.topH
+    background(url('/Content/images/icon-h1.png') left top repeat-x)
+    background-size(auto 1px)
+    padding-top 1px
+.bottomH
+    background(url('/Content/images/icon-h.png') left bottom repeat-x)
+    background-size(auto 1px)
+    padding-bottom 1px
+.leftH
+    background(url('/Content/images/icon-h2.png') left top repeat-y)
+    background-size(1px auto)
+.rightH
+    background(url('/Content/images/icon-h2.png') right top repeat-y)
+    background-size(1px auto)

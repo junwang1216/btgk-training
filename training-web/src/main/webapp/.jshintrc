@@ -1,0 +1,25 @@
+{
+  "bitwise"       : false,
+  "curly"         : true,
+  "eqeqeq"        : false,
+  "undef"         : true,
+  "unused"        : true,
+  "latedef"       : true,
+  "maxparams"     : 4,
+  "shadow"        : "inner",
+  "loopfunc"      : false,
+  "funcscope"     : true,
+  "futurehostile" : true,
+  "scripturl"     : true,
+  "globals"       : {
+    "define"  : true,
+    "module"  : true,
+    "export"  : true,
+    "console" : true,
+    "window"  : true,
+    "require" : true,
+    "setTimeout"   : true,
+    "setInterval"  : true,
+    "clearTimeout" : true
+  }
+}

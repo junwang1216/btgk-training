@@ -1,0 +1,92 @@
+@charset "utf-8";
+
+/*weui*/
+.page {
+    background: #EFEFEF;
+    font-size: 14px;
+    color: #333;
+    padding-bottom: 80px;
+    position: relative;
+}
+.page__hd {
+    background: url("../images/mobile/banner.jpg") no-repeat center;
+    background-size: 100% 100%;
+    margin-bottom: 10px;
+}
+.page__hd .page__menu {
+    overflow: hidden;
+    padding: 30px 20px 10px;
+}
+.page__hd .page__menu .page__title {
+    float: left;
+}
+.page__hd .page__menu .page__center {
+    display: block;
+    float: right;
+    margin-top: 20px;
+}
+.page__hd .page__menu .page__center img {
+    width: 30px;
+}
+.page__hd .weui-search-bar {
+    background: transparent;
+    padding: 0 20px 20px;
+}
+.page__hd .weui-search-bar:after,
+.page__hd .weui-search-bar:before {
+    border: none;
+}
+
+.page__bd .weui-panel {
+    border-radius: 8px;
+}
+.page__bd .weui-panel .weui-panel__hd {
+    background: #10AEFF;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 15px;
+}
+.page__bd .weui-panel .weui-panel__bd .weui-cells {
+    font-size: 14px;
+    color: #666;
+}
+.page__ft {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+.page__more .weui-loadmore__tips {
+    background: transparent;
+}
+.page__article .weui-msg .weui-msg__title {
+    font-size: 16px;
+}
+.page__article .weui-msg .weui-msg__desc {
+    font-size: 14px;
+    text-align: left;
+    text-indent: 28px;
+}
+.page__article .weui-msg {
+    padding-top: 20px;
+}
+.weui-msg__text-area a {
+    color: #fff;
+}
+
+.page__login {
+    padding: 30px;
+}
+.page__login .weui-cells_form {
+    border-radius: 10px;
+}
+.page__login .weui-cells_form .weui-label {
+    width: 80px;
+}
+.page__login .weui-cells_form .weui-input {
+    height: 2em;
+    line-height: 2;
+}
+.page__login .weui-cells_form .weui-btn {
+    width: 200px;
+    font-size: 16px;
+}

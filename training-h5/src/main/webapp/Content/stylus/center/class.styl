@@ -1,0 +1,46 @@
+@require '../base'
+
+.course-list
+    .course-item
+        color #EBEBEB
+        text-align center
+        margin-bottom rem(2)
+        &:nth-child(4n)
+            background #FF7256 url("/Content/images/course/image1.jpg") 50% 50% no-repeat
+            background-size 100%
+        &:nth-child(4n+1)
+            background #FF7256 url("/Content/images/course/image2.jpg") 50% 50% no-repeat
+            background-size 100%
+        &:nth-child(4n+2)
+            background #FF7256 url("/Content/images/course/image3.jpg") 50% 50% no-repeat
+            background-size 100%
+        &:nth-child(4n+3)
+            background #FF7256 url("/Content/images/course/image4.jpg") 50% 50% no-repeat
+            background-size 100%
+        .course-info
+            background linear-gradient(to bottom, #FF7256, rgba(0, 0, 255, 0.5));
+            padding rem(46) rem(14) rem(14)
+            .course-title
+                font-size $font-size-large
+            .course-teacher
+                font-size $font-size-base
+                margin rem(20) 0
+            .course-date
+                font-size $font-size-tip
+                text-align right
+
+.no-log
+    text-align center
+    margin rem(200) auto
+    color $tip-color
+    font-size $font-size-small
+    line-height rem(60)
+    position relative
+    padding-left rem(65)
+    width rem(270)
+    img
+        width rem(60)
+        position absolute
+        left 0
+        top 0
+

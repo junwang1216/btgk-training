@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgSportsCoachesMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgSportsCoaches">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="sportId" jdbcType="INTEGER" property="sportId" />
+    <result column="coachId" jdbcType="INTEGER" property="coachId" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, sportId, coachId, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_sports_coaches
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_sports_coaches
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgSportsCoaches">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_sports_coaches (sportId, coachId, createTime, 
+      updateTime)
+    values (#{sportId,jdbcType=INTEGER}, #{coachId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgSportsCoaches">
+    update org_sports_coaches
+    set sportId = #{sportId,jdbcType=INTEGER},
+      coachId = #{coachId,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_sports_coaches
+    where 1 = 1
+    <if test="sportId != null and sportId != 0">
+      and sportId = #{sportId,jdbcType=INTEGER}
+    </if>
+    <if test="coachId != null and coachId != 0">
+      and coachId = #{coachId,jdbcType=INTEGER}
+    </if>
+  </select>
+  <delete id="clearAllByCoachId" parameterType="java.lang.Integer">
+    delete from org_sports_coaches
+    where coachId = #{coachId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_sports_coaches (coachId, sportId, createTime, updateTime)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.coachId,jdbcType=INTEGER}, #{item.sportId,jdbcType=INTEGER}, #{item.createTime,jdbcType=VARCHAR},
+      #{item.updateTime,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+</mapper>

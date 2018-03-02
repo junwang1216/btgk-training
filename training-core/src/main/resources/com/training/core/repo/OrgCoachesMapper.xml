@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgCoachesMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgCoaches">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="realName" jdbcType="VARCHAR" property="realName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="idCard" jdbcType="VARCHAR" property="idCard" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, realName, password, mobile, idCard, email, createTime, updateTime, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_coaches
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_coaches
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgCoaches">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_coaches (realName, password, mobile, idCard, email, createTime, updateTime, status)
+    values (#{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
+  </insert>
+  <update id="setCoachStatus" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgCoaches">
+    update org_coaches
+    set status = #{status,jdbcType=INTEGER},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgCoaches">
+    update org_coaches
+    set realName = #{realName,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      idCard = #{idCard,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_coaches
+    where 1 = 1
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="realName != null">
+      and realName = #{realName,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

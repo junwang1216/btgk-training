@@ -1,0 +1,21 @@
+<div class="protocols-bg" v-show="isShow"></div>
+<div class="protocols" transition="protocols" v-show="isShow">
+    <div class="protocols-inner">
+        <div class="protocol-header" style="display: none;">
+            <div class="row">
+                协议类型
+                <a href="javascript:;" @click.stop.prevent="hide">x</a>
+            </div>
+        </div>
+        <div class="protocol-body">
+            <div class="row" v-for="protocol in protocolUrls">
+                <a :href="protocol.redirect" v-text="protocol.name"></a>
+            </div>
+        </div>
+        <div class="protocol-footer">
+            <div class="row">
+                <a href="javascript:;" @click.stop.prevent="hide">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgSystemLogMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgSystemLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="logNo" jdbcType="VARCHAR" property="logNo" />
+    <result column="orgId" jdbcType="INTEGER" property="orgId" />
+    <result column="logType" jdbcType="INTEGER" property="logType" />
+    <result column="logContent" jdbcType="VARCHAR" property="logContent" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="mac" jdbcType="VARCHAR" property="mac" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orgId, logNo, logType, logContent, ip, mac, createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_system_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByOrgId" parameterType="java.lang.Integer">
+    delete from org_system_log
+    where orgId = #{orgId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgSystemLog">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_system_log (orgId, logNo, logType, logContent, ip, mac, createTime)
+    values (#{orgId,jdbcType=INTEGER}, #{logNo,jdbcType=VARCHAR}, #{logType,jdbcType=INTEGER},
+      #{logContent,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{mac,jdbcType=VARCHAR},
+      #{createTime,jdbcType=VARCHAR})
+  </insert>
+  <select id="queryAllLog" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_system_log
+    where 1 = 1
+    <if test="orgId != null and orgId != 0">
+      and orgId = #{orgId,jdbcType=INTEGER}
+    </if>
+    order by createTIme desc
+  </select>
+</mapper>
