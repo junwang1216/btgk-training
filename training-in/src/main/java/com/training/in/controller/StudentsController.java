@@ -6,6 +6,7 @@ import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.ClassStatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
+import com.training.core.common.util.Page;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
 import com.training.in.request.OrgStudentsRequest;
@@ -119,6 +120,14 @@ public class StudentsController extends BaseController {
             }
         }
         modelAndView.addObject("orgStudentsList", orgStudentsResponseList);
+
+        int total = orgStudentsResponseList.size();
+        Page page = new Page(10, total);
+        page.setPage(1);
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/students/list?realName=&mobile=&classId=0");
+        modelAndView.addObject("page", page);
 
         return setModelAndView(modelAndView);
     }

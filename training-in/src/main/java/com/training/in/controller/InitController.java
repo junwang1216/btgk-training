@@ -8,7 +8,6 @@ import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DataCryptUtil;
 import com.training.core.common.util.DateUtil;
-import com.training.core.common.util.StrUtil;
 import com.training.core.repo.po.OrgInformation;
 import com.training.core.repo.po.OrgOperator;
 import com.training.core.repo.po.OrgSports;
@@ -42,6 +41,15 @@ public class InitController extends BaseController {
 
     @Resource
     private OrgSportsService orgSportsService;
+
+    @Desc("系统初始化测试支付")
+    @NotProtected
+    @RequestMapping(value = "/testpay", method = RequestMethod.GET)
+    public ModelAndView renderTestPay() {
+        ModelAndView modelAndView = new ModelAndView("Common/testpay");
+
+        return modelAndView;
+    }
 
     @Desc("系统初始化")
     @NotProtected

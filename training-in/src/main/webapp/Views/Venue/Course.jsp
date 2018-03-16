@@ -182,6 +182,9 @@
                                 </c:forEach>
                                 </tbody>
                             </table>
+                            <div>
+                                <%@ include file="../Shared/Pagination.jsp" %>
+                            </div>
                         </div>
                     </div>
                 </div>

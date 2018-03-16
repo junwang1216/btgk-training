@@ -10,6 +10,6 @@ public interface OrgSystemLogService {
 
     int addSystemLog(OrgSystemLog orgSystemLog);
 
-    List<OrgSystemLog> queryAllSystemLog(int orgId);
+    List<OrgSystemLog> queryAllSystemLog(int orgId, int start, int pageSize);
 
 }

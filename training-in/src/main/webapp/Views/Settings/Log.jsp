@@ -61,143 +61,25 @@
                                     <th class="log-no">日志编号</th>
                                     <th class="log-type">日志类型</th>
                                     <th class="log-content">日志内容</th>
-                                    <th class="log-account">用户名</th>
-                                    <th class="log-address">客户端IP</th>
+                                    <th class="log-account">操作人</th>
+                                    <th class="log-ip">客户端IP</th>
+                                    <th class="log-mac">客户端MAC</th>
                                     <th class="log-date">日志时间</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">用户登录</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">用户退出</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">完善信息</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">机构设置</td>
-                                    <td class="log-content">基本资料</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">机构设置</td>
-                                    <td class="log-content">教练管理</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">完善信息</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">机构设置</td>
-                                    <td class="log-content">课程管理</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">完善信息</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">完善信息</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr data-id="">
-                                    <td class="log-no">20171215101812</td>
-                                    <td class="log-type">通行证</td>
-                                    <td class="log-content">完善信息</td>
-                                    <td class="log-account">user20171215</td>
-                                    <td class="log-address">10.11.14.67</td>
-                                    <td class="log-date">2017-01-24 12:12:08</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-danger" title="删除日志">
-                                            <i class="fa fa-trash"></i> 删除
-                                        </a>
-                                    </td>
-                                </tr>
+                                <c:forEach var="log" items="${orgSystemLogList}" varStatus="loop">
+                                    <tr data-id="">
+                                        <td class="log-no">${log.logNo}</td>
+                                        <td class="log-type">${log.logType}</td>
+                                        <td class="log-content">${log.logContent}</td>
+                                        <td class="log-account">${log.logAccount}</td>
+                                        <td class="log-ip">${log.logIp}</td>
+                                        <td class="log-mac">${log.logMac}</td>
+                                        <td class="log-date">${log.logCreateTime}</td>
+                                    </tr>
+                                </c:forEach>
                                 </tbody>
                             </table>
                             <div>

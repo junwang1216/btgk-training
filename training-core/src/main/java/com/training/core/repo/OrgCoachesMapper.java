@@ -17,5 +17,8 @@ public interface OrgCoachesMapper {
 
     int updateByPrimaryKey(OrgCoaches record);
 
-    List<OrgCoaches> queryAll(@Param("realName") String realName, @Param("mobile") String mobile, @Param("status") Integer status);
+    List<OrgCoaches> queryAll(@Param("realName") String realName, @Param("mobile") String mobile, @Param("status") Integer status,
+                              @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+
+    int queryAllCount(@Param("realName") String realName, @Param("mobile") String mobile, @Param("status") Integer status);
 }

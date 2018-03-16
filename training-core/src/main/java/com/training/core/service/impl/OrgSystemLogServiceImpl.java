@@ -25,8 +25,8 @@ public class OrgSystemLogServiceImpl implements OrgSystemLogService {
     }
 
     @Override
-    public List<OrgSystemLog> queryAllSystemLog(int orgId) {
-        return orgSystemLogMapper.queryAllLog(orgId);
+    public List<OrgSystemLog> queryAllSystemLog(int orgId, int start, int pageSize) {
+        return orgSystemLogMapper.queryAllLog(orgId, start, pageSize);
     }
 
 }

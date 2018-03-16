@@ -6,11 +6,10 @@ import com.training.core.common.enums.RoleEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
+import com.training.core.common.util.Page;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
-import com.training.in.request.OrgCoachesRequest;
-import com.training.in.request.OrgSportsSkillsRequest;
-import org.apache.commons.lang3.EnumUtils;
+import com.training.in.request.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 设置场馆、课程、教练等基础信息
  * Created by wangjun on 2017/5/1.
  */
 @Controller
@@ -256,24 +256,30 @@ public class VenueController extends BaseController {
 
     @Desc("课程管理")
     @RequestMapping(value = "/course", method = RequestMethod.GET)
-    public ModelAndView renderVenueCourse(String courseName, String sportId) {
+    public ModelAndView renderVenueCourse(OrgCourseRequest orgCourseRequest) {
 
         ModelAndView modelAndView = new ModelAndView("Venue/Course");
 
-        if (sportId == null) {
-            sportId = "0";
-        }
-
         int orgId = getLoginUser().getOrgId();
 
-        modelAndView.addObject("courseName", courseName);
-        modelAndView.addObject("sportId", sportId);
-
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(courseName, Integer.parseInt(sportId));
-        modelAndView.addObject("orgCoursesList", orgCoursesList);
+        modelAndView.addObject("courseName", orgCourseRequest.getCourseName());
+        modelAndView.addObject("sportId", orgCourseRequest.getSportId());
 
         List<OrgSports> orgSportsList = orgSportsService.queryOrgSportsList(orgId);
         modelAndView.addObject("orgSportsList", orgSportsList);
+
+        int total = orgCoursesService.queryOrgCoursesCount(orgCourseRequest.getCourseName(), orgCourseRequest.getSportId());
+        int start = orgCourseRequest.getPage() < 1 ? 0 : orgCourseRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(orgCourseRequest.getCourseName(), orgCourseRequest.getSportId(), start, pageSize);
+        modelAndView.addObject("orgCoursesList", orgCoursesList);
+
+        Page page = new Page(pageSize, total);
+        page.setPage(orgCourseRequest.getPage());
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/venue/course?courseName=" + orgCourseRequest.getCourseName() + "&sportId=" + orgCourseRequest.getSportId());
+        modelAndView.addObject("page", page);
 
         return setModelAndView(modelAndView);
     }
@@ -380,12 +386,12 @@ public class VenueController extends BaseController {
     // TODO 检索有问题
     @Desc("教练管理")
     @RequestMapping(value = "/coaches", method = RequestMethod.GET)
-    public ModelAndView renderVenueCoaches(String realName, String mobile) {
+    public ModelAndView renderVenueCoaches(OrgCoachesQueryRequest orgCoachesQueryRequest) {
 
         ModelAndView modelAndView = new ModelAndView("Venue/Coaches");
 
-        modelAndView.addObject("realName", realName);
-        modelAndView.addObject("mobile", mobile);
+        modelAndView.addObject("realName", orgCoachesQueryRequest.getRealName());
+        modelAndView.addObject("mobile", orgCoachesQueryRequest.getMobile());
 
         int orgId = getLoginUser().getOrgId();
 
@@ -398,7 +404,10 @@ public class VenueController extends BaseController {
         List<RoleEnum> roleEnumList = RoleEnum.getCoachList();
         modelAndView.addObject("orgRolesList", roleEnumList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null);
+        int total = orgCoachesService.queryOrgCoachesCount(orgCoachesQueryRequest.getRealName(), orgCoachesQueryRequest.getMobile());
+        int start = orgCoachesQueryRequest.getPage() < 1 ? 0 : orgCoachesQueryRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(orgCoachesQueryRequest.getRealName(), orgCoachesQueryRequest.getMobile(), start, pageSize);
         List<Map<String, Object>> responseList = new ArrayList<>();
         for (OrgCoaches orgCoaches : orgCoachesList) {
             Map<String, Object> response = new HashMap<>();
@@ -439,6 +448,13 @@ public class VenueController extends BaseController {
             responseList.add(response);
         }
         modelAndView.addObject("orgCoachesList", responseList);
+
+        Page page = new Page(pageSize, total);
+        page.setPage(orgCoachesQueryRequest.getPage());
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/venue/course?realName=" + orgCoachesQueryRequest.getRealName() + "&mobile=" + orgCoachesQueryRequest.getMobile());
+        modelAndView.addObject("page", page);
 
         return setModelAndView(modelAndView);
     }

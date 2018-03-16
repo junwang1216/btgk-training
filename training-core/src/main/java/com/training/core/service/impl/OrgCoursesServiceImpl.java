@@ -30,8 +30,13 @@ public class OrgCoursesServiceImpl implements OrgCoursesService {
     }
 
     @Override
-    public List<OrgCourses> queryOrgCoursesList(String courseName, Integer sportId) {
-        return orgCoursesMapper.queryAll(courseName, sportId, null);
+    public List<OrgCourses> queryOrgCoursesList(String courseName, Integer sportId, Integer start, Integer pageSize) {
+        return orgCoursesMapper.queryAll(courseName, sportId, null, start, pageSize);
+    }
+
+    @Override
+    public int queryOrgCoursesCount(String courseName, Integer sportId) {
+        return orgCoursesMapper.queryAllCount(courseName, sportId, null);
     }
 
     @Override

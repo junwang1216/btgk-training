@@ -12,7 +12,9 @@ public interface OrgCoachesService {
 
     int lockOrgCoaches(OrgCoaches orgCoaches);
 
-    List<OrgCoaches> queryOrgCoachesList(String realName, String mobile);
+    List<OrgCoaches> queryOrgCoachesList(String realName, String mobile, Integer start, Integer pageSize);
+
+    int queryOrgCoachesCount(String realName, String mobile);
 
     OrgCoaches getOrgCoaches(Integer id);
 

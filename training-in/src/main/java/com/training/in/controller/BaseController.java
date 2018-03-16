@@ -1,21 +1,32 @@
 package com.training.in.controller;
 
 import com.training.core.common.constant.IPlatformConstant;
+import com.training.core.common.enums.LogTypeEnum;
+import com.training.core.common.servlet.HttpServlets;
+import com.training.core.common.util.DateUtil;
 import com.training.core.common.util.JsonUtils;
 import com.training.core.repo.po.OrgOperator;
+import com.training.core.repo.po.OrgSystemLog;
+import com.training.core.service.OrgSystemLogService;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class BaseController {
+
+    @Resource
+    private OrgSystemLogService orgSystemLogService;
+
     public static final String REQUEST_HEAD = "text/html; charset=UTF-8";
 
     public static final String APPLICATION_JSON = "application/json";
@@ -108,47 +119,81 @@ public class BaseController {
         return new String(out.toByteArray(),"utf-8");
     }
 
-    protected String getIPAddress(HttpServletRequest request) throws Exception {
-        String ip = request.getHeader("X-Forwarded-For");
+    protected OrgOperator getLoginUser() {
+        return (OrgOperator)getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER);
+    }
 
-        if (ip != null) {
-            if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
-                int index = ip.indexOf(",");
-                if (index != -1) {
-                    return ip.substring(0, index);
-                } else {
+    protected void setLoginUser(OrgOperator orgOperator) {
+        orgOperator.setPassword(null);
+        getRequest().getSession().setAttribute(IPlatformConstant.LOGIN_USER, orgOperator);
+    }
+
+    protected void log(LogTypeEnum logType, int orgId, String content) {
+        OrgSystemLog orgSystemLog = new OrgSystemLog();
+        HttpServletRequest httpServletRequest = HttpServlets.getRequest();
+
+        String ipAddress = getIPAddress(httpServletRequest);
+        ipAddress = (ipAddress != null) ? ipAddress : "127.0.0.1";
+
+        orgSystemLog.setOrgId(orgId);
+        orgSystemLog.setIp(ipAddress);
+        orgSystemLog.setMac(getMacAddressByIp(ipAddress));
+        orgSystemLog.setAccount(getLoginUser().getRealName());
+
+        orgSystemLog.setCreateTime(DateUtil.getNowDate());
+        orgSystemLog.setLogType(logType.getCode());
+        orgSystemLog.setLogNo(UUID.randomUUID().toString());
+        orgSystemLog.setLogContent(content != null ? content : logType.getDesc());
+
+        orgSystemLogService.addSystemLog(orgSystemLog);
+    }
+
+    private String getIPAddress(HttpServletRequest request) {
+        try {
+            String ip = request.getHeader("X-Forwarded-For");
+
+            if (ip != null) {
+                if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+                    int index = ip.indexOf(",");
+                    if (index != -1) {
+                        return ip.substring(0, index);
+                    } else {
+                        return ip;
+                    }
+                }
+            }
+
+            ip = request.getHeader("X-Real-IP");
+            if (ip != null) {
+                if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
                     return ip;
                 }
             }
-        }
 
-        ip = request.getHeader("X-Real-IP");
-        if (ip != null) {
-            if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
-                return ip;
+            ip = request.getHeader("Proxy-Client-IP");
+            if (ip != null) {
+                if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+                    return ip;
+                }
             }
-        }
 
-        ip = request.getHeader("Proxy-Client-IP");
-        if (ip != null) {
-            if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
-                return ip;
+            ip = request.getHeader("WL-Proxy-Client-IP");
+            if (ip != null) {
+                if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+                    return ip;
+                }
             }
+
+            ip =  request.getRemoteAddr();
+
+            return ip.equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : ip;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        ip = request.getHeader("WL-Proxy-Client-IP");
-        if (ip != null) {
-            if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
-                return ip;
-            }
-        }
-
-        ip =  request.getRemoteAddr();
-
-        return ip.equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : ip;
+        return null;
     }
 
-    public String getMacAddressByIp(String ip) throws Exception {
+    private String getMacAddressByIp(String ip) {
         String macAddress = "";
 
         try {
@@ -170,15 +215,6 @@ public class BaseController {
         }
 
         return  macAddress;
-    }
-
-    protected OrgOperator getLoginUser() {
-        return (OrgOperator)getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER);
-    }
-
-    protected void setLoginUser(OrgOperator orgOperator) {
-        orgOperator.setPassword(null);
-        getRequest().getSession().setAttribute(IPlatformConstant.LOGIN_USER, orgOperator);
     }
 
 }

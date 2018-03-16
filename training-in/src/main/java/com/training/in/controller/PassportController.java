@@ -3,7 +3,6 @@ package com.training.in.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.annotation.NotProtected;
 import com.training.core.common.bean.ResponseBean;
-import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DataCryptUtil;
@@ -12,7 +11,7 @@ import com.training.core.common.util.StrUtil;
 import com.training.core.repo.po.OrgOperator;
 import com.training.core.service.OrgOperatorService;
 import com.training.core.repo.query.OrgOperatorRequest;
-import com.training.in.api.WriteSystemlog;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,11 +21,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 
 /**
+ * 账号的登录、注册、忘记密码等操作
  * Created by wangjun on 2017/4/25.
  */
 @Controller
 @RequestMapping("/admin/passport")
 public class PassportController extends BaseController {
+
+    private static Logger logger = Logger.getLogger(PassportController.class);
 
     @Resource
     private OrgOperatorService orgOperatorService;
@@ -64,6 +66,8 @@ public class PassportController extends BaseController {
             orgOperatorService.setLastLoginTime(DateUtil.getNowDate(), orgOperator.getId());
 
             setLoginUser(orgOperator);
+
+            log(LogTypeEnum.LOG_TYPE_LOGIN, orgOperator.getOrgId(), null);
 
             return new ResponseBean(true);
         } catch (MessageException e) {

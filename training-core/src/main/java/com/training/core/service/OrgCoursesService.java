@@ -12,7 +12,9 @@ public interface OrgCoursesService {
 
     int lockOrgCourses(OrgCourses orgCourses);
 
-    List<OrgCourses> queryOrgCoursesList(String courseName, Integer sportId);
+    List<OrgCourses> queryOrgCoursesList(String courseName, Integer sportId, Integer start, Integer pageSize);
+
+    int queryOrgCoursesCount(String courseName, Integer sportId);
 
     OrgCourses getOrgCourses(Integer id);
 

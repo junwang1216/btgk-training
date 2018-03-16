@@ -3,13 +3,18 @@ package com.training.in.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.constant.IPlatformConstant;
+import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.enums.RoleEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DataCryptUtil;
 import com.training.core.common.util.DateUtil;
+import com.training.core.common.util.Page;
 import com.training.core.repo.po.OrgOperator;
+import com.training.core.repo.po.OrgSystemLog;
 import com.training.core.service.OrgOperatorService;
+import com.training.core.service.OrgSystemLogService;
+import com.training.in.request.OrgSystemLogRequest;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +35,9 @@ public class SettingsController extends BaseController {
 
     @Resource
     private OrgOperatorService orgOperatorService;
+
+    @Resource
+    private OrgSystemLogService orgSystemLogService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
@@ -113,8 +121,38 @@ public class SettingsController extends BaseController {
 
     @Desc("系统日志")
     @RequestMapping(value = "/log", method = RequestMethod.GET)
-    public String renderSettingsLog() {
-        return "Settings/Log";
+    public ModelAndView renderSettingsLog(OrgSystemLogRequest orgSystemLogRequest) {
+
+        ModelAndView modelAndView = new ModelAndView("Settings/Log");
+
+        int start = orgSystemLogRequest.getPage() != 0 ? orgSystemLogRequest.getPage() : 1;
+
+        List<OrgSystemLog> orgSystemLogList = orgSystemLogService.queryAllSystemLog(getLoginUser().getOrgId(), start, 10);
+        List<Map> orgSystemLogList2 = new ArrayList<>();
+        for (OrgSystemLog orgSystemLog : orgSystemLogList) {
+            Map map = new HashMap();
+
+            map.put("logType", LogTypeEnum.forValue(orgSystemLog.getLogType()).getDesc());
+            map.put("logContent", orgSystemLog.getLogContent());
+            map.put("logNo", orgSystemLog.getLogNo());
+            map.put("logCreateTime", orgSystemLog.getCreateTime());
+            map.put("logIp", orgSystemLog.getIp());
+            map.put("logMac", orgSystemLog.getMac());
+            map.put("logAccount", orgSystemLog.getAccount());
+
+            orgSystemLogList2.add(map);
+        }
+        modelAndView.addObject("orgSystemLogList", orgSystemLogList2);
+
+        int total = orgSystemLogList2.size();
+        Page page = new Page(10, total);
+        page.setPage(start);
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/settings/log?startDate=&endDate=");
+        modelAndView.addObject("page", page);
+
+        return setModelAndView(modelAndView);
     }
 
     @Desc("数据库备份")

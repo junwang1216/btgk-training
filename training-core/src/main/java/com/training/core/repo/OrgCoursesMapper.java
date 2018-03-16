@@ -17,5 +17,8 @@ public interface OrgCoursesMapper {
 
     int updateByPrimaryKey(OrgCourses record);
 
-    List<OrgCourses> queryAll(@Param("courseName") String courseName, @Param("sportId") Integer sportId, @Param("status") Integer status);
+    List<OrgCourses> queryAll(@Param("courseName") String courseName, @Param("sportId") Integer sportId, @Param("status") Integer status,
+                              @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+
+    int queryAllCount(@Param("courseName") String courseName, @Param("sportId") Integer sportId, @Param("status") Integer status);
 }

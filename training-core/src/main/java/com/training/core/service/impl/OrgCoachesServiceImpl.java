@@ -30,8 +30,13 @@ public class OrgCoachesServiceImpl implements OrgCoachesService {
     }
 
     @Override
-    public List<OrgCoaches> queryOrgCoachesList(String realName, String mobile) {
-        return orgCoachesMapper.queryAll(realName, mobile, null);
+    public List<OrgCoaches> queryOrgCoachesList(String realName, String mobile, Integer start, Integer pageSize) {
+        return orgCoachesMapper.queryAll(realName, mobile, null, start, pageSize);
+    }
+
+    @Override
+    public int queryOrgCoachesCount(String realName, String mobile) {
+        return orgCoachesMapper.queryAllCount(realName, mobile, null);
     }
 
     @Override

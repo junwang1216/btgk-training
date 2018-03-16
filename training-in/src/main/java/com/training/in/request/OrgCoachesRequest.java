@@ -1,9 +1,6 @@
 package com.training.in.request;
 
-import com.training.core.repo.po.OrgBalanceSettings;
 import com.training.core.repo.po.OrgCoaches;
-
-import java.util.List;
 
 /**
  * Created by wangjun on 2017/12/28.

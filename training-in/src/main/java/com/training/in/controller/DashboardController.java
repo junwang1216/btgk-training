@@ -1,8 +1,6 @@
 package com.training.in.controller;
 
 import com.training.core.common.annotation.Desc;
-import com.training.core.common.constant.IPlatformConstant;
-import org.apache.xpath.operations.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

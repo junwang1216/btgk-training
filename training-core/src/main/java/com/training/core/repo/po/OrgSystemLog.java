@@ -43,6 +43,11 @@ public class OrgSystemLog implements Serializable {
      */
     private String createTime;
 
+    /**
+     * 账户标识
+     */
+    private String account;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -107,5 +112,13 @@ public class OrgSystemLog implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

@@ -62,5 +62,22 @@
     <if test="status != null and status != 0">
       and status = #{status,jdbcType=INTEGER}
     </if>
+    order by updateTime desc
+    limit #{start}, #{pageSize}
+  </select>
+  <select id="queryAllCount" resultType="java.lang.Integer">
+    select count(*)
+    from org_coaches
+    where 1 = 1
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="realName != null">
+      and realName = #{realName,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    order by updateTime desc
   </select>
 </mapper>

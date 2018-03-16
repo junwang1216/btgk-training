@@ -72,10 +72,10 @@ public class ClassController extends BaseController {
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
         modelAndView.addObject("orgVenuesList", orgVenuesList);
 
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, 10);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         return setModelAndView(modelAndView);
@@ -124,10 +124,10 @@ public class ClassController extends BaseController {
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
         modelAndView.addObject("orgVenuesList", orgVenuesList);
 
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, 10);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         modelAndView.addObject("ClassStatusEnum", EnumUtils.getEnumList(ClassStatusEnum.class));
@@ -167,10 +167,10 @@ public class ClassController extends BaseController {
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
         modelAndView.addObject("orgVenuesList", orgVenuesList);
 
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, 10);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         OrgClass orgClass = orgClassService.getOrgClass(Integer.parseInt(classId));
@@ -213,7 +213,7 @@ public class ClassController extends BaseController {
         modelAndView.addObject("orgClassSchedule", map);
         modelAndView.addObject("orgClassScheduleList", orgClassScheduleList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         return setModelAndView(modelAndView);
