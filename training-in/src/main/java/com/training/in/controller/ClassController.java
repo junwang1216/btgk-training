@@ -8,8 +8,10 @@ import com.training.core.common.enums.RoleEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
+import com.training.core.common.util.Page;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
+import com.training.in.request.OrgClassQueryRequest;
 import com.training.in.request.OrgClassScheduleRequest;
 import com.training.in.response.OrgAttendanceResponse;
 import com.training.in.response.OrgClassResponse;
@@ -72,10 +74,12 @@ public class ClassController extends BaseController {
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
         modelAndView.addObject("orgVenuesList", orgVenuesList);
 
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, 10);
+        int orgCoursesCount = orgCoursesService.queryOrgCoursesCount(null, 0);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, orgCoursesCount);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
+        int orgCoachesCount = orgCoachesService.queryOrgCoachesCount(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, orgCoachesCount);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         return setModelAndView(modelAndView);
@@ -117,22 +121,30 @@ public class ClassController extends BaseController {
 
     @Desc("班级列表")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ModelAndView renderClassList() {
+    public ModelAndView renderClassList(OrgClassQueryRequest orgClassQueryRequest) {
 
         ModelAndView modelAndView = new ModelAndView("Class/List");
+
+        modelAndView.addObject("className", orgClassQueryRequest.getClassName());
+        modelAndView.addObject("status", orgClassQueryRequest.getStatus());
 
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
         modelAndView.addObject("orgVenuesList", orgVenuesList);
 
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, 10);
+        int orgCoursesCount = orgCoursesService.queryOrgCoursesCount(null, 0);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, orgCoursesCount);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
+        int orgCoachesCount = orgCoachesService.queryOrgCoachesCount(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, orgCoachesCount);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         modelAndView.addObject("ClassStatusEnum", EnumUtils.getEnumList(ClassStatusEnum.class));
 
-        List<OrgClass> orgClassList = orgClassService.queryOrgClassList();
+        int total = orgClassService.queryOrgClassCount(orgClassQueryRequest.getClassName(), orgClassQueryRequest.getStatus());
+        int start = orgClassQueryRequest.getPage() < 1 ? 0 : orgClassQueryRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(orgClassQueryRequest.getClassName(), orgClassQueryRequest.getStatus(), start, pageSize);
         List<OrgClassResponse> orgClassResponseList = new ArrayList<>();
         for (OrgClass orgClass : orgClassList) {
             OrgClassResponse orgClassResponse = new OrgClassResponse();
@@ -155,6 +167,13 @@ public class ClassController extends BaseController {
         }
         modelAndView.addObject("orgClassList", orgClassResponseList);
 
+        Page page = new Page(pageSize, total);
+        page.setPage(orgClassQueryRequest.getPage());
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/class/list?className=" + orgClassQueryRequest.getClassName() + "&status=" + orgClassQueryRequest.getStatus());
+        modelAndView.addObject("page", page);
+
         return setModelAndView(modelAndView);
     }
 
@@ -167,10 +186,12 @@ public class ClassController extends BaseController {
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
         modelAndView.addObject("orgVenuesList", orgVenuesList);
 
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, 10);
+        int orgCoursesCount = orgCoursesService.queryOrgCoursesCount(null, 0);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(null, 0, 0, orgCoursesCount);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
+        int orgCoachesCount = orgCoachesService.queryOrgCoachesCount(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, orgCoachesCount);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         OrgClass orgClass = orgClassService.getOrgClass(Integer.parseInt(classId));
@@ -179,7 +200,7 @@ public class ClassController extends BaseController {
         return setModelAndView(modelAndView);
     }
 
-    @Desc("班级编辑")
+    @Desc("班级排期")
     @RequestMapping(value = "/schedule", method = RequestMethod.GET)
     public ModelAndView renderClassSchedule(String classId) {
 
@@ -195,7 +216,17 @@ public class ClassController extends BaseController {
 
         Map<String, Object> map = new HashMap<>();
         List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(Integer.parseInt(classId));
-        for (OrgClassSchedule orgClassSchedule : orgClassScheduleList) {
+
+        if (orgClassScheduleList.size() == 0) {
+            OrgClassSchedule orgClassSchedule = new OrgClassSchedule();
+            map.put("startDate", orgClassSchedule.getStartDate());
+            map.put("endDate", orgClassSchedule.getEndDate());
+            map.put("classSchedule", "week");
+            map.put("classWeekStyle", "display:block;");
+            map.put("classDateStyle", "display:none;");
+        }
+        else {
+            OrgClassSchedule orgClassSchedule = orgClassScheduleList.get(0);
             map.put("startDate", orgClassSchedule.getStartDate());
             map.put("endDate", orgClassSchedule.getEndDate());
             if (orgClassSchedule.getClassDate() == null) {
@@ -208,12 +239,13 @@ public class ClassController extends BaseController {
                 map.put("classWeekStyle", "display:none;");
                 map.put("classDateStyle", "display:block;");
             }
-            break;
         }
+
         modelAndView.addObject("orgClassSchedule", map);
         modelAndView.addObject("orgClassScheduleList", orgClassScheduleList);
 
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, 10);
+        int orgCoachesCount = orgCoachesService.queryOrgCoachesCount(null, null);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, orgCoachesCount);
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         return setModelAndView(modelAndView);
@@ -476,7 +508,8 @@ public class ClassController extends BaseController {
         }
         modelAndView.addObject("orgAttendanceResponseList", orgAttendanceResponseList);
 
-        List<OrgClass> classList = orgClassService.queryOrgClassList();
+        int classCount = orgClassService.queryOrgClassCount(null, null);
+        List<OrgClass> classList = orgClassService.queryOrgClassList(null, null, 0, classCount);
         modelAndView.addObject("classList", classList);
 
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);
@@ -512,7 +545,8 @@ public class ClassController extends BaseController {
         }
         modelAndView.addObject("orgAttendanceResponseList", orgAttendanceResponseList);
 
-        List<OrgClass> classList = orgClassService.queryOrgClassList();
+        int classCount = orgClassService.queryOrgClassCount(null, null);
+        List<OrgClass> classList = orgClassService.queryOrgClassList(null, null, 0, classCount);
         modelAndView.addObject("classList", classList);
 
         List<OrgVenues> orgVenuesList = orgVenuesService.queryOrgVenuesList(1);

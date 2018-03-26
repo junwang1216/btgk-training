@@ -6,10 +6,12 @@ import java.util.List;
 
 public interface OrgSystemLogService {
 
-    int clearSystemLogByOrgId(int orgId, int days);
+    int clearSystemLogByOrgId(Integer orgId, Integer days);
 
     int addSystemLog(OrgSystemLog orgSystemLog);
 
-    List<OrgSystemLog> queryAllSystemLog(int orgId, int start, int pageSize);
+    List<OrgSystemLog> queryAllSystemLog(Integer orgId, Integer start, Integer pageSize);
+
+    int queryAllSystemLogCount(Integer orgId);
 
 }

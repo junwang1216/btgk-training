@@ -372,14 +372,14 @@ public class DateUtil {
     public static String getCurrentYearEndTime() {  
         Calendar cal = Calendar.getInstance();  
         cal.setTime(new Date());  
-        cal.add(Calendar.YEAR, 0);  
+        cal.add(Calendar.YEAR, 0);
         return dateToString(cal.getTime(), YYYY); 
     }  
   
     public static String getLastYearStartTime() {  
         Calendar cal = Calendar.getInstance();  
         cal.setTime(new Date());  
-        cal.add(Calendar.YEAR, 1);  
+        cal.add(Calendar.YEAR, 1);
         return dateToString(cal.getTime(), YYYY);
     }
 

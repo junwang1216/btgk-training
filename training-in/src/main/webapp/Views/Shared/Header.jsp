@@ -46,7 +46,7 @@
             </div>
         </li>
         <li class="nav-item d-md-down-none pr-4">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="/admin/helper/index">
                 <i class="icon-docs"></i> 操作指南
             </a>
         </li>

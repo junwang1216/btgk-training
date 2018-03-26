@@ -1,12 +1,15 @@
 package com.training.in.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
+import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.enums.RoleEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
 import com.training.core.common.util.Page;
+import com.training.core.common.util.StringUtil;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
 import com.training.in.request.*;
@@ -86,6 +89,8 @@ public class VenueController extends BaseController {
             orgInformation.setUpdateTime(DateUtil.getNowDate());
             int result = orgInformationService.updateByPrimaryKey(orgInformation);
 
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "修改机构[" + orgInformation.getOrgName() + "]基础资料");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -138,6 +143,9 @@ public class VenueController extends BaseController {
                 result = orgVenuesService.addOrgVenues(orgVenues);
             }
 
+            OrgVenues orgVenues1 = orgVenuesService.getOrgVenues(orgVenues.getId());
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "添加或者修改场馆[" + orgVenues1.getVenueName() + "]信息");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -162,6 +170,9 @@ public class VenueController extends BaseController {
 
             int result = orgVenuesService.closeOrgVenues(orgVenues);
 
+            OrgVenues orgVenues1 = orgVenuesService.getOrgVenues(orgVenues.getId());
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "禁用场馆[" + orgVenues1.getVenueName() + "]运营");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -185,6 +196,8 @@ public class VenueController extends BaseController {
             orgVenues.setId(venueId);
 
             int result = orgVenuesService.closeOrgVenues(orgVenues);
+
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "启用场馆[" + orgVenues.getVenueName() + "]运营");
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
@@ -242,6 +255,9 @@ public class VenueController extends BaseController {
             }
             result = orgSportsSkillsService.addOrgSportsSkillsBatch(orgSportsSkillsRequest.getOrgSportsSkillsList());
 
+            OrgSports orgSports = orgSportsService.getOrgSports(orgSportsSkillsRequest.getSportId());
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "设置项目[" + orgSports.getSportName() + "]的评测技能");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -271,7 +287,7 @@ public class VenueController extends BaseController {
         int total = orgCoursesService.queryOrgCoursesCount(orgCourseRequest.getCourseName(), orgCourseRequest.getSportId());
         int start = orgCourseRequest.getPage() < 1 ? 0 : orgCourseRequest.getPage() - 1;
         int pageSize = 10;
-        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(orgCourseRequest.getCourseName(), orgCourseRequest.getSportId(), start, pageSize);
+        List<OrgCourses> orgCoursesList = orgCoursesService.queryOrgCoursesList(orgCourseRequest.getCourseName(), orgCourseRequest.getSportId(), start * pageSize, pageSize);
         modelAndView.addObject("orgCoursesList", orgCoursesList);
 
         Page page = new Page(pageSize, total);
@@ -323,6 +339,8 @@ public class VenueController extends BaseController {
                 result = orgCoursesService.addOrgCourses(orgCourses);
             }
 
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "添加或者修改课程[" + orgCourses.getCourseName() + "]信息");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -347,6 +365,9 @@ public class VenueController extends BaseController {
 
             int result = orgCoursesService.lockOrgCourses(orgCourses);
 
+            OrgCourses orgCourses1 = orgCoursesService.getOrgCourses(courseId);
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "锁定课程[" + orgCourses1.getCourseName() + "]");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -370,6 +391,9 @@ public class VenueController extends BaseController {
             orgCourses.setId(courseId);
 
             int result = orgCoursesService.lockOrgCourses(orgCourses);
+
+            OrgCourses orgCourses1 = orgCoursesService.getOrgCourses(courseId);
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "解锁课程[" + orgCourses1.getCourseName() + "]");
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
@@ -407,7 +431,7 @@ public class VenueController extends BaseController {
         int total = orgCoachesService.queryOrgCoachesCount(orgCoachesQueryRequest.getRealName(), orgCoachesQueryRequest.getMobile());
         int start = orgCoachesQueryRequest.getPage() < 1 ? 0 : orgCoachesQueryRequest.getPage() - 1;
         int pageSize = 10;
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(orgCoachesQueryRequest.getRealName(), orgCoachesQueryRequest.getMobile(), start, pageSize);
+        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(orgCoachesQueryRequest.getRealName(), orgCoachesQueryRequest.getMobile(), start * pageSize, pageSize);
         List<Map<String, Object>> responseList = new ArrayList<>();
         for (OrgCoaches orgCoaches : orgCoachesList) {
             Map<String, Object> response = new HashMap<>();
@@ -453,7 +477,7 @@ public class VenueController extends BaseController {
         page.setPage(orgCoachesQueryRequest.getPage());
 
         modelAndView.addObject("total", total);
-        modelAndView.addObject("pageURL", "/admin/venue/course?realName=" + orgCoachesQueryRequest.getRealName() + "&mobile=" + orgCoachesQueryRequest.getMobile());
+        modelAndView.addObject("pageURL", "/admin/venue/coaches?realName=" + orgCoachesQueryRequest.getRealName() + "&mobile=" + orgCoachesQueryRequest.getMobile());
         modelAndView.addObject("page", page);
 
         return setModelAndView(modelAndView);
@@ -553,6 +577,8 @@ public class VenueController extends BaseController {
             orgVenueCoachesService.clearAllByCoachId(result);
             orgVenueCoachesService.addOrgVenueCoachesBatch(orgVenueCoachesList);
 
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "添加或者修改教练[" + orgCoachesRequest.getOrgCoaches().getRealName() + "]信息");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -577,6 +603,9 @@ public class VenueController extends BaseController {
 
             int result = orgCoachesService.lockOrgCoaches(orgCoaches);
 
+            OrgCoaches orgCoaches1 = orgCoachesService.getOrgCoaches(coachId);
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "锁定教练[" + orgCoaches1.getRealName() + "]授课权限");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -600,6 +629,9 @@ public class VenueController extends BaseController {
             orgCoaches.setId(coachId);
 
             int result = orgCoachesService.lockOrgCoaches(orgCoaches);
+
+            OrgCoaches orgCoaches1 = orgCoachesService.getOrgCoaches(coachId);
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "解锁教练[" + orgCoaches1.getRealName() + "]授课权限");
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {

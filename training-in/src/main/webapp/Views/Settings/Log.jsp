@@ -18,7 +18,7 @@
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
     <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
-            data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
+            data-main="Content/js/app/settings/log.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -32,16 +32,16 @@
                             <small>Log</small>
                         </div>
                         <div class="card-block">
-                            <form action="" method="post" class="form-horizontal">
+                            <form id="log_form" action="" method="post" class="form-horizontal">
                                 <div class="form-group row">
                                     <div class="col-md-2">
-                                        <input type="text" id="log_start" name="logStart" class="form-control" placeholder="开始日期">
+                                        <input type="text" id="log_start" name="startTime" class="form-control" placeholder="开始日期">
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="text" id="log_end" name="logEnd" class="form-control" placeholder="结束日期">
+                                        <input type="text" id="log_end" name="endTime" class="form-control" placeholder="结束日期">
                                     </div>
                                     <div class="col-md-8">
-                                        <button type="button" class="btn btn-primary">
+                                        <button type="button" class="btn btn-primary search-log">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>
                                     </div>
@@ -49,7 +49,7 @@
                             </form>
                         </div>
                         <div class="card-footer">
-                            <button type="button" class="btn btn-danger">
+                            <button type="button" class="btn btn-danger clear-log">
                                 <i class="fa fa-trash"></i> 清除日志
                             </button>
                             <span class="text-danger ml-2">注意：为了保持的系统的快速访问，系统仅保留一个月的追踪日志。</span>
@@ -63,7 +63,6 @@
                                     <th class="log-content">日志内容</th>
                                     <th class="log-account">操作人</th>
                                     <th class="log-ip">客户端IP</th>
-                                    <th class="log-mac">客户端MAC</th>
                                     <th class="log-date">日志时间</th>
                                     <th></th>
                                 </tr>
@@ -76,7 +75,6 @@
                                         <td class="log-content">${log.logContent}</td>
                                         <td class="log-account">${log.logAccount}</td>
                                         <td class="log-ip">${log.logIp}</td>
-                                        <td class="log-mac">${log.logMac}</td>
                                         <td class="log-date">${log.logCreateTime}</td>
                                     </tr>
                                 </c:forEach>

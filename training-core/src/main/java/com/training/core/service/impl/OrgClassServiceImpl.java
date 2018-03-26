@@ -30,8 +30,18 @@ public class OrgClassServiceImpl implements OrgClassService {
     }
 
     @Override
-    public List<OrgClass> queryOrgClassList() {
-        return orgClassMapper.queryAll();
+    public List<OrgClass> queryOrgClassList(String className, Integer status, Integer start, Integer pageSize) {
+        return orgClassMapper.queryAll(className, status, start, pageSize);
+    }
+
+    @Override
+    public int queryOrgClassCount(String className, Integer status) {
+        return orgClassMapper.queryAllCount(className, status);
+    }
+
+    @Override
+    public int totalOrgClassCount(String startTime, String endTime, Integer status) {
+        return orgClassMapper.totalAllCount(startTime, endTime, status);
     }
 
     @Override

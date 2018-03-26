@@ -66,9 +66,17 @@
                             <form id="class_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                                 <div class="form-group row">
                                     <div class="col-md-3">
-                                        <input type="text" class="form-control" placeholder="班级名称" name="className">
+                                        <input type="text" class="form-control" placeholder="班级名称" name="className" value="${className}">
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-1">
+                                        <select class="form-control" name="status">
+                                            <option value="0">全部状态</option>
+                                            <c:forEach var="st" items="${ClassStatusEnum}">
+                                                <option value="${st.code}" <c:if test="${st.code == status}">selected</c:if> >${st.desc}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-8">
                                         <button type="button" class="btn btn-primary search-class">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>

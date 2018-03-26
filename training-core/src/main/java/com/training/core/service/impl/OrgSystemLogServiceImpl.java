@@ -1,5 +1,6 @@
 package com.training.core.service.impl;
 
+import com.training.core.common.util.DateUtil;
 import com.training.core.repo.OrgSystemLogMapper;
 import com.training.core.repo.po.OrgSystemLog;
 import com.training.core.service.OrgSystemLogService;
@@ -15,8 +16,15 @@ public class OrgSystemLogServiceImpl implements OrgSystemLogService {
     private OrgSystemLogMapper orgSystemLogMapper;
 
     @Override
-    public int clearSystemLogByOrgId(int orgId, int days) {
-        return orgSystemLogMapper.deleteByOrgId(orgId, days);
+    public int clearSystemLogByOrgId(Integer orgId, Integer days) {
+        String endTime, startTime = null;
+        switch (days) {
+            case 30:
+            default:
+                endTime = DateUtil.getTimesMonthmorning();
+        }
+
+        return orgSystemLogMapper.deleteByOrgId(orgId, startTime, endTime);
     }
 
     @Override
@@ -25,8 +33,13 @@ public class OrgSystemLogServiceImpl implements OrgSystemLogService {
     }
 
     @Override
-    public List<OrgSystemLog> queryAllSystemLog(int orgId, int start, int pageSize) {
+    public List<OrgSystemLog> queryAllSystemLog(Integer orgId, Integer start, Integer pageSize) {
         return orgSystemLogMapper.queryAllLog(orgId, start, pageSize);
+    }
+
+    @Override
+    public int queryAllSystemLogCount(Integer orgId) {
+        return orgSystemLogMapper.queryAllLogCount(orgId);
     }
 
 }

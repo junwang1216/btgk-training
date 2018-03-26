@@ -125,9 +125,10 @@ public class SettingsController extends BaseController {
 
         ModelAndView modelAndView = new ModelAndView("Settings/Log");
 
-        int start = orgSystemLogRequest.getPage() != 0 ? orgSystemLogRequest.getPage() : 1;
-
-        List<OrgSystemLog> orgSystemLogList = orgSystemLogService.queryAllSystemLog(getLoginUser().getOrgId(), start, 10);
+        int total = orgSystemLogService.queryAllSystemLogCount(getLoginUser().getOrgId());
+        int pageSize = 10;
+        int start = orgSystemLogRequest.getPage() < 1 ?  0 : orgSystemLogRequest.getPage() - 1;
+        List<OrgSystemLog> orgSystemLogList = orgSystemLogService.queryAllSystemLog(getLoginUser().getOrgId(), start * pageSize, pageSize);
         List<Map> orgSystemLogList2 = new ArrayList<>();
         for (OrgSystemLog orgSystemLog : orgSystemLogList) {
             Map map = new HashMap();
@@ -144,15 +145,34 @@ public class SettingsController extends BaseController {
         }
         modelAndView.addObject("orgSystemLogList", orgSystemLogList2);
 
-        int total = orgSystemLogList2.size();
-        Page page = new Page(10, total);
-        page.setPage(start);
+        Page page = new Page(pageSize, total);
+        page.setPage(orgSystemLogRequest.getPage());
 
         modelAndView.addObject("total", total);
-        modelAndView.addObject("pageURL", "/admin/settings/log?startDate=&endDate=");
+        modelAndView.addObject("pageURL", "/admin/settings/log?startTime=&endTime=");
         modelAndView.addObject("page", page);
 
         return setModelAndView(modelAndView);
+    }
+
+    @Desc("清除日志")
+    @ResponseBody
+    @RequestMapping(value = "/clearLog", method = RequestMethod.POST)
+    public ResponseBean clearSettingsLog() {
+        try {
+
+            int result;
+            int orgId = getLoginUser().getOrgId();
+            result = orgSystemLogService.clearSystemLogByOrgId(orgId, 30);
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
     }
 
     @Desc("数据库备份")

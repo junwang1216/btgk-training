@@ -6,6 +6,8 @@
 <%@ taglib uri="http://www.sports.com/tags/tag" prefix="layout" %>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_CSS%>">
+    <link href="Content/bower_components/jquery-timepicker-wvega/jquery.timepicker.css?v=${static_resource_version}" rel="stylesheet">
+    <link href="Content/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css?v=${static_resource_version}" rel="stylesheet">
     <link href="Content/css/jquery.steps.css?v=${static_resource_version}" rel="stylesheet">
     <style type="text/css">
         .form-control-label {
@@ -57,8 +59,9 @@
                                                     <select class="form-control" id="info_venue_id" name="venueId" data-val="true" data-val-required="请选择所属场馆">
                                                         <option value="">选择场馆</option>
                                                         <c:forEach var="venue" items="${orgVenuesList}">
-                                                            <option value="${venue.id}"
-                                                                    <c:if test="${orgClass.venueId == venue.id}">selected</c:if> >${venue.venueName}</option>
+                                                            <c:if test="${venue.status == 1}">
+                                                                <option value="${venue.id}" <c:if test="${orgClass.venueId == venue.id}">selected</c:if> >${venue.venueName}</option>
+                                                            </c:if>
                                                         </c:forEach>
                                                     </select>
                                                     <div data-valmsg-for="venueId" data-valmsg-replace="true"></div>
@@ -87,8 +90,9 @@
                                                             data-val="true" data-val-required="请选择授课内容">
                                                         <option value="">选择授课内容</option>
                                                         <c:forEach var="course" items="${orgCoursesList}">
-                                                            <option value="${course.id}"
-                                                                    <c:if test="${orgClass.courseId == course.id}">selected</c:if> >${course.courseName}</option>
+                                                            <c:if test="${course.status == 1}">
+                                                                <option value="${course.id}" <c:if test="${orgClass.courseId == course.id}">selected</c:if> >${course.courseName}</option>
+                                                            </c:if>
                                                         </c:forEach>
                                                     </select>
                                                     <div data-valmsg-for="courseId" data-valmsg-replace="true"></div>
@@ -102,8 +106,9 @@
                                                     <select class="form-control" id="info_coach_id" name="coachId" data-val="true" data-val-required="请选择负责教练">
                                                         <option value="">选择教练</option>
                                                         <c:forEach var="coach" items="${orgCoachesList}">
-                                                            <option value="${coach.id}"
-                                                                    <c:if test="${orgClass.coachId == coach.id}">selected</c:if> >${coach.realName}</option>
+                                                            <c:if test="${course.status == 1}">
+                                                                <option value="${coach.id}" <c:if test="${orgClass.coachId == coach.id}">selected</c:if> >${coach.realName}</option>
+                                                            </c:if>
                                                         </c:forEach>
                                                     </select>
                                                     <div data-valmsg-for="coachId" data-valmsg-replace="true"></div>
@@ -160,10 +165,10 @@
                                                     <span class="text-danger">*</span> 上课周期
                                                 </label>
                                                 <div class="col-md-3">
-                                                    <input type="text" class="form-control" placeholder="开始日期" id="class_schedule_startDate" name="startDate">
+                                                    <input type="text" class="form-control datepicker" placeholder="开始日期" id="class_schedule_startDate" name="startDate">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="text" class="form-control" placeholder="结束日期" id="class_schedule_endDate" name="endDate">
+                                                    <input type="text" class="form-control datepicker" placeholder="结束日期" id="class_schedule_endDate" name="endDate">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -179,10 +184,10 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" placeholder="开始时间" name="classWeekStartTime">
+                                                    <input type="text" class="form-control timepicker" placeholder="开始时间" name="classWeekStartTime">
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" placeholder="结束时间" name="classWeekEndTime">
+                                                    <input type="text" class="form-control timepicker" placeholder="结束时间" name="classWeekEndTime">
                                                 </div>
                                                 <div class="col-md-2">
                                                     <select class="form-control" name="classWeekCoachId">
@@ -206,13 +211,13 @@
                                         <div class="class-date-list" style="display: none;">
                                             <div class="form-group row">
                                                 <div class="offset-2 col-md-2">
-                                                    <input type="text" class="form-control" placeholder="上课日期" name="classDate">
+                                                    <input type="text" class="form-control datepicker" placeholder="上课日期" name="classDate">
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" placeholder="开始时间" name="classDateStartTime">
+                                                    <input type="text" class="form-control timepicker" placeholder="开始时间" name="classDateStartTime">
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <input type="text" class="form-control" placeholder="结束时间" name="classDateEndTime">
+                                                    <input type="text" class="form-control timepicker" placeholder="结束时间" name="classDateEndTime">
                                                 </div>
                                                 <div class="col-md-2">
                                                     <select class="form-control" name="classDateCoachId">

@@ -90,18 +90,47 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
         options: options
     });
 
-    var data = {
-        labels: labels,
+    /* 统计班级量 */
+    function totalClassCount(type) {
+        $(".total-class .dropdown-item[data-type='" + type + "']").addClass("active").siblings().removeClass("active");
+
+        $.getJSON('/admin/dashboard/class/total', {type: type}, function (res) {
+            var data = res.data;
+
+            if (res.code == 1) {
+                console.log(data);
+                $(".total-class .total-class-count").text(data.start + data.working + data.end);
+                $(".total-class .total-class-name").text(type == "year" ? "年班级数量（个）" : (type == "total" ? "总班级数量（个）" : "月班级数量（个）"));
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : "统计班级数量失败，请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+            }
+        });
+    }
+    totalClassCount("year");
+    $(".total-class").on("click", ".dropdown-item", function (e) {
+        e.preventDefault();
+
+        totalClassCount($(this).attr("data-type"));
+    });
+
+    var classNum = {
+        labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
         datasets: [
             {
-                label: 'My First dataset',
+                label: '班级数量',
                 backgroundColor: $.brandInfo,
                 borderColor: 'rgba(255,255,255,.55)',
-                data: [1, 18, 9, 17, 34, 22, 11]
-            },
+                data: [65, 59, 84, 84, 51, 55, 40, 65, 59, 84, 65, 59]
+            }
         ]
     };
-    var options = {
+    var classOpt = {
         maintainAspectRatio: false,
         legend: {
             display: false
@@ -114,7 +143,7 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
                 },
                 ticks: {
                     fontSize: 2,
-                    fontColor: 'transparent',
+                    fontColor: 'transparent'
                 }
 
             }],
@@ -123,9 +152,9 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
                 ticks: {
                     display: false,
                     min: Math.min.apply(Math, data.datasets[0].data) - 5,
-                    max: Math.max.apply(Math, data.datasets[0].data) + 5,
+                    max: Math.max.apply(Math, data.datasets[0].data) + 5
                 }
-            }],
+            }]
         },
         elements: {
             line: {
@@ -135,15 +164,14 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
             point: {
                 radius: 4,
                 hitRadius: 10,
-                hoverRadius: 4,
-            },
+                hoverRadius: 4
+            }
         }
     };
-    var ctx = $('#card-chart2');
-    var cardChart2 = new Chart(ctx, {
+    new Chart($('#total_class_chart'), {
         type: 'line',
-        data: data,
-        options: options
+        data: classNum,
+        options: classOpt
     });
 
     var options = {

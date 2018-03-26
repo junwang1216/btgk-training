@@ -62,9 +62,13 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         if ($(this).hasClass("class-item-selected")) {
             $(this).removeClass("class-item-selected");
         } else {
-            $(".class-item").removeClass("class-item-selected");
             $(this).addClass("class-item-selected");
         }
+
+        var total = 0;
+        $(".class-list").find(".class-item.class-item-selected").each(function (index, item) {
+            total += parseInt($(item).attr("data-price"));
+        })
 
         var classId = $(this).attr("data-id");
         var className = $(this).attr("data-name");
@@ -72,7 +76,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
 
         $("#class_id").val(classId);
         $("#class_name").val(className);
-        $("#class_balance").val(classPrice);
+        $("#class_balance").val(total);
     });
 
     // 保存分班

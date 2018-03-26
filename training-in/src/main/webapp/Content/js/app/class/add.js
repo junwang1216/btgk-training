@@ -7,6 +7,9 @@ requirejs.config({
         "pace"      : 'bower_components/pace/pace',
 
         "jquery.steps" : 'bower_components/jquery.steps/build/jquery.steps',
+        "timepicker"    : "bower_components/jquery-timepicker-wvega/jquery.timepicker",
+        "datepicker"    : "bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker",
+        "datepicker-zh" : "bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min",
         "alert"     : 'utils/jqueryAlert/alert/alert',
 
         "jquery.validate"              : 'bower_components/jquery.validation/dist/jquery.validate',
@@ -25,6 +28,15 @@ requirejs.config({
         "alert": {
             deps: ["jquery"]
         },
+        "timepicker": {
+            deps: ["jquery"]
+        },
+        "datepicker": {
+            deps: ["jquery", "bootstrap", "datepicker-zh"]
+        },
+        "datepicker-zh": {
+            deps: ["jquery"]
+        },
         "jquery.validate": {
             deps: ["jquery", "override"]
         },
@@ -36,7 +48,7 @@ requirejs.config({
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jquery.validate', 'jquery.validate.unobtrusive'], function ($, jqueryAlert) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jquery.validate', 'jquery.validate.unobtrusive', "timepicker", "datepicker-zh", "datepicker"], function ($, jqueryAlert) {
     'use strict';
 
     // 表单校验配置
@@ -45,6 +57,22 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jq
             ignore: ":hidden"
         });
     });
+
+    function setDatePicker() {
+        $('input.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true,
+            toggleActive: true,
+            language: "zh-CN",
+            daysOfWeekHighlighted: "0,6"
+        });
+        $('input.timepicker').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 30
+        });
+    }
 
     $("#class-steps").steps({
         headerTag: "h3",
@@ -96,6 +124,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jq
 
         $item.remove();
         $(".class-week-list").find(".form-group:last-child .class-week-add").show();
+        setDatePicker();
     });
 
     $(".class-week-list").on("click", ".class-week-add", function (e) {
@@ -106,6 +135,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jq
 
         $(".class-week-list").append($nextItem);
         $(this).hide();
+        setDatePicker();
     });
 
     $(".class-date-list").on("click", ".class-date-del", function (e) {
@@ -127,6 +157,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jq
 
         $item.remove();
         $(".class-date-list").find(".form-group:last-child .class-date-add").show();
+        setDatePicker();
     });
 
     $(".class-date-list").on("click", ".class-date-add", function (e) {
@@ -137,6 +168,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jq
 
         $(".class-date-list").append($nextItem);
         $(this).hide();
+        setDatePicker();
     });
 
     // 保存班级排期
@@ -298,6 +330,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "jquery.steps", 'jq
                 });
 
                 $("#class-steps").steps("next");
+                setDatePicker();
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',

@@ -24,6 +24,12 @@
   <delete id="deleteByOrgId" parameterType="java.lang.Integer">
     delete from org_system_log
     where orgId = #{orgId,jdbcType=INTEGER}
+    <if test="startTime != null">
+      and createTime &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and createTime &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
   </delete>
   <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgSystemLog">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -45,7 +51,7 @@
     order by createTIme desc
     limit #{start}, #{pageSize}
   </select>
-  <select id="queryAllLogCount" resultMap="BaseResultMap">
+  <select id="queryAllLogCount" resultType="java.lang.Integer">
     select count(*)
     from org_system_log
     where 1 = 1

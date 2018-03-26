@@ -61,7 +61,8 @@ public class StudentsController extends BaseController {
 
         modelAndView.addObject("conditions", orgStudentsRequest);
 
-        List<OrgClass> orgClassList = orgClassService.queryOrgClassList();
+        int orgClassCount = orgClassService.queryOrgClassCount(null, null);
+        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(null, null, 0, orgClassCount);
 
         List<OrgClassResponse> orgClassResponseList = new ArrayList<>();
         for (OrgClass orgClass : orgClassList) {
@@ -102,19 +103,24 @@ public class StudentsController extends BaseController {
 
             if (orgClassStudentsList.size() <= 0) {
                 orgStudentsResponse.setOrgClass(null);
+                orgStudentsResponse.setOrgClassList(null);
                 orgStudentsResponseList.add(orgStudentsResponse);
                 continue;
             }
 
             orgStudentsResponse.setOrgClass(null);
+            List<OrgClass> orgStudentsClassList = new ArrayList<>();
             for (OrgClassStudents orgClassStudents : orgClassStudentsList) {
                 OrgClass orgClass = orgClassService.getOrgClass(orgClassStudents.getClassId());
 
-                if (orgClass.getStatus() == ClassStatusEnum.STATUS_END.getCode()) {
-                    continue;
-                }
+                orgStudentsClassList.add(orgClass);
+
+//                if (orgClass.getStatus() == ClassStatusEnum.STATUS_END.getCode()) {
+//                    continue;
+//                }
 
                 orgStudentsResponse.setOrgClass(orgClass);
+                orgStudentsResponse.setOrgClassList(orgStudentsClassList);
                 orgStudentsResponseList.add(orgStudentsResponse);
                 break;
             }
@@ -149,7 +155,7 @@ public class StudentsController extends BaseController {
 
         ModelAndView modelAndView = new ModelAndView("Students/Add");
 
-        List<OrgClass> orgClassList = orgClassService.queryOrgClassList();
+        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(null, null, 0, 1000);
 
         List<OrgClassResponse> orgClassResponseList = new ArrayList<>();
         for (OrgClass orgClass : orgClassList) {

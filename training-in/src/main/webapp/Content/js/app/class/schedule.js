@@ -25,7 +25,7 @@ requirejs.config({
             deps: ["jquery"]
         },
         "datepicker": {
-            deps: ["jquery", "bootstrap"]
+            deps: ["jquery", "bootstrap", "datepicker-zh"]
         },
         "datepicker-zh": {
             deps: ["jquery"]
@@ -35,20 +35,25 @@ requirejs.config({
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "datepicker", "datepicker-zh"], function ($, jqueryAlert) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "datepicker-zh", "datepicker"], function ($, jqueryAlert) {
     'use strict';
 
-    $('input.datepicker').datepicker({
-        format: 'yyyy-dd-mm',
-        autoclose: true,
-        todayBtn: true,
-        todayHighlight: true,
-        language: "zh-CN"
-    });
-    $('input.timepicker').timepicker({
-        timeFormat: 'HH:mm',
-        interval: 30
-    });
+    function setDatePicker() {
+        $('input.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true,
+            toggleActive: true,
+            language: "zh-CN",
+            daysOfWeekHighlighted: "0,6"
+        });
+        $('input.timepicker').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 30
+        });
+    }
+    setDatePicker();
 
     $.postJSON = function(url, data, callback) {
         return $.ajax({
@@ -90,6 +95,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
 
         $item.remove();
         $(".class-week-list").find(".form-group:last-child .class-week-add").show();
+        setDatePicker();
     });
 
     $(".class-week-list").on("click", ".class-week-add", function (e) {
@@ -100,6 +106,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
 
         $(".class-week-list").append($nextItem);
         $(this).hide();
+        setDatePicker()
     });
 
     $(".class-date-list").on("click", ".class-date-del", function (e) {
@@ -121,6 +128,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
 
         $item.remove();
         $(".class-date-list").find(".form-group:last-child .class-date-add").show();
+        setDatePicker();
     });
 
     $(".class-date-list").on("click", ".class-date-add", function (e) {
@@ -131,6 +139,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
 
         $(".class-date-list").append($nextItem);
         $(this).hide();
+        setDatePicker();
     });
 
     // 保存班级排期

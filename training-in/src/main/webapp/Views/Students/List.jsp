@@ -90,18 +90,20 @@
                         <input type="hidden" id="class_id" name="classId">
                         <div class="class-list row">
                             <c:forEach var="item" items="${orgClassList}" varStatus="loop">
-                                <div class="col-md-4">
-                                    <div class="card">
-                                        <div class="card-body p-2 clearfix class-item"
-                                             data-id="${item.orgClass.id}"
-                                             data-name="${item.orgClass.className}"
-                                             data-price="${item.orgClass.classPrice}">
-                                            <i class="icon-sports ${item.orgSports.sportIcon} bg-primary p-4"></i>
-                                            <div class="mb-1 pt-1 font-weight-bold font-xs"> ${item.orgClass.className}</div>
-                                            <div class="text-muted font-weight-bold font-xs class-price p-2">${item.orgClass.classPrice}元</div>
+                                <c:if test="${item.orgClass.status != 3}">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <div class="card-body p-2 clearfix class-item"
+                                                 data-id="${item.orgClass.id}"
+                                                 data-name="${item.orgClass.className}"
+                                                 data-price="${item.orgClass.classPrice}">
+                                                <i class="icon-sports ${item.orgSports.sportIcon} bg-primary p-4"></i>
+                                                <div class="mb-1 pt-1 font-weight-bold font-xs"> ${item.orgClass.className}</div>
+                                                <div class="text-muted font-weight-bold font-xs class-price p-2">${item.orgClass.classPrice}元</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </c:if>
                             </c:forEach>
                         </div>
                         <div>
@@ -180,8 +182,7 @@
                                         <select class="form-control" id="user_class" name="classId">
                                             <option value="0">所在班级</option>
                                             <c:forEach var="item" items="${orgClassList}">
-                                                <option value="${item.orgClass.id}"
-                                                        <c:if test="${conditions.classId == item.orgClass.id}">selected</c:if> >${item.orgClass.className}</option>
+                                                <option value="${item.orgClass.id}" <c:if test="${conditions.classId == item.orgClass.id}">selected</c:if> >${item.orgClass.className}</option>
                                             </c:forEach>
                                         </select>
                                     </div>
@@ -224,9 +225,12 @@
                                             <tr data-id="${item.orgStudents.id}" <c:if test="${item.orgClass != null}">data-class="${item.orgClass.id}"</c:if> >
                                                 <td>${loop.index + 1}</td>
                                                 <td>${item.orgStudents.realName}</td>
-                                                <td>
-                                                    <c:if test="${item.orgClass != null}">${item.orgClass.className}</c:if>
-                                                    <c:if test="${item.orgClass == null}">--</c:if>
+                                                <td class="user-list-class">
+                                                    <c:forEach var="cls" items="${item.orgClassList}">
+                                                        <c:if test="${cls.status != 3}">
+                                                            <span data-class="${cls.id}">${cls.className}&nbsp;</span>
+                                                        </c:if>
+                                                    </c:forEach>
                                                 </td>
                                                 <td>${item.orgStudents.mobileSensitive}</td>
                                                 <td>${item.orgStudents.birthday}</td>

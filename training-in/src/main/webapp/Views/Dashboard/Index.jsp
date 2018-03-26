@@ -38,23 +38,24 @@
                 </div>
                 <!--/.col-->
 
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-3 total-class">
                     <div class="card card-inverse card-info">
                         <div class="card-block pb-0">
-                            <button type="button" class="btn btn-transparent active p-0 float-right">
-                                <i class="icon-location-pin"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#">当  日</a>
-                                <a class="dropdown-item" href="#">近一周</a>
-                                <a class="dropdown-item" href="#">近一月</a>
-                                <a class="dropdown-item" href="#">总  量</a>
+                            <div class="btn-group float-right">
+                                <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown">
+                                    <i class="icon-book-open"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="javascript:;" data-type="month">本  月</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="year">本  年</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="total">总  量</a>
+                                </div>
                             </div>
-                            <h4 class="mb-0">18</h4>
-                            <p>班级量（个）</p>
+                            <h4 class="mb-0 total-class-count">0</h4>
+                            <p class="total-class-name">年班级数量（个）</p>
                         </div>
-                        <div class="chart-wrapper px-3" style="height:70px;">
-                            <canvas id="card-chart2" class="chart" height="70"></canvas>
+                        <div class="chart-wrapper px-3" style="height: 70px;">
+                            <canvas id="total_class_chart" class="chart" height="70"></canvas>
                         </div>
                     </div>
                 </div>

@@ -21,4 +21,7 @@ public class OrgSystemLogRequest {
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
+
+    /** 条件检索 **/
+    // TODO
 }

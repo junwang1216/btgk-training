@@ -3,10 +3,13 @@ package com.training.in.response;
 import com.training.core.repo.po.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class OrgStudentsResponse implements Serializable {
 
     private OrgClass orgClass;
+
+    private List<OrgClass> orgClassList;
 
     private OrgStudents orgStudents;
 
@@ -19,6 +22,13 @@ public class OrgStudentsResponse implements Serializable {
     }
     public void setOrgClass(OrgClass orgClass) {
         this.orgClass = orgClass;
+    }
+
+    public List<OrgClass> getOrgClassList() {
+        return orgClassList;
+    }
+    public void setOrgClassList(List<OrgClass> orgClassList) {
+        this.orgClassList = orgClassList;
     }
 
     public OrgStudents getOrgStudents() {

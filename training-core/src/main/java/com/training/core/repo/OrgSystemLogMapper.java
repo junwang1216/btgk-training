@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OrgSystemLogMapper {
 
-    int deleteByOrgId(Integer orgId, Integer days);
+    int deleteByOrgId(@Param("orgId") Integer orgId, @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     int insert(OrgSystemLog record);
 
