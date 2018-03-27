@@ -4,6 +4,7 @@ public enum LogTypeEnum {
     LOG_TYPE_LOGIN(1, "运营账号登录"),
     LOG_TYPE_LOGOUT(2, "运营账号退出"),
     LOG_TYPE_VENUE_SETTINGS(3, "机构设置"),
+    LOG_TYPE_CLASS_SETTINGS(4, "班级管理"),
 
     LOG_TYPE_EXCEPTION(99, "日志类型错误"),
     ;

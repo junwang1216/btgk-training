@@ -126,63 +126,67 @@
                         <div class="card-footer text-right"></div>
                         <div class="card-block">
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item active">
-                                    <a class="nav-link">所有课时 <span class="badge badge-pill badge-danger">${orgClassScheduleAllList.size()}</span></a>
+                                <li class="nav-item <c:if test="${status == null}">active</c:if> ">
+                                    <a href="javascript:;" class="nav-link class-date-all">所有课时 <span class="badge badge-pill badge-danger">${orgClassScheduleAllList.size()}</span></a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">未上课 <span class="badge badge-pill badge-danger">${orgClassScheduleStartList.size()}</span></a>
+                                <li class="nav-item <c:if test="${status == 1}">active</c:if> ">
+                                    <a href="javascript:;" class="nav-link class-date-will">未上课 <span class="badge badge-pill badge-danger">${orgClassScheduleStartList.size()}</span></a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link">已上课 <span class="badge badge-pill badge-danger">${orgClassScheduleEndList.size()}</span></a>
+                                <li class="nav-item <c:if test="${status == 2}">active</c:if> ">
+                                    <a href="javascript:;" class="nav-link class-date-finished">已上课 <span class="badge badge-pill badge-danger">${orgClassScheduleEndList.size()}</span></a>
                                 </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active">
                                     <div class="row class-date-list">
-                                        <c:forEach var="schedule" items="${orgClassScheduleEndList}" varStatus="loop">
-                                            <c:if test="${!loop.last}">
+                                        <c:if test="${status == null || status == 2}">
+                                            <c:forEach var="schedule" items="${orgClassScheduleEndList}" varStatus="loop">
+                                                <c:if test="${!loop.last}">
+                                                    <div class="col-md-2">
+                                                        <div class="card text-white bg-success class-date"
+                                                             data-id="${schedule.classId}" data-date="${schedule.classDate}"
+                                                             data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="1"
+                                                             data-toggle="modal" data-target="#attendance_list">
+                                                            <div class="card-body text-center p-2">
+                                                                <div class="m-0">${orgClass.className}</div>
+                                                                <div class="h5 py-2 m-0">${schedule.classDate}</div>
+                                                                <small class="m-0">已签到：11人 | 已结课</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                                <c:if test="${loop.last}">
+                                                    <div class="col-md-2">
+                                                        <div class="card text-white bg-warning class-date"
+                                                             data-id="${schedule.classId}" data-date="${schedule.classDate}"
+                                                             data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="1"
+                                                             data-toggle="modal" data-target="#attendance_list">
+                                                            <div class="card-body text-center p-2">
+                                                                <div class="m-0">${orgClass.className}</div>
+                                                                <div class="h5 py-2 m-0">${schedule.classDate}</div>
+                                                                <small class="m-0">已签到：2人 | 已结课</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:if>
+                                        <c:if test="${status == null || status == 1}">
+                                            <c:forEach var="schedule" items="${orgClassScheduleStartList}" varStatus="loop">
                                                 <div class="col-md-2">
-                                                    <div class="card text-white bg-success class-date"
+                                                    <div class="card text-white bg-danger class-date"
                                                          data-id="${schedule.classId}" data-date="${schedule.classDate}"
-                                                         data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="1"
+                                                         data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="2"
                                                          data-toggle="modal" data-target="#attendance_list">
                                                         <div class="card-body text-center p-2">
                                                             <div class="m-0">${orgClass.className}</div>
                                                             <div class="h5 py-2 m-0">${schedule.classDate}</div>
-                                                            <small class="m-0">已签到：11人 | 已结课</small>
+                                                            <small class="m-0">预估签到：11人 | 未上课</small>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </c:if>
-                                            <c:if test="${loop.last}">
-                                                <div class="col-md-2">
-                                                    <div class="card text-white bg-warning class-date"
-                                                         data-id="${schedule.classId}" data-date="${schedule.classDate}"
-                                                         data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="1"
-                                                         data-toggle="modal" data-target="#attendance_list">
-                                                        <div class="card-body text-center p-2">
-                                                            <div class="m-0">${orgClass.className}</div>
-                                                            <div class="h5 py-2 m-0">${schedule.classDate}</div>
-                                                            <small class="m-0">已签到：2人 | 已结课</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:if>
-                                        </c:forEach>
-                                        <c:forEach var="schedule" items="${orgClassScheduleStartList}" varStatus="loop">
-                                            <div class="col-md-2">
-                                                <div class="card text-white bg-danger class-date"
-                                                     data-id="${schedule.classId}" data-date="${schedule.classDate}"
-                                                     data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="2"
-                                                     data-toggle="modal" data-target="#attendance_list">
-                                                    <div class="card-body text-center p-2">
-                                                        <div class="m-0">${orgClass.className}</div>
-                                                        <div class="h5 py-2 m-0">${schedule.classDate}</div>
-                                                        <small class="m-0">预估签到：11人 | 未上课</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
+                                            </c:forEach>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>

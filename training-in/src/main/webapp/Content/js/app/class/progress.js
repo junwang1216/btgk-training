@@ -184,4 +184,23 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
 
         __renderClassStudentsAttendance(classId, classDate, classStatus);
     });
+
+    // 查询课程上课进度
+    $(".class-date-all").on("click", function (e) {
+        e.preventDefault();
+
+        location.assign(location.href.replace(/&status=\d/, ""));
+    });
+
+    $(".class-date-will").on("click", function (e) {
+        e.preventDefault();
+
+        location.assign(location.href.replace(/&status=\d/, "") + "&status=1");
+    });
+
+    $(".class-date-finished").on("click", function (e) {
+        e.preventDefault();
+
+        location.assign(location.href.replace(/&status=\d/, "") + "&status=2");
+    });
 });

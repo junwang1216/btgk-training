@@ -4,6 +4,7 @@ import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.ClassStatusEnum;
+import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.enums.RoleEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
@@ -28,6 +29,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
+ * 设置班级信息
  * Created by wangjun on 2017/5/1.
  */
 @Controller
@@ -64,6 +66,8 @@ public class ClassController extends BaseController {
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
     }
+
+    /** 班级设置 **/
 
     @Desc("班级设置")
     @RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -144,7 +148,7 @@ public class ClassController extends BaseController {
         int total = orgClassService.queryOrgClassCount(orgClassQueryRequest.getClassName(), orgClassQueryRequest.getStatus());
         int start = orgClassQueryRequest.getPage() < 1 ? 0 : orgClassQueryRequest.getPage() - 1;
         int pageSize = 10;
-        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(orgClassQueryRequest.getClassName(), orgClassQueryRequest.getStatus(), start, pageSize);
+        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(orgClassQueryRequest.getClassName(), orgClassQueryRequest.getStatus(), start * pageSize, pageSize);
         List<OrgClassResponse> orgClassResponseList = new ArrayList<>();
         for (OrgClass orgClass : orgClassList) {
             OrgClassResponse orgClassResponse = new OrgClassResponse();
@@ -244,8 +248,18 @@ public class ClassController extends BaseController {
         modelAndView.addObject("orgClassSchedule", map);
         modelAndView.addObject("orgClassScheduleList", orgClassScheduleList);
 
-        int orgCoachesCount = orgCoachesService.queryOrgCoachesCount(null, null);
-        List<OrgCoaches> orgCoachesList = orgCoachesService.queryOrgCoachesList(null, null, 0, orgCoachesCount);
+
+        OrgCourses orgCourses = orgCoursesService.getOrgCourses(orgClass.getCourseId());
+        List<OrgSportsCoaches> orgSportsCoachesList = orgSportsCoachesService.queryOrgSportsCoachesList(orgCourses.getSportId(), 0);
+
+        List<OrgCoaches> orgCoachesList = new ArrayList<>();
+        for (OrgSportsCoaches orgSportsCoaches : orgSportsCoachesList) {
+            OrgCoaches orgCoaches = orgCoachesService.getOrgCoaches(orgSportsCoaches.getCoachId());
+
+            if (orgCoaches != null && orgCoaches.getStatus() == StatusEnum.STATUS_OK.getCode()) {
+                orgCoachesList.add(orgCoaches);
+            }
+        }
         modelAndView.addObject("orgCoachesList", orgCoachesList);
 
         return setModelAndView(modelAndView);
@@ -257,22 +271,22 @@ public class ClassController extends BaseController {
     public ResponseBean saveClass(OrgClass orgClass) {
         try {
 
-            int result;
-
             orgClass.setStatus(1);
             if (orgClass.getId() != null) {
                 orgClass.setUpdateTime(DateUtil.getNowDate());
-                result = orgClassService.saveOrgClass(orgClass);
+                orgClassService.saveOrgClass(orgClass);
             }
             else {
                 orgClass.setCreateTime(DateUtil.getNowDate());
                 orgClass.setUpdateTime(DateUtil.getNowDate());
                 orgClass.setStatus(ClassStatusEnum.STATUS_START.getCode());
-                result = orgClassService.addOrgClass(orgClass);
+                orgClassService.addOrgClass(orgClass);
             }
 
             Map<String, Object> map = new HashMap<>();
-            map.put("classId", result);
+            map.put("classId", orgClass.getId());
+
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "添加或者修改班级[" + orgClass.getClassName() + "]信息");
 
             return new ResponseBean(map);
         } catch (MessageException e) {
@@ -294,6 +308,9 @@ public class ClassController extends BaseController {
 
             orgClass.setUpdateTime(DateUtil.getNowDate());
             result = orgClassService.saveOrgClassStatus(orgClass);
+
+            OrgClass orgClass1 = orgClassService.getOrgClass(orgClass.getId());
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "切换班级[" + orgClass1.getClassName() + "]状态");
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
@@ -320,6 +337,9 @@ public class ClassController extends BaseController {
             }
             result = orgClassScheduleService.addOrgClassScheduleBatch(orgClassScheduleRequest.getOrgClassScheduleList());
 
+            OrgClass orgClass = orgClassService.getOrgClass(orgClassScheduleRequest.getClassId());
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "设置班级[" + orgClass.getClassName() + "]排期计划");
+
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -330,6 +350,8 @@ public class ClassController extends BaseController {
         }
     }
 
+    /** 其他班级设置 **/
+
     @Desc("班级评测")
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String renderClassTest() {
@@ -338,9 +360,11 @@ public class ClassController extends BaseController {
 
     @Desc("上课进度")
     @RequestMapping(value = "/progress", method = RequestMethod.GET)
-    public ModelAndView renderClassProgress(String classId) throws Exception {
+    public ModelAndView renderClassProgress(String classId, String status) throws Exception {
 
         ModelAndView modelAndView = new ModelAndView("Class/Progress");
+
+        modelAndView.addObject("status", status);
 
         if (classId == null) {
             return setModelAndView(modelAndView);

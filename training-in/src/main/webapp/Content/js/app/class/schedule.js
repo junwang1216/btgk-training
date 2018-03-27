@@ -25,17 +25,17 @@ requirejs.config({
             deps: ["jquery"]
         },
         "datepicker": {
-            deps: ["jquery", "bootstrap", "datepicker-zh"]
+            deps: ["jquery", "bootstrap"]
         },
         "datepicker-zh": {
-            deps: ["jquery"]
+            deps: ["jquery", "datepicker"]
         }
     },  // 依赖关系
     waitSeconds: 0,
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "datepicker-zh", "datepicker"], function ($, jqueryAlert) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "datepicker", "datepicker-zh"], function ($, jqueryAlert) {
     'use strict';
 
     function setDatePicker() {
@@ -46,7 +46,8 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
             todayHighlight: true,
             toggleActive: true,
             language: "zh-CN",
-            daysOfWeekHighlighted: "0,6"
+            daysOfWeekHighlighted: "0,6",
+            weekStart: 0
         });
         $('input.timepicker').timepicker({
             timeFormat: 'HH:mm',
