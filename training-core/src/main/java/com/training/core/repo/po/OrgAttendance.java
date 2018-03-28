@@ -14,7 +14,7 @@ public class OrgAttendance implements Serializable {
     private String inDate;
 
     /**
-     * 签到方 1：教练  2：学员
+     * 签到方 1：教练  3：学员
      */
     private Integer inRole;
 

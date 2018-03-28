@@ -12,6 +12,6 @@ public interface OrgAttendanceService {
 
     List<OrgAttendance> queryCoachSignLog(int coachId, int classId);
 
-    List<OrgAttendance> queryClassSignLog(int classId);
+    List<OrgAttendance> queryClassSignLog(int classId, int inRole);
 
 }

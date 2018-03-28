@@ -54,9 +54,14 @@ public class OrgClassSchedule implements Serializable {
     private String createTime;
 
     /**
-     * 签到
+     * 已经结课
      */
     private Integer hasSigned;
+
+    /**
+     * 签到学员人数
+     */
+    private Integer count;
 
     private static final long serialVersionUID = 1L;
 
@@ -146,5 +151,13 @@ public class OrgClassSchedule implements Serializable {
 
     public void setHasSigned(Integer hasSigned) {
         this.hasSigned = hasSigned;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }

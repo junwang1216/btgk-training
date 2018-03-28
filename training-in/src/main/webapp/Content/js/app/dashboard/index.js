@@ -273,7 +273,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
     /* 统计班级量 */
     var studentCharts = null;
     var studentOptions = {
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         legend: {
             display: false
         },
@@ -292,7 +292,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
         },
         elements: {
             point: {
-                radius: 0,
+                radius: 4,
                 hitRadius: 10,
                 hoverRadius: 4,
                 hoverBorderWidth: 3

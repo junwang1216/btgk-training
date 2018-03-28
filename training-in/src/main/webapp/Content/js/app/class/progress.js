@@ -52,9 +52,9 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
                         .replace("${studentSex}", item.orgStudents.sex == 1 ? "男" : "女")
                         .replace("${studentStatus}", item.orgAttendance ? "text-muted" : "text-danger");
 
-                    hasCloseClass = !!item.orgAttendanceCoach || classStatus == 2;
+                    hasCloseClass = !!item.orgAttendanceCoach;
 
-                    if (hasCloseClass) {
+                    if (hasCloseClass || classStatus == 3) {
                         listItem = listItem.replace("${studentAttendance}", item.orgAttendance ? "已上课" : "未上课");
                     } else {
                         listItem = listItem.replace("${studentAttendance}",
@@ -66,7 +66,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
 
                 $("#attendance_list .user-list tbody").html(list.join(""));
 
-                if (hasCloseClass) {
+                if (hasCloseClass || classStatus == 3) {
                     $("#attendance_list .close-class-date").hide();
                 } else {
                     $("#attendance_list .close-class-date").show();

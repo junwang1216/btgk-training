@@ -1,5 +1,6 @@
 package com.training.core.service.impl;
 
+import com.training.core.common.enums.RoleEnum;
 import com.training.core.repo.OrgAttendanceMapper;
 import com.training.core.repo.po.OrgAttendance;
 import com.training.core.service.OrgAttendanceService;
@@ -21,17 +22,17 @@ public class OrgAttendanceServiceImpl implements OrgAttendanceService {
 
     @Override
     public List<OrgAttendance> queryStudentSignLog(int studentId, int classId) {
-        return orgAttendanceMapper.queryUserSignLog(studentId, classId, 3);
+        return orgAttendanceMapper.queryUserSignLog(studentId, classId, RoleEnum.ROLE_STUDENT.getCode());
     }
 
     @Override
     public List<OrgAttendance> queryCoachSignLog(int coachId, int classId) {
-        return orgAttendanceMapper.queryUserSignLog(coachId, classId, 1);
+        return orgAttendanceMapper.queryUserSignLog(coachId, classId, RoleEnum.ROLE_COACH.getCode());
     }
 
     @Override
-    public List<OrgAttendance> queryClassSignLog(int classId) {
-        return orgAttendanceMapper.queryClassSignLog(classId, 3);
+    public List<OrgAttendance> queryClassSignLog(int classId, int inRole) {
+        return orgAttendanceMapper.queryClassSignLog(classId, inRole);
     }
 }
 

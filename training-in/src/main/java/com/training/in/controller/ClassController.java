@@ -360,6 +360,24 @@ public class ClassController extends BaseController {
         return "Class/Test";
     }
 
+    private int checkClassSign(List<OrgAttendance> orgAttendanceList, int userId, String inDate, int inRole) {
+        int total = 0;
+
+        for (OrgAttendance orgAttendance : orgAttendanceList) {
+            if (inRole == RoleEnum.ROLE_STUDENT.getCode()) {
+                if (orgAttendance.getInDate().equals(inDate) && orgAttendance.getInRole() == inRole) {
+                    total++;
+                }
+            } else if (inRole == RoleEnum.ROLE_COACH.getCode()) {
+                if (orgAttendance.getInDate().equals(inDate) && orgAttendance.getInRole() == inRole && orgAttendance.getInUserId() == userId) {
+                    total++;
+                }
+            }
+        }
+
+        return total;
+    }
+
     @Desc("上课进度")
     @RequestMapping(value = "/progress", method = RequestMethod.GET)
     public ModelAndView renderClassProgress(String classId, String status) throws Exception {
@@ -378,17 +396,36 @@ public class ClassController extends BaseController {
 
         modelAndView.addObject("orgClass", orgClass);
 
-        List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(Integer.parseInt(classId));
+        List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(orgClass.getId());
+        List<OrgAttendance> orgAttendanceListStudents = orgAttendanceService.queryClassSignLog(orgClass.getId(), RoleEnum.ROLE_STUDENT.getCode());
+        List<OrgAttendance> orgAttendanceListCoach = orgAttendanceService.queryClassSignLog(orgClass.getId(), RoleEnum.ROLE_COACH.getCode());
+        List<OrgClassStudents> orgClassStudentsList = orgClassStudentsService.queryOrgClassStudentsListByClassId(orgClass.getId());
 
         List<OrgClassSchedule> orgClassScheduleAllList = new ArrayList<>();
         List<OrgClassSchedule> orgClassScheduleStartList = new ArrayList<>();
         List<OrgClassSchedule> orgClassScheduleEndList = new ArrayList<>();
         for (OrgClassSchedule orgClassSchedule : orgClassScheduleList) {
             if (orgClassSchedule.getClassDate() != null) {
-                if (orgClassSchedule.getClassDate().compareTo(currentDate) <= 0) {
+                if (orgClass.getStatus() == ClassStatusEnum.STATUS_START.getCode()) {
+                    orgClassSchedule.setCount(orgClassStudentsList.size());
+
+                    orgClassScheduleStartList.add(orgClassSchedule);
+                } else if (orgClass.getStatus() == ClassStatusEnum.STATUS_END.getCode()) {
+                    orgClassSchedule.setHasSigned(checkClassSign(orgAttendanceListCoach, orgClassSchedule.getCoachId(), orgClassSchedule.getClassDate(), RoleEnum.ROLE_COACH.getCode()));
+                    orgClassSchedule.setCount(checkClassSign(orgAttendanceListStudents, 0, orgClassSchedule.getClassDate(), RoleEnum.ROLE_STUDENT.getCode()));
+
                     orgClassScheduleEndList.add(orgClassSchedule);
                 } else {
-                    orgClassScheduleStartList.add(orgClassSchedule);
+                    if (orgClassSchedule.getClassDate().compareTo(currentDate) <= 0) {
+                        orgClassSchedule.setHasSigned(checkClassSign(orgAttendanceListCoach, orgClassSchedule.getCoachId(), orgClassSchedule.getClassDate(), RoleEnum.ROLE_COACH.getCode()));
+                        orgClassSchedule.setCount(checkClassSign(orgAttendanceListStudents, 0, orgClassSchedule.getClassDate(), RoleEnum.ROLE_STUDENT.getCode()));
+
+                        orgClassScheduleEndList.add(orgClassSchedule);
+                    } else {
+                        orgClassSchedule.setCount(orgClassStudentsList.size());
+
+                        orgClassScheduleStartList.add(orgClassSchedule);
+                    }
                 }
 
                 orgClassScheduleAllList.add(orgClassSchedule);
@@ -405,10 +442,26 @@ public class ClassController extends BaseController {
                     orgClassSchedule1.setEndDate(orgClassSchedule.getEndDate());
                     orgClassSchedule1.setId(orgClassSchedule.getId());
 
-                    if (orgClassSchedule1.getClassDate().compareTo(currentDate) <= 0) {
-                        orgClassScheduleEndList.add(orgClassSchedule1);
-                    } else {
+                    if (orgClass.getStatus() == ClassStatusEnum.STATUS_START.getCode()) {
+                        orgClassSchedule1.setCount(orgClassStudentsList.size());
+
                         orgClassScheduleStartList.add(orgClassSchedule1);
+                    } else if (orgClass.getStatus() == ClassStatusEnum.STATUS_END.getCode()) {
+                        orgClassSchedule1.setHasSigned(checkClassSign(orgAttendanceListCoach, orgClassSchedule1.getCoachId(), orgClassSchedule1.getClassDate(), RoleEnum.ROLE_COACH.getCode()));
+                        orgClassSchedule1.setCount(checkClassSign(orgAttendanceListStudents, 0, orgClassSchedule1.getClassDate(), RoleEnum.ROLE_STUDENT.getCode()));
+
+                        orgClassScheduleEndList.add(orgClassSchedule);
+                    } else {
+                        if (orgClassSchedule1.getClassDate().compareTo(currentDate) <= 0) {
+                            orgClassSchedule1.setHasSigned(checkClassSign(orgAttendanceListCoach, orgClassSchedule1.getCoachId(), orgClassSchedule1.getClassDate(), RoleEnum.ROLE_COACH.getCode()));
+                            orgClassSchedule1.setCount(checkClassSign(orgAttendanceListStudents, 0, orgClassSchedule1.getClassDate(), RoleEnum.ROLE_STUDENT.getCode()));
+
+                            orgClassScheduleEndList.add(orgClassSchedule1);
+                        } else {
+                            orgClassSchedule1.setCount(orgClassStudentsList.size());
+
+                            orgClassScheduleStartList.add(orgClassSchedule1);
+                        }
                     }
 
                     orgClassScheduleAllList.add(orgClassSchedule1);
@@ -440,7 +493,7 @@ public class ClassController extends BaseController {
         return setModelAndView(modelAndView);
     }
 
-    @Desc("查询某管理员")
+    @Desc("查询班级签到")
     @ResponseBody
     @RequestMapping(value = "/getClassAttendance", method = RequestMethod.GET)
     public ResponseBean getClassAttendance(int classId, String classDate) {
@@ -498,7 +551,14 @@ public class ClassController extends BaseController {
         try {
             orgAttendance.setCreateTime(DateUtil.getNowDate());
 
+            OrgClass orgClass = orgClassService.getOrgClass(orgAttendance.getInClassID());
+            if (orgClass.getStatus() == ClassStatusEnum.STATUS_END.getCode() || orgClass.getStatus() == ClassStatusEnum.STATUS_START.getCode()) {
+                return new ResponseBean(false);
+            }
+
             int result = orgAttendanceService.toSignin(orgAttendance);
+
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), orgAttendance.getCreateTime() + "，班级[" + orgClass.getClassName() + "]签到");
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {

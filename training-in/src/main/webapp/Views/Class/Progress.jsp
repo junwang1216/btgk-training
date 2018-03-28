@@ -145,26 +145,40 @@
                                                     <div class="col-md-2">
                                                         <div class="card text-white bg-success class-date"
                                                              data-id="${schedule.classId}" data-date="${schedule.classDate}"
-                                                             data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="1"
+                                                             data-schedule="${schedule.id}" data-coach="${schedule.coachId}" data-status="${orgClass.status}"
                                                              data-toggle="modal" data-target="#attendance_list">
                                                             <div class="card-body text-center p-2">
                                                                 <div class="m-0">${orgClass.className}</div>
                                                                 <div class="h5 py-2 m-0">${schedule.classDate}</div>
-                                                                <small class="m-0">已签到：11人 | 已结课</small>
+                                                                <small class="m-0">已签到：${schedule.count}人 | ${schedule.hasSigned > 0 ? '已结课' : '未结课'}</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </c:if>
-                                                <c:if test="${loop.last}">
+                                                <c:if test="${loop.last && orgClass.status != 3}">
                                                     <div class="col-md-2">
                                                         <div class="card text-white bg-warning class-date"
                                                              data-id="${schedule.classId}" data-date="${schedule.classDate}"
-                                                             data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="1"
+                                                             data-schedule="${schedule.id}" data-coach="${schedule.coachId}" data-status="${orgClass.status}"
                                                              data-toggle="modal" data-target="#attendance_list">
                                                             <div class="card-body text-center p-2">
                                                                 <div class="m-0">${orgClass.className}</div>
                                                                 <div class="h5 py-2 m-0">${schedule.classDate}</div>
-                                                                <small class="m-0">已签到：2人 | 已结课</small>
+                                                                <small class="m-0">已签到：${schedule.count}人 | ${schedule.hasSigned > 0 ? '已结课' : '未结课'}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                                <c:if test="${loop.last && orgClass.status == 3}">
+                                                    <div class="col-md-2">
+                                                        <div class="card text-white bg-success class-date"
+                                                             data-id="${schedule.classId}" data-date="${schedule.classDate}"
+                                                             data-schedule="${schedule.id}" data-coach="${schedule.coachId}" data-status="${orgClass.status}"
+                                                             data-toggle="modal" data-target="#attendance_list">
+                                                            <div class="card-body text-center p-2">
+                                                                <div class="m-0">${orgClass.className}</div>
+                                                                <div class="h5 py-2 m-0">${schedule.classDate}</div>
+                                                                <small class="m-0">已签到：${schedule.count}人 | ${schedule.hasSigned > 0 ? '已结课' : '未结课'}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -176,12 +190,12 @@
                                                 <div class="col-md-2">
                                                     <div class="card text-white bg-danger class-date"
                                                          data-id="${schedule.classId}" data-date="${schedule.classDate}"
-                                                         data-schedule="${schedule.id}" data-coach="${orgClass.coachId}" data-status="2"
+                                                         data-schedule="${schedule.id}" data-coach="${schedule.coachId}" data-status="${orgClass.status}"
                                                          data-toggle="modal" data-target="#attendance_list">
                                                         <div class="card-body text-center p-2">
                                                             <div class="m-0">${orgClass.className}</div>
                                                             <div class="h5 py-2 m-0">${schedule.classDate}</div>
-                                                            <small class="m-0">预估签到：11人 | 未上课</small>
+                                                            <small class="m-0">学生人数：${schedule.count} | 未开始</small>
                                                         </div>
                                                     </div>
                                                 </div>
