@@ -11,9 +11,13 @@ public interface OrgClassStudentsMapper {
 
     int insert(OrgClassStudents record);
 
+    int delete(OrgClassStudents record);
+
     OrgClassStudents selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKey(OrgClassStudents record);
 
     List<OrgClassStudents> queryOrgClassStudentsList(@Param("classId") Integer classId, @Param("studentId") Integer studentId);
+
+    int totalAllStudentsCount(@Param("startTime") String startTime, @Param("endTime") String endTime);
 }

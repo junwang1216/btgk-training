@@ -100,27 +100,42 @@
             </div>
             <!--/.row-->
 
-            <div class="card">
+            <div class="card total-students">
                 <div class="card-block">
                     <div class="row">
-                        <div class="col-sm-5">
-                            <h4 class="card-title mb-0">学员数量（人）</h4>
-                            <div class="small text-muted">2017年05月</div>
+                        <div class="col-sm-6">
+                            <h4 class="card-title mb-0">学员数量（人）<span class="small text-muted total-students-date"></span></h4>
                         </div>
                         <!--/.col-->
-                        <div class="col-sm-7 hidden-sm-down">
-                            <button type="button" class="btn btn-primary float-right"><i class="icon-cloud-download"></i>
-                            </button>
-                            <div class="btn-toolbar float-right" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group mr-3" data-toggle="buttons" aria-label="First group">
+                        <div class="col-sm-6 hidden-sm-down">
+                            <div class="btn-toolbar float-right" role="toolbar">
+                                <div class="btn-group" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary">
-                                        <input type="radio" name="options" id="option1">日
+                                        <input type="radio" name="total_students_type" id="total_students_type1" value="prev_day">昨 日
+                                    </label>
+                                    <label class="btn btn-outline-secondary mr-3">
+                                        <input type="radio" name="total_students_type" id="total_students_type2" value="day">今 日
+                                    </label>
+
+                                    <%--<label class="btn btn-outline-secondary">--%>
+                                        <%--<input type="radio" name="total_students_type" id="total_students_type3" value="prev_week">上 周--%>
+                                    <%--</label>--%>
+                                    <%--<label class="btn btn-outline-secondary mr-3">--%>
+                                        <%--<input type="radio" name="total_students_type" id="total_students_type4" value="week">本 周--%>
+                                    <%--</label>--%>
+
+                                    <label class="btn btn-outline-secondary">
+                                        <input type="radio" name="total_students_type" id="total_students_type5" value="prev_month">上 月
+                                    </label>
+                                    <label class="btn btn-outline-secondary mr-3">
+                                        <input type="radio" name="total_students_type" id="total_students_type6" value="month">本 月
+                                    </label>
+
+                                    <label class="btn btn-outline-secondary">
+                                        <input type="radio" name="total_students_type" id="total_students_type7" value="prev_year">去 年
                                     </label>
                                     <label class="btn btn-outline-secondary active">
-                                        <input type="radio" name="options" id="option2" checked="">月
-                                    </label>
-                                    <label class="btn btn-outline-secondary">
-                                        <input type="radio" name="options" id="option3">年
+                                        <input type="radio" name="total_students_type" id="total_students_type8" value="year" checked="checked">今 年
                                     </label>
                                 </div>
                             </div>
@@ -129,44 +144,37 @@
                     </div>
                     <!--/.row-->
                     <div class="chart-wrapper" style="height:300px;margin-top:40px;">
-                        <canvas id="main-chart" class="chart" height="300"></canvas>
+                        <canvas id="total_students_chart" class="chart" height="300"></canvas>
                     </div>
                 </div>
                 <div class="card-footer">
                     <ul>
                         <li>
-                            <div class="text-muted">用户访问量</div>
-                            <strong>29.703 Users (40%)</strong>
+                            <div class="text-muted">学员总量（个）</div>
+                            <strong class="total-students-all"></strong>
                             <div class="progress progress-xs mt-2">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </li>
                         <li class="hidden-sm-down">
-                            <div class="text-muted">注册用户量</div>
-                            <strong>24.093 Users (20%)</strong>
+                            <div class="text-muted">已分班学员量（个）</div>
+                            <strong class="total-students-class"></strong>
                             <div class="progress progress-xs mt-2">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </li>
                         <li>
-                            <div class="text-muted">新学员量</div>
-                            <strong>78.706 Views (60%)</strong>
+                            <div class="text-muted">新增学员总量（个）</div>
+                            <strong class="total-students-create"></strong>
                             <div class="progress progress-xs mt-2">
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </li>
                         <li class="hidden-sm-down">
-                            <div class="text-muted">老学员量</div>
-                            <strong>22.123 Users (80%)</strong>
+                            <div class="text-muted">新增已分班学员量（个）</div>
+                            <strong class="total-students-create-class"></strong>
                             <div class="progress progress-xs mt-2">
-                                <div class="progress-bar bg-danger" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </li>
-                        <li class="hidden-sm-down">
-                            <div class="text-muted">转化率</div>
-                            <strong>40.15%</strong>
-                            <div class="progress progress-xs mt-2">
-                                <div class="progress-bar" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </li>
                     </ul>

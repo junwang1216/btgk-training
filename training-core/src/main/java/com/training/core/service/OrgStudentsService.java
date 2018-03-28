@@ -11,7 +11,13 @@ public interface OrgStudentsService {
 
     int saveOrgStudents(OrgStudents orgStudents);
 
-    List<OrgStudents> queryOrgStudentsList();
+    List<OrgStudents> queryOrgStudentsList(String realName, String mobile, Integer classId, Integer start, Integer pageSize);
+
+    int queryOrgStudentsListCount(String realName, String mobile, Integer classId);
+
+    int totalOrgStudentsCount(String startTime, String endTime);
+
+    List<OrgStudents> queryOrgStudentsListByDate(String startTime, String endTime);
 
     OrgStudents getOrgStudents(Integer id);
 

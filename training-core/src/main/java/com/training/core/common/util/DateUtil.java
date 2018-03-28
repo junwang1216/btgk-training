@@ -48,21 +48,27 @@ public class DateUtil {
 		return dateList;
 	}
 
-    // 获取每月的日期
+    // 获取月的日期YYYYMMDD
     public static List<String> getMonthDate(String dateStr) {
         List<String> dateList = new ArrayList<String>();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
+        try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = sdf.parse(dateStr);
 
-        cal.setTime(cal.getTime());
-        cal.set(Calendar.DATE, 1);
+			Calendar calendar = sdf.getCalendar();
+			calendar.set(Calendar.DATE, 1);
 
-        int month = cal.get(Calendar.MONTH);
-        while(cal.get(Calendar.MONTH) == month){
-            dateList.add(sdf.format(cal.getTime()));
-            cal.add(Calendar.DATE, 1);
-        }
+			int month = calendar.get(Calendar.MONTH);
+
+			while(calendar.get(Calendar.MONTH) == month){
+				dateList.add(sdf.format(calendar.getTime()));
+				calendar.add(Calendar.DATE, 1);
+			}
+
+		} catch (Exception e) {
+        	;
+		}
 
         return dateList;
     }
@@ -360,7 +366,7 @@ public class DateUtil {
         return dateToString(cal.getTime(), YYYYMMDDHHMMSS);
     }  
   
-    // 获得本月最后一天24点时间  
+    // 获得本月最后一天24点时间
     public static String getTimesMonthnight() {  
         Calendar cal = Calendar.getInstance();  
         cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);  
@@ -443,7 +449,7 @@ public class DateUtil {
 		Date date = addDate(new Date(), 2);
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
-		System.out.println( calendar.getActualMaximum(Calendar.DATE));
+		System.out.println(getMonthDate("2018-04-01"));
 
 		/*System.out.println(getWeekTimes(addDate(new Date(), -1)));
 		System.out.println(dateToString(addDate(new Date(), -1), YYYYMMDD));

@@ -25,8 +25,18 @@ public class OrgClassStudentsServiceImpl implements OrgClassStudentsService {
     }
 
     @Override
+    public int totalAllStudentsCount(String startTime, String endTime) {
+        return orgClassStudentsMapper.totalAllStudentsCount(startTime, endTime);
+    }
+
+    @Override
     public int addOrgClassStudents(OrgClassStudents orgClassStudents) {
         return orgClassStudentsMapper.insert(orgClassStudents);
+    }
+
+    @Override
+    public int delOrgClassStudents(OrgClassStudents orgClassStudents) {
+        return orgClassStudentsMapper.delete(orgClassStudents);
     }
 
 }

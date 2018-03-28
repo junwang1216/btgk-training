@@ -88,6 +88,7 @@
                     <form id="class_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                         <input type="hidden" id="class_student_id" name="studentId">
                         <input type="hidden" id="class_id" name="classId">
+                        <input type="hidden" id="class_ids" name="classIds">
                         <div class="class-list row">
                             <c:forEach var="item" items="${orgClassList}" varStatus="loop">
                                 <c:if test="${item.orgClass.status != 3}">
@@ -99,36 +100,44 @@
                                                  data-price="${item.orgClass.classPrice}">
                                                 <i class="icon-sports ${item.orgSports.sportIcon} bg-primary p-4"></i>
                                                 <div class="mb-1 pt-1 font-weight-bold font-xs"> ${item.orgClass.className}</div>
-                                                <div class="text-muted font-weight-bold font-xs class-price p-2">${item.orgClass.classPrice}元</div>
+                                                <div class="text-muted font-weight-bold font-xs class-price p-2">
+                                                    <c:if test="${item.orgClass.status == 1}"><i class="fa fa-battery-empty" title="已开班"></i></c:if>
+                                                    <c:if test="${item.orgClass.status == 2}"><i class="fa fa-battery-half" title="上课中"></i></c:if>
+                                                    &nbsp;${item.orgClass.classPrice}元
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </c:if>
                             </c:forEach>
                         </div>
-                        <div>
-                            <div class="form-group row">
-                                <label class="col-md-4 form-control-label">
-                                    <span class="text-danger">*</span> 所选班级
-                                </label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="txtClass" id="class_name" disabled placeholder="所分配的班级">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-md-4 form-control-label">
-                                    <span class="text-danger">*</span> 支付金额
-                                </label>
-                                <div class="col-md-8">
-                                    <input type="text" class="form-control" name="txtClassBalance" id="class_balance" disabled placeholder="需支付的金额（元）">
-                                </div>
-                            </div>
-                        </div>
+                        <%--<div>--%>
+                            <%--<div class="form-group row">--%>
+                                <%--<label class="col-md-4 form-control-label">--%>
+                                    <%--<span class="text-danger">*</span> 所选班级--%>
+                                <%--</label>--%>
+                                <%--<div class="col-md-8">--%>
+                                    <%--<input type="text" class="form-control" name="txtClass" id="class_name" disabled placeholder="所分配的班级">--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                            <%--<div class="form-group row">--%>
+                                <%--<label class="col-md-4 form-control-label">--%>
+                                    <%--<span class="text-danger">*</span> 支付金额--%>
+                                <%--</label>--%>
+                                <%--<div class="col-md-8">--%>
+                                    <%--<input type="text" class="form-control" name="txtClassBalance" id="class_balance" disabled placeholder="需支付的金额（元）">--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <span class="text-danger pay-note"></span>
                     <button type="button" class="btn btn-sm btn-primary save-class">
-                        <i class="fa fa-check"></i> 确 认
+                        <i class="fa fa-check"></i> 确认去支付
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger save-class-recharge" style="display: none">
+                        <i class="fa fa-check"></i> 确认去退费
                     </button>
                 </div>
             </div>
@@ -199,77 +208,70 @@
                         </div>
                         <div class="card-footer text-right"></div>
                         <div class="card-block">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item active"><a class="nav-link">所有学员</a></li>
-                                <li class="nav-item"><a class="nav-link">未分班</a></li>
-                                <li class="nav-item"><a class="nav-link">已分班</a></li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active">
-                                    <table class="table table-striped table-sm user-list">
-                                        <thead>
-                                        <tr>
-                                            <th>##</th>
-                                            <th>学员姓名</th>
-                                            <th>所在班级</th>
-                                            <th>手机号码</th>
-                                            <th>出生日期</th>
-                                            <th>性别</th>
-                                            <th>身高(cm)</th>
-                                            <th>体重(kg)</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="item" items="${orgStudentsList}" varStatus="loop">
-                                            <tr data-id="${item.orgStudents.id}" <c:if test="${item.orgClass != null}">data-class="${item.orgClass.id}"</c:if> >
-                                                <td>${loop.index + 1}</td>
-                                                <td>${item.orgStudents.realName}</td>
-                                                <td class="user-list-class">
-                                                    <c:forEach var="cls" items="${item.orgClassList}">
-                                                        <c:if test="${cls.status != 3}">
-                                                            <span data-class="${cls.id}">${cls.className}&nbsp;</span>
-                                                        </c:if>
-                                                    </c:forEach>
-                                                </td>
-                                                <td>${item.orgStudents.mobileSensitive}</td>
-                                                <td>${item.orgStudents.birthday}</td>
-                                                <td>
-                                                    <c:if test="${item.orgStudents.sex == 1}">
-                                                        <i class="fa fa-mars"></i> 男
-                                                    </c:if>
-                                                    <c:if test="${item.orgStudents.sex == 2}">
-                                                        <i class="fa fa-venus"></i> 女
-                                                    </c:if>
-                                                </td>
-                                                <td>${item.orgStudents.height}</td>
-                                                <td>${item.orgStudents.weight}</td>
-                                                <td>
-                                                    <a href="/admin/students/edit?studentId=${item.orgStudents.id}" class="btn btn-sm btn-primary user-refresh" title="重新编辑">
-                                                        <i class="fa fa-pencil"></i> 修改
-                                                    </a>
-                                                    <a href="javascript:" class="btn btn-sm btn-danger user-class" title="分班"
-                                                       data-target="#class_students" data-toggle="modal">
-                                                        <i class="fa fa-sitemap"></i> 分班
-                                                    </a>
-                                                    <%--<a href="#" class="btn btn-sm btn-danger user-recharge" title="缴费金额"--%>
-                                                       <%--data-target="#user_recharge" data-toggle="modal">--%>
-                                                        <%--<i class="fa fa-jpy"></i> 缴费--%>
-                                                    <%--</a>--%>
-                                                    <c:if test="${item.orgClass != null && item.orgClass.status != 3}">
-                                                        <a href="javascript:" class="btn btn-sm btn-warning user-recharge" title="退费金额">
-                                                            <i class="fa fa-money"></i> 退费
-                                                        </a>
-                                                    </c:if>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                    </table>
-                                    <div>
-                                        <%@ include file="../Shared/Pagination.jsp" %>
-                                    </div>
-                                </div>
+                            <table class="table table-striped table-sm user-list">
+                                <thead>
+                                <tr>
+                                    <th>##</th>
+                                    <th>学员姓名</th>
+                                    <th>所在班级</th>
+                                    <th>手机号码</th>
+                                    <th>出生日期</th>
+                                    <th>性别</th>
+                                    <th>身高(cm)</th>
+                                    <th>体重(kg)</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <c:forEach var="item" items="${orgStudentsList}" varStatus="loop">
+                                    <tr data-id="${item.orgStudents.id}" <c:if test="${item.orgClass != null}">data-class="${item.orgClass.id}"</c:if> >
+                                        <td>${loop.index + 1}</td>
+                                        <td>${item.orgStudents.realName}</td>
+                                        <td class="user-list-class">
+                                            <c:forEach var="cls" items="${item.orgClassList}">
+                                                <c:if test="${cls.status != 3}">
+                                                    <a href="/admin/class/list?className=${cls.className}" data-class="${cls.id}">${cls.className}</a>&nbsp;
+                                                </c:if>
+                                                <%--<c:if test="${cls.status == 3}">--%>
+                                                    <%--<span data-class="${cls.id}">${cls.className}</span>&nbsp;--%>
+                                                <%--</c:if>--%>
+                                            </c:forEach>
+                                        </td>
+                                        <td>${item.orgStudents.mobileSensitive}</td>
+                                        <td>${item.orgStudents.birthday}</td>
+                                        <td>
+                                            <c:if test="${item.orgStudents.sex == 1}">
+                                                <i class="fa fa-mars"></i> 男
+                                            </c:if>
+                                            <c:if test="${item.orgStudents.sex == 2}">
+                                                <i class="fa fa-venus"></i> 女
+                                            </c:if>
+                                        </td>
+                                        <td>${item.orgStudents.height}</td>
+                                        <td>${item.orgStudents.weight}</td>
+                                        <td>
+                                            <a href="/admin/students/edit?studentId=${item.orgStudents.id}" class="btn btn-sm btn-primary user-refresh" title="重新编辑">
+                                                <i class="fa fa-pencil"></i> 修改
+                                            </a>
+                                            <a href="javascript:" class="btn btn-sm btn-danger user-class" title="分班"
+                                               data-target="#class_students" data-toggle="modal">
+                                                <i class="fa fa-sitemap"></i> 分班
+                                            </a>
+                                                <%--<a href="#" class="btn btn-sm btn-danger user-recharge" title="缴费金额"--%>
+                                                <%--data-target="#user_recharge" data-toggle="modal">--%>
+                                                <%--<i class="fa fa-jpy"></i> 缴费--%>
+                                                <%--</a>--%>
+                                            <a href="javascript:" class="btn btn-sm btn-warning user-recharge" title="退费金额"
+                                               data-target="#class_students" data-toggle="modal">
+                                                <i class="fa fa-money"></i> 退费
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                            <div>
+                                <%@ include file="../Shared/Pagination.jsp" %>
                             </div>
                         </div>
                     </div>

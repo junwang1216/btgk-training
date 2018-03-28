@@ -26,13 +26,6 @@ requirejs.config({
 require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jqueryAlert) {
     'use strict';
 
-    // 表单校验配置
-    /*$(document).ready(function () {
-        $('#login_form').validate({
-            ignore: ":hidden"
-        });
-    });*/
-
     $.postJSON = function(url, data, callback) {
         return $.ajax({
             'type' : 'POST',
@@ -48,10 +41,41 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         var classId = $(this).parents("tr").attr("data-class");
 
         $("#class_student_id").val($(this).parents("tr").attr("data-id"));
+        $("#class_students .class-item").removeClass("class-item-selected");
+        $("#class_students .class-list .col-md-4").show();
+
+        $("#class_students .save-class").show();
+        $("#class_students .save-class-recharge").hide();
+
+        var classIds = $(this).parents("tr").find(".user-list-class a");
+        for (var i = 0; i < classIds.length; i++) {
+            $("#class_students .class-item[data-id='" + classIds.eq(i).attr("data-class") + "']").parents(".col-md-4").hide();
+        }
 
         if (!!classId) {
-            $(".class-item").removeClass("class-item-selected");
-            $(".class-item[data-id='" + classId + "']").addClass("class-item-selected");
+            // $(".class-item").removeClass("class-item-selected");
+            // $(".class-item[data-id='" + classId + "']").addClass("class-item-selected");
+        }
+    });
+
+    $(".user-list").on("click", ".user-recharge", function () {
+        var classId = $(this).parents("tr").attr("data-class");
+
+        $("#class_student_id").val($(this).parents("tr").attr("data-id"));
+        $("#class_students .class-item").removeClass("class-item-selected");
+        $("#class_students .class-list .col-md-4").hide();
+
+        var classIds = $(this).parents("tr").find(".user-list-class a");
+        for (var i = 0; i < classIds.length; i++) {
+            $("#class_students .class-item[data-id='" + classIds.eq(i).attr("data-class") + "']").parents(".col-md-4").show();
+        }
+
+        $(".save-class").hide();
+        $(".save-class-recharge").show();
+
+        if (!!classId) {
+            // $(".class-item").removeClass("class-item-selected");
+            // $(".class-item[data-id='" + classId + "']").addClass("class-item-selected");
         }
     });
 
@@ -66,17 +90,22 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         }
 
         var total = 0;
+        var classIds = [];
         $(".class-list").find(".class-item.class-item-selected").each(function (index, item) {
             total += parseInt($(item).attr("data-price"));
-        })
+            classIds.push($(item).attr("data-id"));
+        });
 
-        var classId = $(this).attr("data-id");
-        var className = $(this).attr("data-name");
-        var classPrice = $(this).attr("data-price");
+        //var classId = $(this).attr("data-id");
+        //var className = $(this).attr("data-name");
+        //var classPrice = $(this).attr("data-price");
 
-        $("#class_id").val(classId);
-        $("#class_name").val(className);
-        $("#class_balance").val(total);
+        //$("#class_id").val(classId);
+        //$("#class_name").val(className);
+        //$("#class_balance").val(total);
+
+        $("#class_ids").val(classIds.join(","));
+        $(".pay-note").text("已选择班级" + classIds.length + "个，总计金额" + total + "元");
     });
 
     // 保存分班
@@ -84,9 +113,17 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         e.preventDefault();
 
         var $form = $("#class_form");
-        var conditions = $form.serialize();
+        var conditions = {
+            studentId: $("#class_student_id").val(),
+            classIds: $("#class_ids").val(),
+            state: true
+        };
 
-        if (!$("#class_id").val().trim()) {
+        if ($form.attr("submitting") == "submitting") {
+            return false;
+        }
+
+        if (!$("#class_ids").val().trim()) {
             jqueryAlert({
                 'icon'      : '/Content/images/icon-error.png',
                 'content'   : "请选择班级",
@@ -97,7 +134,9 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
             return false;
         }
 
-        $.post('/admin/students/saveClassStudents', conditions, function (res) {
+        $form.attr("submitting", "submitting");
+
+        $.postJSON('/admin/students/saveClassStudents', conditions, function (res) {
             $form.attr("submitting", "");
 
             if (res.code == 1) {
@@ -115,7 +154,62 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "保存学生失败, 请稍后重试",
+                    'content'   : "学生分班失败, 请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+            }
+        });
+    });
+
+    // 保存分班退费
+    $(".save-class-recharge").on("click", function (e) {
+        e.preventDefault();
+
+        var $form = $("#class_form");
+        var conditions = {
+            studentId: $("#class_student_id").val(),
+            classIds: $("#class_ids").val(),
+            state: false
+        };
+
+        if ($form.attr("submitting") == "submitting") {
+            return false;
+        }
+
+        if (!$("#class_ids").val().trim()) {
+            jqueryAlert({
+                'icon'      : '/Content/images/icon-error.png',
+                'content'   : "请选择班级",
+                'closeTime' : 2000,
+                'modal'        : true,
+                'isModalClose' : true
+            });
+            return false;
+        }
+
+        $form.attr("submitting", "submitting");
+
+        $.postJSON('/admin/students/saveClassStudents', conditions, function (res) {
+            $form.attr("submitting", "");
+
+            if (res.code == 1) {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-ok.png',
+                    'content'   : "学员退费成功",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : "学生退费失败, 请稍后重试",
                     'closeTime' : 2000,
                     'modal'        : true,
                     'isModalClose' : true

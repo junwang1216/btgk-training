@@ -10,6 +10,10 @@ public interface OrgClassStudentsService {
 
     List<OrgClassStudents> queryOrgClassStudentsListByClassId(Integer classId);
 
+    int totalAllStudentsCount(String startTime, String endTime);
+
     int addOrgClassStudents(OrgClassStudents orgClassStudents);
+
+    int delOrgClassStudents(OrgClassStudents orgClassStudents);
 
 }

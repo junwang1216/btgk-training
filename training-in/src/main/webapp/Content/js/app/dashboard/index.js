@@ -7,6 +7,8 @@ requirejs.config({
         "pace"      : 'bower_components/pace/pace',
         "chart"     : 'bower_components/chart.js/dist/Chart',
 
+        "alert"     : 'utils/jqueryAlert/alert/alert',
+
         "base"      : 'js/widgets/base',
         "override"  : 'js/widgets/override'
     },
@@ -14,13 +16,16 @@ requirejs.config({
         "bootstrap": {
             deps: ["jquery", "override"],
             exports: "bootstrap"
-        }
+        },
+        "alert": {
+            deps: ["jquery"]
+        },
     },  // 依赖关系
     waitSeconds: 0,
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function ($, Chart) {
+require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], function ($, jqueryAlert, Chart) {
     'use strict';
 
     function convertHex(hex, opacity) {
@@ -173,6 +178,7 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
         data: classNum,
         options: classOpt
     });
+    //end
 
     var options = {
         maintainAspectRatio: false,
@@ -263,50 +269,10 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
         options: options
     });
 
-    //Main Chart
-    var elements = 27;
-    var data1 = [];
-    var data2 = [];
-    var data3 = [];
-
-    for (var i = 0; i <= elements; i++) {
-        data1.push(random(50, 200));
-        data2.push(random(80, 100));
-        data3.push(65);
-    }
-
-    var data = {
-        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S', 'M', 'T', 'W', 'T', 'F', 'S', 'S'],
-        datasets: [
-            {
-                label: 'My First dataset',
-                backgroundColor: convertHex($.brandInfo, 10),
-                borderColor: $.brandInfo,
-                pointHoverBackgroundColor: '#fff',
-                borderWidth: 2,
-                data: data1
-            },
-            {
-                label: 'My Second dataset',
-                backgroundColor: 'transparent',
-                borderColor: $.brandSuccess,
-                pointHoverBackgroundColor: '#fff',
-                borderWidth: 2,
-                data: data2
-            },
-            {
-                label: 'My Third dataset',
-                backgroundColor: 'transparent',
-                borderColor: $.brandDanger,
-                pointHoverBackgroundColor: '#fff',
-                borderWidth: 1,
-                borderDash: [8, 5],
-                data: data3
-            }
-        ]
-    };
-
-    var options = {
+    /*统计学员数量*/
+    /* 统计班级量 */
+    var studentCharts = null;
+    var studentOptions = {
         maintainAspectRatio: false,
         legend: {
             display: false
@@ -314,15 +280,13 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
         scales: {
             xAxes: [{
                 gridLines: {
-                    drawOnChartArea: false,
+                    drawOnChartArea: false
                 }
             }],
             yAxes: [{
                 ticks: {
                     beginAtZero: true,
-                    maxTicksLimit: 5,
-                    stepSize: Math.ceil(250 / 5),
-                    max: 250
+                    maxTicksLimit: 5
                 }
             }]
         },
@@ -331,72 +295,58 @@ require(['jquery', 'chart', 'bootstrap', 'pace', 'base', 'override'], function (
                 radius: 0,
                 hitRadius: 10,
                 hoverRadius: 4,
-                hoverBorderWidth: 3,
-            }
-        },
-    };
-    var ctx = $('#main-chart');
-    var mainChart = new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: options
-    });
-
-
-    //Social Box Charts
-    var labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-    var options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-            display: false,
-        },
-        scales: {
-            xAxes: [{
-                display: false,
-            }],
-            yAxes: [{
-                display: false,
-            }]
-        },
-        elements: {
-            point: {
-                radius: 0,
-                hitRadius: 10,
-                hoverRadius: 4,
-                hoverBorderWidth: 3,
+                hoverBorderWidth: 3
             }
         }
     };
+    function totalStudentsCount(type) {
+        $.getJSON('/admin/dashboard/students/total', {type: type}, function (res) {
+            var data = res.data;
 
-    var data1 = {
-        labels: labels,
-        datasets: [{
-            backgroundColor: 'rgba(255,255,255,.1)',
-            borderColor: 'rgba(255,255,255,.55)',
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: [65, 59, 84, 84, 51, 55, 40]
-        }]
-    };
-    var ctx = $('#social-box-chart-1');
-    var socialBoxChart1 = new Chart(ctx, {
-        type: 'line',
-        data: data1,
-        options: options
-    });
+            if (res.code == 1) {
+                $(".total-students-date").text(data.startTime + " 至 " + data.endTime);
+                $(".total-students-all").text(data.total + " Users");
+                $(".total-students-class").text(data.totalCreate + " Users");
+                $(".total-students-create").text(data.totalCurrent + " Users");
+                $(".total-students-create-class").text(data.totalCreateCurrent + " Users");
 
-    var data2 = {
-        labels: labels,
-        datasets: [
-            {
-                backgroundColor: 'rgba(255,255,255,.1)',
-                borderColor: 'rgba(255,255,255,.55)',
-                pointHoverBackgroundColor: '#fff',
-                borderWidth: 2,
-                data: [1, 13, 9, 17, 34, 41, 38]
+                var studentTotalNum = {
+                    labels: data.labelList,
+                    datasets: [
+                        {
+                            label: '学员数量',
+                            backgroundColor: $.brandInfo,
+                            borderColor: 'rgba(255,255,255,.55)',
+                            data: data.valueList
+                        }
+                    ]
+                };
+
+                if (!studentCharts) {
+                    studentCharts = new Chart($('#total_students_chart'), {
+                        type: 'line',
+                        data: studentTotalNum,
+                        options: studentOptions
+                    });
+                } else {
+                    studentCharts.data = studentTotalNum;
+                    studentCharts.update();
+                }
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : "统计学员数量失败，请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
             }
-        ]
-    };
+        });
+    }
+    totalStudentsCount("year");
+    $(".total-students [name='total_students_type']").on("change", function (e) {
+        e.preventDefault();
+
+        totalStudentsCount($(".total-students input[name='total_students_type']:checked").val());
+    });
 });

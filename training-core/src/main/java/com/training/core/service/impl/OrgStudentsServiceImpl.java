@@ -26,8 +26,23 @@ public class OrgStudentsServiceImpl implements OrgStudentsService {
     }
 
     @Override
-    public List<OrgStudents> queryOrgStudentsList() {
-        return orgStudentsMapper.queryAll(null, null, null, null);
+    public List<OrgStudents> queryOrgStudentsList(String realName, String mobile, Integer classId, Integer start, Integer pageSize) {
+        return orgStudentsMapper.queryAll(realName, mobile, start, pageSize);
+    }
+
+    @Override
+    public int queryOrgStudentsListCount(String realName, String mobile, Integer classId) {
+        return orgStudentsMapper.queryAllCount(realName, mobile);
+    }
+
+    @Override
+    public int totalOrgStudentsCount(String startTime, String endTime) {
+        return orgStudentsMapper.totalAllCount(startTime, endTime);
+    }
+
+    @Override
+    public List<OrgStudents> queryOrgStudentsListByDate(String startTime, String endTime) {
+        return orgStudentsMapper.queryAllByDate(startTime, endTime);
     }
 
     @Override

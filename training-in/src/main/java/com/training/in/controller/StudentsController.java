@@ -4,15 +4,18 @@ import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.ClassStatusEnum;
+import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
 import com.training.core.common.util.Page;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
+import com.training.in.request.OrgClassStudentsRequest;
 import com.training.in.request.OrgStudentsRequest;
 import com.training.in.response.OrgClassResponse;
 import com.training.in.response.OrgStudentsResponse;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 学生管理
  * Created by wangjun on 2017/5/1.
  */
 @Controller
@@ -92,7 +96,10 @@ public class StudentsController extends BaseController {
             orgStudentsRequest.setStudentIds(studentIds);
         }
 
-        List<OrgStudents> orgStudentsList = orgStudentsService.queryOrgStudentsList();
+        int total = orgStudentsService.queryOrgStudentsListCount(orgStudentsRequest.getRealName(), orgStudentsRequest.getMobile(), orgStudentsRequest.getClassId());
+        int start = orgStudentsRequest.getPage() < 1 ? 0 : orgStudentsRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgStudents> orgStudentsList = orgStudentsService.queryOrgStudentsList(orgStudentsRequest.getRealName(), orgStudentsRequest.getMobile(), orgStudentsRequest.getClassId(), start * pageSize, pageSize);
 
         List<OrgStudentsResponse> orgStudentsResponseList = new ArrayList<>();
         for (OrgStudents orgStudents : orgStudentsList) {
@@ -120,16 +127,14 @@ public class StudentsController extends BaseController {
 //                }
 
                 orgStudentsResponse.setOrgClass(orgClass);
-                orgStudentsResponse.setOrgClassList(orgStudentsClassList);
-                orgStudentsResponseList.add(orgStudentsResponse);
-                break;
             }
+            orgStudentsResponse.setOrgClassList(orgStudentsClassList);
+            orgStudentsResponseList.add(orgStudentsResponse);
         }
         modelAndView.addObject("orgStudentsList", orgStudentsResponseList);
 
-        int total = orgStudentsResponseList.size();
-        Page page = new Page(10, total);
-        page.setPage(1);
+        Page page = new Page(pageSize, total);
+        page.setPage(orgStudentsRequest.getPage());
 
         modelAndView.addObject("total", total);
         modelAndView.addObject("pageURL", "/admin/students/list?realName=&mobile=&classId=0");
@@ -196,6 +201,8 @@ public class StudentsController extends BaseController {
             Map<String, Object> map = new HashMap<>();
             map.put("studentId", result > 0 ? orgStudents.getId() : 0);
 
+            log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "添加或者修改学员[" + orgStudents.getRealName() + "]信息");
+
             return new ResponseBean(map);
         } catch (MessageException e) {
             e.printStackTrace();
@@ -206,16 +213,41 @@ public class StudentsController extends BaseController {
         }
     }
 
-    @Desc("保存学生")
+    @Desc("保存学生分班")
     @ResponseBody
     @RequestMapping(value = "/saveClassStudents", method = RequestMethod.POST)
-    public ResponseBean saveStudents(OrgClassStudents orgClassStudents) {
+    public ResponseBean saveClassStudents(@RequestBody OrgClassStudentsRequest orgClassStudentsRequest) {
         try {
 
-            int result;
+            int result = 0;
 
-            orgClassStudents.setCreateTime(DateUtil.getNowDate());
-            result = orgClassStudentsService.addOrgClassStudents(orgClassStudents);
+            OrgStudents orgStudents = orgStudentsService.getOrgStudents(orgClassStudentsRequest.getStudentId());
+
+            if (orgClassStudentsRequest.isState()) {
+                for (String classId : orgClassStudentsRequest.getClassIds().split(",")) {
+                    OrgClassStudents orgClassStudents = new OrgClassStudents();
+
+                    orgClassStudents.setClassId(Integer.parseInt(classId));
+                    orgClassStudents.setStudentId(orgClassStudentsRequest.getStudentId());
+                    orgClassStudents.setCreateTime(DateUtil.getNowDate());
+
+                    result += orgClassStudentsService.addOrgClassStudents(orgClassStudents);
+                }
+
+                log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "学员[" + orgStudents.getRealName() + "]分班");
+            } else {
+                for (String classId : orgClassStudentsRequest.getClassIds().split(",")) {
+                    OrgClassStudents orgClassStudents = new OrgClassStudents();
+
+                    orgClassStudents.setClassId(Integer.parseInt(classId));
+                    orgClassStudents.setStudentId(orgClassStudentsRequest.getStudentId());
+                    orgClassStudents.setCreateTime(DateUtil.getNowDate());
+
+                    result += orgClassStudentsService.delOrgClassStudents(orgClassStudents);
+                }
+
+                log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "学员[" + orgStudents.getRealName() + "]退费");
+            }
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {

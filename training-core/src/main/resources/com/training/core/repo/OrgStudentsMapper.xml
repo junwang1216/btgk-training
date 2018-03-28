@@ -61,10 +61,43 @@
     <if test="realName != null">
       and realName LIKE CONCAT('%',#{realName,jdbcType=INTEGER},'%')
     </if>
-    <if test="start != null and offset != null">
-      limit #{start}, #{offset}
+    order by updateTime DESC
+    limit #{start}, #{pageSize}
+  </select>
+  <select id="queryAllCount" resultType="java.lang.Integer">
+    select count(*)
+    from org_students
+    where 1 = 1
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="realName != null">
+      and realName LIKE CONCAT('%',#{realName,jdbcType=INTEGER},'%')
     </if>
     order by updateTime DESC
+  </select>
+  <select id="totalAllCount" resultType="java.lang.Integer">
+    select count(*)
+    from org_students
+    where 1 = 1
+    <if test="startTime != null">
+      and createTime &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and createTime &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="queryAllByDate" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_students
+    where 1 = 1
+    <if test="startTime != null">
+      and createTime &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and createTime &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
   </select>
   <select id="innerLogin" parameterType="com.training.core.repo.query.OrgStudentRequest" resultMap="BaseResultMap">
     select

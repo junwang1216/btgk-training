@@ -271,20 +271,22 @@ public class ClassController extends BaseController {
     public ResponseBean saveClass(OrgClass orgClass) {
         try {
 
+            int result;
+
             orgClass.setStatus(1);
             if (orgClass.getId() != null) {
                 orgClass.setUpdateTime(DateUtil.getNowDate());
-                orgClassService.saveOrgClass(orgClass);
+                result = orgClassService.saveOrgClass(orgClass);
             }
             else {
                 orgClass.setCreateTime(DateUtil.getNowDate());
                 orgClass.setUpdateTime(DateUtil.getNowDate());
                 orgClass.setStatus(ClassStatusEnum.STATUS_START.getCode());
-                orgClassService.addOrgClass(orgClass);
+                result = orgClassService.addOrgClass(orgClass);
             }
 
             Map<String, Object> map = new HashMap<>();
-            map.put("classId", orgClass.getId());
+            map.put("classId", result > 0 ? orgClass.getId() : 0);
 
             log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "添加或者修改班级[" + orgClass.getClassName() + "]信息");
 

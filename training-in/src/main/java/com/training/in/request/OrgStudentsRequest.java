@@ -17,14 +17,14 @@ public class OrgStudentsRequest extends OrgPageRequest {
     private String idCard;
 
     public String getRealName() {
-        return realName;
+        return (realName == null || realName.equals("")) ? null : realName;
     }
     public void setRealName(String realName) {
         this.realName = realName;
     }
 
     public String getMobile() {
-        return mobile;
+        return (mobile == null || mobile.equals("")) ? null : mobile;
     }
     public void setMobile(String mobile) {
         this.mobile = mobile;
