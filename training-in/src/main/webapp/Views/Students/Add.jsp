@@ -60,6 +60,11 @@
         .class-item.class-item-selected {
             border: 2px solid #4dbd74;
         }
+        label.radio-inline {
+            margin-right: .5rem;
+            margin-bottom: 0;
+            margin-top: .25rem;
+        }
     </style>
 </layout:override>
 

@@ -11,6 +11,11 @@
             text-align: right;
             font-weight: bold;
         }
+        label.radio-inline {
+            margin-right: .5rem;
+            margin-bottom: 0;
+            margin-top: .25rem;
+        }
     </style>
 </layout:override>
 

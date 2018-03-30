@@ -88,6 +88,10 @@
                 <c:when test="${param.subMenu == 'orders'}">
                     <li class="breadcrumb-item active">我的订单</li>
                 </c:when>
+                <c:when test="${param.subMenu == 'detail'}">
+                    <li class="breadcrumb-item"><a href="/admin/data/orders">我的订单</a></li>
+                    <li class="breadcrumb-item active">订单详情</li>
+                </c:when>
                 <c:when test="${param.subMenu == 'income'}">
                     <li class="breadcrumb-item active">收入流水</li>
                 </c:when>

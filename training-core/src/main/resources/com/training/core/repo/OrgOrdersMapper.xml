@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgOrdersMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgOrders">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="orderNo" jdbcType="VARCHAR" property="orderNo" />
+    <result column="orderType" jdbcType="INTEGER" property="orderType" />
+    <result column="payType" jdbcType="INTEGER" property="payType" />
+    <result column="orderAmount" jdbcType="INTEGER" property="orderAmount" />
+    <result column="payAmount" jdbcType="INTEGER" property="payAmount" />
+    <result column="orderStatus" jdbcType="INTEGER" property="orderStatus" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+    <result column="operateId" jdbcType="INTEGER" property="operateId" />
+    <result column="payNo" jdbcType="INTEGER" property="payNo" />
+    <result column="payUserId" jdbcType="INTEGER" property="payUserId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orderNo, orderType, payType, orderAmount, payAmount, orderStatus, createTime, updateTime, operateId, payNo, payUserId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_orders
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_orders
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgOrders">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_orders (orderNo, orderType, payType, orderAmount, payAmount, orderStatus, createTime, updateTime, operateId, payNo, payUserId)
+    values (#{orderNo,jdbcType=VARCHAR}, #{orderType,jdbcType=INTEGER}, #{payType,jdbcType=INTEGER}, #{orderAmount,jdbcType=INTEGER},
+      #{payAmount,jdbcType=INTEGER}, #{orderStatus,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR},
+      #{operateId,jdbcType=INTEGER}, #{payNo,jdbcType=INTEGER}, #{payUserId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgOrders">
+    update org_orders
+    set orderNo = #{orderNo,jdbcType=VARCHAR},
+      orderType = #{orderType,jdbcType=INTEGER},
+      payType = #{payType,jdbcType=INTEGER},
+      orderAmount = #{orderAmount,jdbcType=INTEGER},
+      payAmount = #{payAmount,jdbcType=INTEGER},
+      orderStatus = #{orderStatus,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=VARCHAR},
+      operateId = #{operateId,jdbcType=INTEGER},
+      payNo = #{payNo,jdbcType=INTEGER}
+      payUserId = #{payUserId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_orders
+    where 1 = 1
+    <if test="orderNo != null">
+      and orderNo = #{orderNo,jdbcType=VARCHAR}
+    </if>
+    <if test="orderType != null">
+      and orderType = #{orderType,jdbcType=INTEGER}
+    </if>
+    <if test="orderStatus != null">
+      and orderStatus = #{orderStatus,jdbcType=INTEGER}
+    </if>
+    order by updateTime desc
+    limit #{start}, #{pageSize}
+  </select>
+</mapper>

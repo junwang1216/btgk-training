@@ -112,8 +112,8 @@
                     <i class="icon-chart"></i> 数据统计
                 </a>
                 <ul class="nav-dropdown-items">
-                    <li class="nav-item <c:if test="${param.subMenu == 'orders'}">open</c:if>">
-                        <a class="nav-link <c:if test="${param.subMenu == 'orders'}">active</c:if>" href="/admin/data/orders">
+                    <li class="nav-item <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">active</c:if>" href="/admin/data/orders">
                             <i class="icon-arrow-right"></i> 我的订单
                         </a>
                     </li>

@@ -25,6 +25,11 @@ public class OrgClassStudentsServiceImpl implements OrgClassStudentsService {
     }
 
     @Override
+    public OrgClassStudents getOrgClassStudents(Integer id) {
+        return orgClassStudentsMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public int totalAllStudentsCount(String startTime, String endTime) {
         return orgClassStudentsMapper.totalAllStudentsCount(startTime, endTime);
     }
