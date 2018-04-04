@@ -235,23 +235,51 @@ public class VenueController extends BaseController {
     // 当期不能添加项目
     // TODO
 
+    @Desc("删除项目评测技能")
+    @ResponseBody
+    @RequestMapping(value = "/deleteSportsSkills", method = RequestMethod.POST)
+    public ResponseBean deleteVenueSportsSkills(@RequestBody OrgSportsSkills orgSportsSkills) {
+        try {
+            int result = orgSportsSkillsService.deleteOrgSportsSkills(orgSportsSkills.getId());
+
+            log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "删除技能[" + orgSportsSkills.getSkillName() + "]的评测技能");
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
     @Desc("保存项目评测技能")
     @ResponseBody
     @RequestMapping(value = "/saveSportsSkills", method = RequestMethod.POST)
     public ResponseBean saveVenueSportsSkills(@RequestBody OrgSportsSkillsRequest orgSportsSkillsRequest) {
         try {
 
-            orgSportsSkillsService.clearAllBySportId(orgSportsSkillsRequest.getSportId());
+            //orgSportsSkillsService.clearAllBySportId(orgSportsSkillsRequest.getSportId());
 
             int result = 0;
+            List<OrgSportsSkills> orgSportsSkillsList = new ArrayList<>();
 
             for (OrgSportsSkills orgSportsSkills : orgSportsSkillsRequest.getOrgSportsSkillsList()) {
+                if (orgSportsSkills.getId() != null) {
+                    continue;
+                }
+
                 orgSportsSkills.setCreateTime(DateUtil.getNowDate());
                 orgSportsSkills.setUpdateTime(DateUtil.getNowDate());
                 orgSportsSkills.setSkillNote("无");
                 orgSportsSkills.setStatus(StatusEnum.STATUS_OK.getCode());
+
+                orgSportsSkillsList.add(orgSportsSkills);
             }
-            result = orgSportsSkillsService.addOrgSportsSkillsBatch(orgSportsSkillsRequest.getOrgSportsSkillsList());
+            if (orgSportsSkillsList.size() > 0) {
+                result = orgSportsSkillsService.addOrgSportsSkillsBatch(orgSportsSkillsList);
+            }
 
             OrgSports orgSports = orgSportsService.getOrgSports(orgSportsSkillsRequest.getSportId());
             log(LogTypeEnum.LOG_TYPE_VENUE_SETTINGS, getLoginUser().getOrgId(), "设置项目[" + orgSports.getSportName() + "]的评测技能");

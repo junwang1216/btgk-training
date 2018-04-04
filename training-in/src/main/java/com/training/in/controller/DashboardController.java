@@ -6,9 +6,13 @@ import com.training.core.common.enums.ClassStatusEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
+import com.training.core.repo.po.OrgClass;
+import com.training.core.repo.po.OrgClassStudents;
+import com.training.core.repo.po.OrgOrders;
 import com.training.core.repo.po.OrgStudents;
 import com.training.core.service.OrgClassService;
 import com.training.core.service.OrgClassStudentsService;
+import com.training.core.service.OrgOrdersService;
 import com.training.core.service.OrgStudentsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +41,9 @@ public class DashboardController extends BaseController {
 
     @Resource
     private OrgClassStudentsService orgClassStudentsService;
+
+    @Resource
+    private OrgOrdersService orgOrdersService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", getLoginUser());
@@ -86,7 +93,7 @@ public class DashboardController extends BaseController {
         }
     }
 
-    @Desc("统计班级数量")
+    @Desc("统计学生数量")
     @ResponseBody
     @RequestMapping(value = "/students/total", method = RequestMethod.GET)
     public ResponseBean totalDashboardStudents(String type) {
@@ -94,7 +101,7 @@ public class DashboardController extends BaseController {
             Map<String, Object> map = new HashMap<>();
 
             String startTime, endTime;
-            String startTimeShow, endTimeShow;
+            String titleShow;
             int valueTotal = 0;
             List<OrgStudents> orgStudentsList;
             List<String> labelList = new ArrayList<>();
@@ -161,6 +168,8 @@ public class DashboardController extends BaseController {
                     labelList1.add(dateDay + " 22:00");
                     labelList1.add(dateDay + " 23:00");
 
+                    titleShow = dateDay.replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$1年$2月$3日");
+
                     startTime = dateDay + " 00:00:00";
                     endTime = dateDay + " 23:59:59";
 
@@ -182,7 +191,7 @@ public class DashboardController extends BaseController {
                     break;
                 case "prev_month":
                 case "month":
-                    List<String> labelList3 = new ArrayList<>();
+                    List<String> labelList3;
 
                     if (type.equals("prev_month")) {
                         labelList3 = DateUtil.getMonthDate(DateUtil.getAddMonth(-1) + "-01");
@@ -192,13 +201,14 @@ public class DashboardController extends BaseController {
 
                     startTime = labelList3.get(0) + " 00:00:00";
                     endTime = labelList3.get(labelList3.size() - 1) + " 23:59:59";
+                    titleShow = labelList3.get(0).replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$1年$2月$3日") + " 至 " + labelList3.get(labelList3.size() - 1).replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$1年$2月$3日");
                     orgStudentsList = orgStudentsService.queryOrgStudentsListByDate(startTime, endTime);
 
                     for (String date : labelList3) {
                         String startDayTime = date + " 00:00:00";
                         String endDayTime = date + " 23:59:59";
 
-                        labelList.add(date.replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$2月$3日"));
+                        labelList.add(date.replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$3日"));
 
                         int total = 0;
                         for (OrgStudents orgStudents : orgStudentsList) {
@@ -259,6 +269,7 @@ public class DashboardController extends BaseController {
 
                     startTime = labelList2.get(0) + "-01 00:00:00";
                     endTime = labelList2.get(labelList2.size() - 1) + "-31 23:59:59";
+                    titleShow = (labelList2.get(0) + "-01").replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$1年$2月$3日") + " 至 " + (labelList2.get(labelList2.size() - 1) + "-31").replaceAll("^(\\d{4})-(\\d{2})-(\\d{2})$", "$1年$2月$3日");
                     orgStudentsList = orgStudentsService.queryOrgStudentsListByDate(startTime, endTime);
 
                     for (String date : labelList2) {
@@ -281,11 +292,54 @@ public class DashboardController extends BaseController {
             map.put("startTime", startTime);
             map.put("endTime", endTime);
 
+            map.put("titleShow", titleShow);
+
             map.put("totalCreateCurrent", orgClassStudentsService.totalAllStudentsCount(startTime, endTime));  // 当前新增分班学员数
             map.put("totalCurrent", valueTotal); // 当前学员数
 
             map.put("total", orgStudentsService.totalOrgStudentsCount(null, null));  // 学员总量
             map.put("totalCreate", orgClassStudentsService.totalAllStudentsCount(null, null)); // 分班学员总量
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("统计收支金额")
+    @ResponseBody
+    @RequestMapping(value = "/money/total", method = RequestMethod.GET)
+    public ResponseBean totalDashboardIncome(String type) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            String startTime = null, endTime = null;
+            int total = 0, refund = 0;
+            switch (type) {
+                case "year":
+                    startTime = DateUtil.getCurrentYearEndTime() + "-01-01 00:00:00";
+                    endTime = DateUtil.getCurrentYearEndTime() + "-12-31 23:59:59";
+                    break;
+                case "total":
+                    break;
+                case "month":
+                default:
+                    startTime = DateUtil.getTimesMonthmorning();
+                    endTime = DateUtil.getTimesMonthnight();
+            }
+
+            List<OrgOrders> orgOrdersList = orgOrdersService.queryOrdersByDate(startTime, endTime, null);
+            for (OrgOrders orgOrders : orgOrdersList) {
+                total += orgOrders.getPayAmount() != null ? orgOrders.getPayAmount() : 0;
+                refund += orgOrders.getRefundAmount() != null ? orgOrders.getRefundAmount() : 0;
+            }
+
+            map.put("total", total);
+            map.put("refund", refund);
 
             return new ResponseBean(map);
         } catch (MessageException e) {

@@ -17,7 +17,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
 </layout:override>
 
@@ -102,7 +102,7 @@
                                     <table class="table table-striped table-sm income-list">
                                         <thead>
                                         <tr>
-                                            <th class="income-no">编号</th>
+                                            <th class="income-no">缴费编号</th>
                                             <th class="income-type">缴费类型</th>
                                             <th class="income-student">交费学员</th>
                                             <th class="income-money">缴费金额</th>
@@ -115,120 +115,24 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr data-id="">
-                                            <td class="income-no">1</td>
-                                            <td class="income-type">新生缴费</td>
-                                            <td class="income-student">王大锤</td>
-                                            <td class="income-money">¥3000.00</td>
-                                            <td class="income-venue">奥体中心</td>
-                                            <td class="income-date">2017-12-18 12:11:22</td>
-                                            <td class="income-person">李逵</td>
-                                            <td class="income-person">林冲</td>
-                                            <td class="income-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="income-no">2</td>
-                                            <td class="income-type">会员续费</td>
-                                            <td class="income-student">王大锤</td>
-                                            <td class="income-money">¥3000.00</td>
-                                            <td class="income-venue">奥体中心</td>
-                                            <td class="income-date">2017-12-18 12:11:22</td>
-                                            <td class="income-person">李逵</td>
-                                            <td class="income-person">--</td>
-                                            <td class="income-date">--</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-danger" title="审核">
-                                                    <i class="fa fa-clock-o"></i> 审核
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="income-no">3</td>
-                                            <td class="income-type">会员续费</td>
-                                            <td class="income-student">王大锤</td>
-                                            <td class="income-money">¥3000.00</td>
-                                            <td class="income-venue">奥体中心</td>
-                                            <td class="income-date">2017-12-18 12:11:22</td>
-                                            <td class="income-person">李逵</td>
-                                            <td class="income-person">林冲</td>
-                                            <td class="income-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="income-no">4</td>
-                                            <td class="income-type">新生缴费</td>
-                                            <td class="income-student">王大锤</td>
-                                            <td class="income-money">¥3000.00</td>
-                                            <td class="income-venue">奥体中心</td>
-                                            <td class="income-date">2017-12-18 12:11:22</td>
-                                            <td class="income-person">李逵</td>
-                                            <td class="income-person">林冲</td>
-                                            <td class="income-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="income-no">5</td>
-                                            <td class="income-type">会员续费</td>
-                                            <td class="income-student">王大锤</td>
-                                            <td class="income-money">¥3000.00</td>
-                                            <td class="income-venue">奥体中心</td>
-                                            <td class="income-date">2017-12-18 12:11:22</td>
-                                            <td class="income-person">李逵</td>
-                                            <td class="income-person">--</td>
-                                            <td class="income-date">--</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-danger" title="审核">
-                                                    <i class="fa fa-clock-o"></i> 审核
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="income-no">6</td>
-                                            <td class="income-type">会员续费</td>
-                                            <td class="income-student">王大锤</td>
-                                            <td class="income-money">¥3000.00</td>
-                                            <td class="income-venue">奥体中心</td>
-                                            <td class="income-date">2017-12-18 12:11:22</td>
-                                            <td class="income-person">李逵</td>
-                                            <td class="income-person">林冲</td>
-                                            <td class="income-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        <c:forEach var="balance" items="${orgBalanceDataResponseList}" varStatus="loop">
+                                            <tr data-id="${balance.balanceNo}">
+                                                <td class="income-no">${balance.balanceNo}</td>
+                                                <td class="income-type">${balance.balanceType}</td>
+                                                <td class="income-student">${balance.balanceUserId}</td>
+                                                <td class="income-money">¥${balance.balanceAmount}</td>
+                                                <td class="income-venue">${balance.balanceNo}</td>
+                                                <td class="income-date">${balance.balanceTime}</td>
+                                                <td class="income-person">${balance.operateId}</td>
+                                                <td class="income-person">${balance.reviewId}</td>
+                                                <td class="income-date">${balance.reviewTime}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success" title="审核" disabled>
+                                                        <i class="fa fa-check"></i> 已审
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                         </tbody>
                                     </table>
                                     <div>

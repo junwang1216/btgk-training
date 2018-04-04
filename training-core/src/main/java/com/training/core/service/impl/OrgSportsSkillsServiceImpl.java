@@ -26,6 +26,11 @@ public class OrgSportsSkillsServiceImpl implements OrgSportsSkillsService {
     }
 
     @Override
+    public int deleteOrgSportsSkills(int skillId) {
+        return orgSportsSkillsMapper.deleteByPrimaryKey(skillId);
+    }
+
+    @Override
     public List<OrgSportsSkills> queryOrgSportsSkillsList(int sportId) {
         return orgSportsSkillsMapper.queryAllBySportId(sportId);
     }

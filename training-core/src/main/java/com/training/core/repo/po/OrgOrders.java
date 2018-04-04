@@ -34,6 +34,16 @@ public class OrgOrders implements Serializable {
     private Integer payAmount;
 
     /**
+     * 退款 类型
+     */
+    private Integer refundType;
+
+    /**
+     * 订单退款金额
+     */
+    private Integer refundAmount;
+
+    /**
      * 订单状态
      */
     private Integer orderStatus;
@@ -56,7 +66,7 @@ public class OrgOrders implements Serializable {
     /**
      * 支付记录ID
      */
-    private Integer payNo;
+    private String payNo;
 
     /**
      * 支付人ID
@@ -113,6 +123,22 @@ public class OrgOrders implements Serializable {
         this.payAmount = payAmount;
     }
 
+    public Integer getRefundType() {
+        return refundType;
+    }
+
+    public void setRefundType(Integer refundType) {
+        this.refundType = refundType;
+    }
+
+    public Integer getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(Integer refundAmount) {
+        this.refundAmount = refundAmount;
+    }
+
     public Integer getOrderStatus() {
         return orderStatus;
     }
@@ -145,11 +171,11 @@ public class OrgOrders implements Serializable {
         this.operateId = operateId;
     }
 
-    public Integer getPayNo() {
+    public String getPayNo() {
         return payNo;
     }
 
-    public void setPayNo(Integer payNo) {
+    public void setPayNo(String payNo) {
         this.payNo = payNo;
     }
 

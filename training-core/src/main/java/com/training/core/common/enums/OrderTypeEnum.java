@@ -2,6 +2,7 @@ package com.training.core.common.enums;
 
 public enum OrderTypeEnum {
     ORDER_TYPE_CLASS(1, "培训班费用"),
+    ORDER_TYPE_REFUND(2, "培训班退费"),
     ;
     int code;
     String desc;
@@ -10,6 +11,16 @@ public enum OrderTypeEnum {
         this.code = code;
         this.desc = desc;
     }
+
+    public static OrderTypeEnum forValue(int value) {
+        for (OrderTypeEnum type : OrderTypeEnum.values()) {
+            if (value == type.code) {
+                return type;
+            }
+        }
+        return null;
+    }
+
 
     public int getCode() {
         return code;

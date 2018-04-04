@@ -10,6 +10,8 @@ public interface OrgClassScheduleService {
 
     int saveClassSchedule(OrgClassSchedule orgClassSchedule);
 
+    int deleteClassSchedule(int scheduleId);
+
     List<OrgClassSchedule> queryOrgClassScheduleList(int classId);
 
     int clearAllByClassId(int classId);

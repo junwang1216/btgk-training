@@ -16,4 +16,6 @@ public interface OrgOrdersMapper {
     int updateByPrimaryKey(OrgOrders record);
 
     List<OrgOrders> queryAll(@Param("orderNo") String orderNo, @Param("orderType") Integer orderType, @Param("orderStatus") Integer orderStatus, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
+
+    List<OrgOrders> queryAllByDate(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("orderStatus") Integer orderStatus);
 }

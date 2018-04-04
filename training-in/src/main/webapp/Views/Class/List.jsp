@@ -18,7 +18,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/class/list.js?v=${static_resource_version}"></script>
 </layout:override>
 
@@ -27,6 +27,9 @@
         <div class="modal-dialog modal-primary modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-body">
+                    <p class="help-block">已开班：可以进行任意的重新排期</p>
+                    <p class="help-block">上课中：仅可以删除排期，添加排期；不能更改排期方式。</p>
+                    <p class="help-block">已开班：不能增删任何排期。</p>
                     <form id="class_status_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                         <input type="hidden" id="info_class_id" name="id" value="">
                         <div class="form-group row">

@@ -58,7 +58,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/venue/sports.js?v=${static_resource_version}"></script>
 </layout:override>
 
@@ -117,13 +117,14 @@
                                 <input type="hidden" name="sportId" id="id_skill_sportId" value="${sportId}">
                                 <c:if test="${orgSportsSkillsList != null}">
                                     <c:forEach var="skill" items="${orgSportsSkillsList}" varStatus="loop">
-                                        <div class="form-group row">
+                                        <div class="form-group row skill-item">
+                                            <input type="hidden" name="id" value="${skill.id}" disabled>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" name="skillName"
-                                                       placeholder="评测项名称" value="${skill.skillName}">
+                                                       placeholder="评测项名称" value="${skill.skillName}" disabled>
                                             </div>
                                             <div class="col-md-3">
-                                                <select class="form-control" name="maxValue">
+                                                <select class="form-control" name="maxValue" disabled>
                                                     <option value="10" <c:if test="${skill.maxValue == 10}"></c:if> >最高10分</option>
                                                     <option value="100" <c:if test="${skill.maxValue == 100}"></c:if>>最高100分</option>
                                                 </select>

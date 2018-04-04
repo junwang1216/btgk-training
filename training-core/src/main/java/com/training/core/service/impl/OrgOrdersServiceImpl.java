@@ -20,6 +20,11 @@ public class OrgOrdersServiceImpl implements OrgOrdersService {
     }
 
     @Override
+    public int saveOrgOrders(OrgOrders orgOrders) {
+        return orgOrdersMapper.updateByPrimaryKey(orgOrders);
+    }
+
+    @Override
     public OrgOrders getOrgOrders(int orderId) {
         return orgOrdersMapper.selectByPrimaryKey(orderId);
     }
@@ -27,6 +32,11 @@ public class OrgOrdersServiceImpl implements OrgOrdersService {
     @Override
     public List<OrgOrders> queryOrders() {
         return orgOrdersMapper.queryAll(null, null, null, 0, 10);
+    }
+
+    @Override
+    public List<OrgOrders> queryOrdersByDate(String startTime, String endTime, Integer status) {
+        return orgOrdersMapper.queryAllByDate(startTime, endTime, status);
     }
 }
 

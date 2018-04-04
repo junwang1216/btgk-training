@@ -23,6 +23,16 @@ public class OrgClassStudents implements Serializable {
      */
     private String createTime;
 
+    /**
+     * 关联订单No
+     */
+    private String orderNo;
+
+    /**
+     * 有效分班
+     */
+    private Integer status;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -55,5 +65,21 @@ public class OrgClassStudents implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

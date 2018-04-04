@@ -31,7 +31,7 @@
                             <h4 class="mb-0">2/10</h4>
                             <p>上课统计（班次/课时）</p>
                         </div>
-                        <div class="chart-wrapper px-3" style="height:70px;">
+                        <div class="chart-wrapper px-1" style="height:70px;">
                             <canvas id="card-chart1" class="chart" height="70"></canvas>
                         </div>
                     </div>
@@ -52,47 +52,56 @@
                                 </div>
                             </div>
                             <h4 class="mb-0 total-class-count">0</h4>
-                            <p class="total-class-name">年班级数量（个）</p>
+                            <p class="total-class-name">班级数量（正上课/全部）</p>
                         </div>
-                        <div class="chart-wrapper px-3" style="height: 70px;">
+                        <div class="chart-wrapper px-1" style="height: 70px;">
                             <canvas id="total_class_chart" class="chart" height="70"></canvas>
                         </div>
                     </div>
                 </div>
                 <!--/.col-->
 
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-3 income-class">
                     <div class="card card-inverse card-warning">
                         <div class="card-block pb-0">
                             <div class="btn-group float-right">
-                                <button type="button" class="btn btn-transparent active dropdown-toggle p-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown">
                                     <i class="icon-settings"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#">当  日</a>
-                                    <a class="dropdown-item" href="#">近一周</a>
-                                    <a class="dropdown-item" href="#">近一月</a>
-                                    <a class="dropdown-item" href="#">总  量</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="month">本  月</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="year">本  年</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="total">总  量</a>
                                 </div>
                             </div>
-                            <h4 class="mb-0">19,823</h4>
-                            <p>入账金额（元）</p>
+                            <h4 class="mb-0 income-class-count">0</h4>
+                            <p class="income-class-name">入账金额（元）</p>
                         </div>
                         <div class="chart-wrapper" style="height:70px;">
-                            <canvas id="card-chart3" class="chart" height="70"></canvas>
+                            <canvas id="income_class_chart" class="chart" height="70"></canvas>
                         </div>
                     </div>
                 </div>
                 <!--/.col-->
 
-                <div class="col-sm-6 col-lg-3">
+                <div class="col-sm-6 col-lg-3 expend-class">
                     <div class="card card-inverse card-danger">
                         <div class="card-block pb-0">
-                            <h4 class="mb-0">9,823元</h4>
-                            <p>出账金额（元）</p>
+                            <div class="btn-group float-right">
+                                <button type="button" class="btn btn-transparent dropdown-toggle p-0" data-toggle="dropdown">
+                                    <i class="icon-settings"></i>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="javascript:;" data-type="month">本  月</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="year">本  年</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="total">总  量</a>
+                                </div>
+                            </div>
+                            <h4 class="mb-0 expend-class-count">0</h4>
+                            <p class="expend-class-name">出账金额（元）</p>
                         </div>
-                        <div class="chart-wrapper px-3" style="height:70px;">
-                            <canvas id="card-chart4" class="chart" height="70"></canvas>
+                        <div class="chart-wrapper" style="height:70px;">
+                            <canvas id="expend_class_chart" class="chart" height="70"></canvas>
                         </div>
                     </div>
                 </div>

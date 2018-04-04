@@ -15,7 +15,8 @@ requirejs.config({
         "jquery.validate.unobtrusive"  : 'bower_components/Microsoft.jQuery.Unobtrusive.Validation/jquery.validate.unobtrusive',
 
         "base"      : 'js/widgets/base',
-        "override"  : 'js/widgets/override'
+        "override"  : 'js/widgets/override',
+        "payment"   : 'js/widgets/payment'
     },
     shim: {
         "bootstrap": {
@@ -41,7 +42,7 @@ requirejs.config({
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 'jquery.validate.unobtrusive', "datepicker", "datepicker-zh"], function ($, jqueryAlert) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 'jquery.validate.unobtrusive', "datepicker", "datepicker-zh", 'payment'], function ($, jqueryAlert) {
     'use strict';
 
     // 表单校验配置
@@ -121,7 +122,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
             $form.attr("submitting", "");
 
             if (res.code == 1) {
-                callback(1);
+                callback(1, res.data);
             } else {
                 callback(0);
                 jqueryAlert({
@@ -187,7 +188,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 });
                 return;
             }
-            __saveClassStudents(function (classStatus) {
+            __saveClassStudents(function (classStatus, data) {
                 if (classStatus == 2) {
                     jqueryAlert({
                         'icon'      : '/Content/images/icon-ok.png',
@@ -196,6 +197,10 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                         'modal'        : true,
                         'isModalClose' : true
                     });
+
+                    window.setTimeout(function () {
+                        window.location.href = '/admin/students/list';
+                    }, 1500);
                 }
 
                 if (classStatus == 0) {
@@ -206,6 +211,10 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                         'modal'        : true,
                         'isModalClose' : true
                     });
+
+                    window.setTimeout(function () {
+                        window.location.href = '/admin/students/list';
+                    }, 1500);
                 }
 
                 if (classStatus == 1) {
@@ -216,11 +225,41 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                         'modal'        : true,
                         'isModalClose' : true
                     });
-                }
 
-                window.setTimeout(function () {
-                    window.location.href = '/admin/students/list';
-                }, 1500);
+                    var payment = new $.Payment({
+                        orderNo: data.orderNo,
+                        orderAmount: data.orderAmount,
+                        failure: function () {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-error.png',
+                                'content'   : "学生分班支付失败, 请稍后重试",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+                        },
+                        success: function () {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-ok.png',
+                                'content'   : "学员分班支付成功",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+
+                            window.setTimeout(function () {
+                                window.location.assign("/admin/students/list");
+                            }, 1500);
+                        },
+                        cancel: function () {
+                            window.setTimeout(function () {
+                                window.location.assign("/admin/order/list");
+                            }, 1500);
+                        }
+                    });
+
+                    payment.showConfirm();
+                }
             });
         });
     });

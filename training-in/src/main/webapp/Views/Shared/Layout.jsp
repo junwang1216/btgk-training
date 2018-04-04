@@ -49,7 +49,7 @@
 </div>
 
 <!-- js -->
-<script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+<script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
         data-main="Content/js/app.js?v=${static_resource_version}"></script>
 
 <layout:block name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>"/>

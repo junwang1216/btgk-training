@@ -59,6 +59,7 @@
             background: url("/Content/images/sports/icon-bangqiu.png") no-repeat center;
             background-size: 1.5rem;
         }
+
         .class-item {
             cursor: pointer;
             height: 7.5rem;
@@ -76,7 +77,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
 </layout:override>
 
@@ -111,24 +112,6 @@
                                 </c:if>
                             </c:forEach>
                         </div>
-                        <%--<div>--%>
-                            <%--<div class="form-group row">--%>
-                                <%--<label class="col-md-4 form-control-label">--%>
-                                    <%--<span class="text-danger">*</span> 所选班级--%>
-                                <%--</label>--%>
-                                <%--<div class="col-md-8">--%>
-                                    <%--<input type="text" class="form-control" name="txtClass" id="class_name" disabled placeholder="所分配的班级">--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group row">--%>
-                                <%--<label class="col-md-4 form-control-label">--%>
-                                    <%--<span class="text-danger">*</span> 支付金额--%>
-                                <%--</label>--%>
-                                <%--<div class="col-md-8">--%>
-                                    <%--<input type="text" class="form-control" name="txtClassBalance" id="class_balance" disabled placeholder="需支付的金额（元）">--%>
-                                <%--</div>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -144,30 +127,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="user_recharge" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-primary modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <form id="user_recharge_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
-                        <input type="hidden" id="user_recharge_id" name="userId" value="">
-                        <div class="form-group row">
-                            <div class="col-md-12">
-                                <input type="text" id="user_recharge_money" name="userMoney" class="form-control" placeholder="请输入充值金额...">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
-                        <i class="fa fa-close"></i> 取 消
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary">
-                        <i class="fa fa-check"></i> 充 值
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <%@ include file="../Shared/Payment.jsp" %>
 
     <div class="container-fluid">
         <div class="animated fadeIn">
@@ -261,9 +221,9 @@
                                                 <%--data-target="#user_recharge" data-toggle="modal">--%>
                                                 <%--<i class="fa fa-jpy"></i> 缴费--%>
                                                 <%--</a>--%>
-                                            <a href="javascript:" class="btn btn-sm btn-warning user-recharge" title="退费金额"
-                                               data-target="#class_students" data-toggle="modal">
-                                                <i class="fa fa-money"></i> 退费
+                                            <%--<a href="javascript:" class="btn btn-sm btn-warning user-recharge" title="退班"--%>
+                                               <%--data-target="#class_students" data-toggle="modal">--%>
+                                                <%--<i class="fa fa-money"></i> 退班--%>
                                             </a>
                                         </td>
                                     </tr>

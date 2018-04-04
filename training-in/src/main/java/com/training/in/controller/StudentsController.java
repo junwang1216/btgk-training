@@ -3,8 +3,7 @@ package com.training.in.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.constant.IPlatformConstant;
-import com.training.core.common.enums.ClassStatusEnum;
-import com.training.core.common.enums.LogTypeEnum;
+import com.training.core.common.enums.*;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
 import com.training.core.common.util.Page;
@@ -22,10 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 学生管理
@@ -52,6 +48,9 @@ public class StudentsController extends BaseController {
 
     @Resource
     private OrgClassStudentsService orgClassStudentsService;
+
+    @Resource
+    private OrgOrdersService orgOrdersService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
@@ -219,37 +218,65 @@ public class StudentsController extends BaseController {
     public ResponseBean saveClassStudents(@RequestBody OrgClassStudentsRequest orgClassStudentsRequest) {
         try {
 
-            int result = 0;
+            int result;
 
             OrgStudents orgStudents = orgStudentsService.getOrgStudents(orgClassStudentsRequest.getStudentId());
+            List<OrgClassStudents> orgClassStudentsList = new ArrayList<>();
+            int amount = 0;
+            String orderNo = UUID.randomUUID().toString();
 
-            if (orgClassStudentsRequest.isState()) {
-                for (String classId : orgClassStudentsRequest.getClassIds().split(",")) {
-                    OrgClassStudents orgClassStudents = new OrgClassStudents();
+            for (String classId : orgClassStudentsRequest.getClassIds().split(",")) {
+                OrgClassStudents orgClassStudents = new OrgClassStudents();
+                OrgClass orgClass = orgClassService.getOrgClass(Integer.parseInt(classId));
 
-                    orgClassStudents.setClassId(Integer.parseInt(classId));
-                    orgClassStudents.setStudentId(orgClassStudentsRequest.getStudentId());
-                    orgClassStudents.setCreateTime(DateUtil.getNowDate());
+                orgClassStudents.setClassId(Integer.parseInt(classId));
+                orgClassStudents.setStudentId(orgClassStudentsRequest.getStudentId());
+                orgClassStudents.setCreateTime(DateUtil.getNowDate());
+                orgClassStudents.setOrderNo(orderNo);
+                orgClassStudents.setStatus(StatusEnum.STATUS_OK.getCode());
 
-                    result += orgClassStudentsService.addOrgClassStudents(orgClassStudents);
-                }
-
-                log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "学员[" + orgStudents.getRealName() + "]分班");
-            } else {
-                for (String classId : orgClassStudentsRequest.getClassIds().split(",")) {
-                    OrgClassStudents orgClassStudents = new OrgClassStudents();
-
-                    orgClassStudents.setClassId(Integer.parseInt(classId));
-                    orgClassStudents.setStudentId(orgClassStudentsRequest.getStudentId());
-                    orgClassStudents.setCreateTime(DateUtil.getNowDate());
-
-                    result += orgClassStudentsService.delOrgClassStudents(orgClassStudents);
-                }
-
-                log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "学员[" + orgStudents.getRealName() + "]退费");
+                orgClassStudentsList.add(orgClassStudents);
+                amount += orgClass.getClassPrice();
             }
 
-            return new ResponseBean(result > 0);
+            OrgOrders orgOrders = new OrgOrders();
+
+            orgOrders.setOrderNo(orderNo);
+            orgOrders.setOrderAmount(amount);
+            orgOrders.setPayAmount(0);
+            orgOrders.setPayUserId(orgClassStudentsRequest.getStudentId());
+            orgOrders.setOperateId(getLoginUser().getId());
+            orgOrders.setCreateTime(DateUtil.getNowDate());
+            orgOrders.setUpdateTime(DateUtil.getNowDate());
+
+            if (orgClassStudentsRequest.isState()) {
+                result = orgClassStudentsService.addOrgClassStudentsBath(orgClassStudentsList);
+
+                log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "学员[" + orgStudents.getRealName() + "]分班");
+
+                if (result > 0) {
+                    orgOrders.setOrderType(OrderTypeEnum.ORDER_TYPE_CLASS.getCode());
+                    orgOrders.setOrderStatus(OrderStatusEnum.ORDER_STATUS_UNPAID.getCode());
+                    orgOrdersService.addOrgOrders(orgOrders);
+                }
+            } else {
+                // TODO 废弃
+                result = orgClassStudentsService.delOrgClassStudentsBatch(orgClassStudentsList);
+
+                log(LogTypeEnum.LOG_TYPE_STUDENTS_SETTINGS, getLoginUser().getOrgId(), "学员[" + orgStudents.getRealName() + "]退费");
+
+                if (result > 0) {
+                    orgOrders.setOrderType(OrderTypeEnum.ORDER_TYPE_REFUND.getCode());
+                    orgOrders.setOrderStatus(OrderStatusEnum.ORDER_STATUS_REFUND.getCode());
+                    orgOrdersService.addOrgOrders(orgOrders);
+                }
+            }
+
+            Map map = new HashMap();
+            map.put("orderNo", orderNo);
+            map.put("orderAmount", amount);
+
+            return new ResponseBean(map);
         } catch (MessageException e) {
             e.printStackTrace();
             return new ResponseBean(e.getMessage());

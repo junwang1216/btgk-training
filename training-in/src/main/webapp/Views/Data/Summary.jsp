@@ -6,7 +6,7 @@
 <%@ taglib uri="http://www.sports.com/tags/tag" prefix="layout" %>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
 </layout:override>
 

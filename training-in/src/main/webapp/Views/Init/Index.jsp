@@ -127,7 +127,7 @@
                                                 <div class="col-md-9">
                                                     <input type="text" class="form-control" id="info_contact_mobile" name="contactMobile" placeholder="请输入手机号码"
                                                            data-val="true" data-val-required="手机号码不能为空"
-                                                           data-val-regex-pattern="^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$" data-val-regex="手机号码格式不正确">
+                                                           data-val-regex-pattern="^(13[0-9]|15[012356789]|18[02356789]|14[57])[0-9]{8}$" data-val-regex="手机号码格式不正确">
                                                     <div data-valmsg-for="contactMobile" data-valmsg-replace="true"></div>
                                                 </div>
                                             </div>
@@ -195,7 +195,7 @@
                                             <div class="col-md-9">
                                                 <input type="text" class="form-control" id="admin_mobile" name="mobile" placeholder="请输入手机号码"
                                                        data-val="true" data-val-required="手机号码不能为空"
-                                                       data-val-regex-pattern="^(13[0-9]|15[012356789]|18[0236789]|14[57])[0-9]{8}$" data-val-regex="手机号码格式不正确">
+                                                       data-val-regex-pattern="^(13[0-9]|15[012356789]|166|17[0-9]|18[02356789]|14[57]|19[89])[0-9]{8}$" data-val-regex="手机号码格式不正确">
                                                 <div data-valmsg-for="mobile" data-valmsg-replace="true"></div>
                                             </div>
                                         </div>

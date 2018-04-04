@@ -4,6 +4,7 @@ public enum OrderStatusEnum {
     ORDER_STATUS_PAID(1, "已支付"),
     ORDER_STATUS_UNPAID(2, "未支付"),
     ORDER_STATUS_CANCEL(3, "已取消"),
+    ORDER_STATUS_REFUND(4, "已退费"),
     ;
     int code;
     String desc;

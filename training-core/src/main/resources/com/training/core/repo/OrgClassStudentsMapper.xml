@@ -6,9 +6,11 @@
     <result column="classId" jdbcType="INTEGER" property="classId" />
     <result column="studentId" jdbcType="INTEGER" property="studentId" />
     <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="orderNo" jdbcType="VARCHAR" property="orderNo" />
+    <result column="status" jdbcType="INTEGER" property="status" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, classId, studentId, createTime
+    id, classId, studentId, createTime, orderNo, status
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,20 +26,35 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into org_class_students (classId, studentId, createTime
-      )
-    values (#{classId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}
-      )
+    insert into org_class_students (classId, studentId, createTime, orderNo, status)
+    values (#{classId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class_students (classId, studentId, createTime, orderNo, status)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.classId,jdbcType=INTEGER}, #{item.studentId,jdbcType=INTEGER}, #{item.createTime,jdbcType=VARCHAR}, #{item.orderNo,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER})
+    </foreach>
   </insert>
   <delete id="delete" parameterType="com.training.core.repo.po.OrgClassStudents">
     delete from org_class_students
     where classId = #{classId,jdbcType=INTEGER} and studentId = #{studentId,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteBatch" parameterType="java.util.List">
+    delete from org_class_students
+    where id in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >
+      #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </delete>
   <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgClassStudents">
     update org_class_students
     set classId = #{classId,jdbcType=INTEGER},
       studentId = #{studentId,jdbcType=INTEGER},
-      createTime = #{createTime,jdbcType=VARCHAR}
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="queryOrgClassStudentsList" resultMap="BaseResultMap">
@@ -51,12 +68,19 @@
     <if test="studentId != null and studentId != 0">
       and studentId = #{studentId,jdbcType=INTEGER}
     </if>
+    <if test="orderNo != null">
+      and orderNo = #{orderNo,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
     <if test="studentId != null and studentId != 0">
       group by classId
     </if>
   </select>
-  <select id="totalAllStudentsCount" resultType="java.lang.Integer">
-    select count(distinct(studentId))
+  <select id="queryOrgClassStudentsListByDate" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
     from org_class_students
     where 1 = 1
     <if test="startTime != null">
@@ -65,5 +89,24 @@
     <if test="endTime != null">
       and createTime &lt;= #{endTime,jdbcType=VARCHAR}
     </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
   </select>
+  <select id="totalAllStudentsCount" resultType="java.lang.Integer">
+    select count(distinct(studentId))
+    from org_class_students
+    where status = 1
+    <if test="startTime != null">
+      and createTime &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and createTime &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <update id="setStatus" parameterType="com.training.core.repo.po.OrgClassStudents">
+    update org_class_students
+    set status = #{status,jdbcType=INTEGER}
+    where orderNo = #{orderNo,jdbcType=VARCHAR}
+  </update>
 </mapper>

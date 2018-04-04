@@ -10,6 +10,8 @@ public interface OrgSportsSkillsService {
 
     int saveOrgSportsSkills(OrgSportsSkills orgSportsSkills);
 
+    int deleteOrgSportsSkills(int skillId);
+
     List<OrgSportsSkills> queryOrgSportsSkillsList(int sportId);
 
     int clearAllBySportId(int sportId);

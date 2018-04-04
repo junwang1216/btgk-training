@@ -113,7 +113,7 @@
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">open</c:if>">
-                        <a class="nav-link <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">active</c:if>" href="/admin/data/orders">
+                        <a class="nav-link <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">active</c:if>" href="/admin/order/list">
                             <i class="icon-arrow-right"></i> 我的订单
                         </a>
                     </li>

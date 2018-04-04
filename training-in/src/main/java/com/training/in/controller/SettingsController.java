@@ -2,6 +2,7 @@ package com.training.in.controller;
 
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
+import com.training.core.common.config.WebConfig;
 import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.enums.RoleEnum;
@@ -219,7 +220,10 @@ public class SettingsController extends BaseController {
             String backupPath = System.getProperty("user.home") + "/btgk-training-backup";
 
             // 调用 调用mysql的安装目录的命令
-            Process child = rt.exec("mysqldump -h localhost -uroot -p123456 btgk-training");
+            String dbName = WebConfig.getDatabaseName();
+            String userName = WebConfig.getDatabaseUserName();
+            String password = WebConfig.getDatabasePassword();
+            Process child = rt.exec("mysqldump -h localhost -u" + userName + " -p" + password + " " + dbName);
 
             // 设置导出编码为utf-8。这里必须是utf-8
             // 把进程执行中的控制台输出信息写入.sql文件，即生成了备份文件。注：如果不对控制台信息进行读出，则会导致进程堵塞无法运行
@@ -260,12 +264,37 @@ public class SettingsController extends BaseController {
     @Desc("数据库备份")
     @ResponseBody
     @RequestMapping(value = "/restore", method = RequestMethod.POST)
-    public ResponseBean restoreSettingsDatabase(String databaseName) {
+    public ResponseBean restoreSettingsDatabase() {
         try {
+            String backupPath = System.getProperty("user.home") + "/btgk-training-backup";
+            String maxFileName = "";
+            String maxFileAbsolute = "";
+
+            File directory = new File(backupPath);
+            if (!directory.exists()) {
+                return new ResponseBean(false);
+            }
+
+            File[] listFiles = directory.listFiles();// 获取目录下的所有文件或文件夹
+            if (listFiles == null) {// 如果目录为空，直接退出
+                return new ResponseBean(false);
+            }
+
+            // 遍历，目录下的所有文件
+            for (File f : listFiles) {
+                if (f.isFile() && f.getName().contains("btgk-training") && f.getName().compareTo(maxFileName) > 0) {
+                    maxFileName = f.getName();
+                    maxFileAbsolute = f.getAbsolutePath();
+                }
+            }
+
             Runtime runtime = Runtime.getRuntime();
-            Process process = runtime.exec("mysql -h localhost -uroot -p123456 --default-character-set=utf8 " + databaseName);
+            String dbName = WebConfig.getDatabaseName();
+            String userName = WebConfig.getDatabaseUserName();
+            String password = WebConfig.getDatabasePassword();
+            Process process = runtime.exec("mysql -h localhost -u" + userName + " -p" + password + " --default-character-set=utf8 " + dbName);
             OutputStream outputStream = process.getOutputStream();
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\test.sql"), "utf-8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(maxFileAbsolute), "utf-8"));
             String str = null;
             StringBuffer sb = new StringBuffer();
             while ((str = br.readLine()) != null) {

@@ -17,11 +17,15 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/data/orders.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
+
+    <%@ include file="../Shared/Payment.jsp" %>
+
+    <%@ include file="../Shared/RefundPayment.jsp" %>
 
     <div class="container-fluid">
         <div class="animated fadeIn">
@@ -83,18 +87,17 @@
                                         <tr>
                                             <th class="orders-no">订单编号</th>
                                             <th class="orders-type">订单类型</th>
-                                            <th class="orders-pay-type">支付方式</th>
                                             <th class="orders-amount">订单金额</th>
+                                            <th class="orders-pay-type">支付方式</th>
                                             <th class="orders-pay-amount">支付金额</th>
                                             <th class="orders-status">订单状态</th>
                                             <th class="orders-date">订单日期</th>
-                                            <th class="orders-person">缴费人</th>
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <c:forEach var="order" items="${orgOrdersList}">
-                                            <tr data-id="${order.orgOrders.id}">
+                                            <tr data-id="${order.orgOrders.id}" data-no="${order.orgOrders.orderNo}" data-amount="${order.orgOrders.orderAmount}" data-pay-amount="${order.orgOrders.payAmount}">
                                                 <td class="orders-no">${order.orgOrders.orderNo}</td>
                                                 <td class="orders-type">
                                                     <c:forEach var="type" items="${OrderTypeEnum}">
@@ -103,6 +106,7 @@
                                                         </c:if>
                                                     </c:forEach>
                                                 </td>
+                                                <td class="orders-amount">¥${order.orgOrders.orderAmount}元</td>
                                                 <td class="orders-pay-type">
                                                     <c:forEach var="type" items="${PayTypeEnum}">
                                                         <c:if test="${type.code == order.orgOrders.payType}">
@@ -110,7 +114,6 @@
                                                         </c:if>
                                                     </c:forEach>
                                                 </td>
-                                                <td class="orders-amount">¥${order.orgOrders.orderAmount}元</td>
                                                 <td class="orders-pay-amount">￥${order.orgOrders.payAmount}元</td>
                                                 <td class="orders-date">
                                                     <c:forEach var="status" items="${OrderStatusEnum}">
@@ -120,17 +123,21 @@
                                                     </c:forEach>
                                                 </td>
                                                 <td class="orders-date">${order.orgOrders.createTime}</td>
-                                                <td class="orders-person">${order.orgStudents.realName}</td>
                                                 <td>
-                                                    <a href="/admin/data/orders/detail?orderId=${order.orgOrders.id}" class="btn btn-sm btn-primary" title="查看详情">
-                                                        <i class="fa fa-search"></i> 查看
+                                                    <a href="/admin/order/detail?orderId=${order.orgOrders.id}" class="btn btn-sm btn-primary" title="查看详情">
+                                                        <i class="fa fa-search"></i> 详情
                                                     </a>
                                                     <c:if test="${order.orgOrders.orderStatus == 2}">
-                                                        <button class="btn btn-sm btn-danger" title="支付">
-                                                            <i class="fa fa-check"></i> 支付
+                                                        <button class="btn btn-sm btn-danger goto-payment" title="支付">
+                                                            <i class="fa fa-money"></i> 支付
                                                         </button>
-                                                        <button class="btn btn-sm btn-warning" title="取消">
-                                                            <i class="fa fa-check"></i> 取消
+                                                        <button class="btn btn-sm btn-warning cancel-payment" title="取消">
+                                                            <i class="fa fa-remove"></i> 取消
+                                                        </button>
+                                                    </c:if>
+                                                    <c:if test="${order.orgOrders.orderStatus == 1}">
+                                                        <button class="btn btn-sm btn-warning back-payment" title="退款">
+                                                            <i class="fa fa-history"></i> 退款
                                                         </button>
                                                     </c:if>
                                                 </td>

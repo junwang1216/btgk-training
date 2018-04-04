@@ -7,6 +7,8 @@ requirejs.config({
         "pace"      : 'bower_components/pace/pace',
 
         "alert"     : 'utils/jqueryAlert/alert/alert',
+        "datepicker"    : "bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker",
+        "datepicker-zh" : "bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min",
 
         "jquery.validate"              : 'bower_components/jquery.validation/dist/jquery.validate',
         "jquery.validate.unobtrusive"  : 'bower_components/Microsoft.jQuery.Unobtrusive.Validation/jquery.validate.unobtrusive',
@@ -26,13 +28,19 @@ requirejs.config({
         },
         "jquery.validate.unobtrusive": {
             deps: ["jquery", "jquery.validate"]
+        },
+        "datepicker": {
+            deps: ["jquery", "bootstrap"]
+        },
+        "datepicker-zh": {
+            deps: ["jquery", "datepicker"]
         }
     },  // 依赖关系
     waitSeconds: 0,
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 'jquery.validate.unobtrusive'], function ($, jqueryAlert) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 'jquery.validate.unobtrusive', "datepicker", "datepicker-zh"], function ($, jqueryAlert) {
     'use strict';
 
     // 表单校验配置
@@ -41,6 +49,20 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
             ignore: ":hidden"
         });
     });
+
+    function setDatePicker() {
+        $('input.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            todayHighlight: true,
+            toggleActive: true,
+            language: "zh-CN",
+            daysOfWeekHighlighted: "0,6",
+            weekStart: 0
+        });
+    }
+    setDatePicker();
 
     // 保存学生
     $(".save-students").on("click", function (e) {

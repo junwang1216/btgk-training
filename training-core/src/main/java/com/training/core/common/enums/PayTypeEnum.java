@@ -4,6 +4,7 @@ public enum PayTypeEnum {
     PAY_TYPE_MONEY(1, "现金"),
     PAY_TYPE_WX(2, "微信"),
     PAY_TYPE_ZFB(3, "支付宝"),
+    PAY_TYPE_YL(4, "银联"),
     ;
     int code;
     String desc;

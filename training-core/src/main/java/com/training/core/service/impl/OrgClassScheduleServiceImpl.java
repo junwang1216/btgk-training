@@ -25,6 +25,11 @@ public class OrgClassScheduleServiceImpl implements OrgClassScheduleService {
     }
 
     @Override
+    public int deleteClassSchedule(int scheduleId) {
+        return orgClassScheduleMapper.deleteByPrimaryKey(scheduleId);
+    }
+
+    @Override
     public List<OrgClassSchedule> queryOrgClassScheduleList(int classId) {
         return orgClassScheduleMapper.queryAllByClassId(classId);
     }

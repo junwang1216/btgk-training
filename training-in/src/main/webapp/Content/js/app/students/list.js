@@ -9,7 +9,8 @@ requirejs.config({
         "alert"     : 'utils/jqueryAlert/alert/alert',
 
         "base"      : 'js/widgets/base',
-        "override"  : 'js/widgets/override'
+        "override"  : 'js/widgets/override',
+        "payment"   : 'js/widgets/payment'
     },
     shim: {
         "bootstrap": {
@@ -23,7 +24,7 @@ requirejs.config({
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jqueryAlert) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'payment'], function ($, jqueryAlert) {
     'use strict';
 
     $.postJSON = function(url, data, callback) {
@@ -58,6 +59,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         }
     });
 
+    // TODO 废弃
     $(".user-list").on("click", ".user-recharge", function () {
         var classId = $(this).parents("tr").attr("data-class");
 
@@ -148,9 +150,41 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
                     'isModalClose' : true
                 });
 
-                window.setTimeout(function () {
-                    window.location.reload();
-                }, 1500);
+                var payment = new $.Payment({
+                    orderNo: res.data.orderNo,
+                    orderAmount: res.data.orderAmount,
+                    failure: function () {
+                        jqueryAlert({
+                            'icon'      : '/Content/images/icon-error.png',
+                            'content'   : "学生分班支付失败, 请稍后重试",
+                            'closeTime' : 2000,
+                            'modal'        : true,
+                            'isModalClose' : true
+                        });
+                    },
+                    success: function () {
+                        jqueryAlert({
+                            'icon'      : '/Content/images/icon-ok.png',
+                            'content'   : "学员分班支付成功",
+                            'closeTime' : 2000,
+                            'modal'        : true,
+                            'isModalClose' : true
+                        });
+
+                        window.setTimeout(function () {
+                            window.location.reload();
+                        }, 1500);
+                    },
+                    cancel: function () {
+                        window.setTimeout(function () {
+                            window.location.assign("/admin/order/list");
+                        }, 1500);
+                    }
+                });
+
+                payment.showConfirm(function () {
+                    $("#class_students").modal("hide");
+                });
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',
@@ -163,6 +197,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         });
     });
 
+    // TODO 废弃
     // 保存分班退费
     $(".save-class-recharge").on("click", function (e) {
         e.preventDefault();

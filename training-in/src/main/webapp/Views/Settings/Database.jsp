@@ -12,7 +12,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script async type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
+    <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
             data-main="Content/js/app/settings/database.js?v=${static_resource_version}"></script>
 </layout:override>
 
@@ -30,17 +30,21 @@
                             <button type="button" class="btn btn-primary btn-lg backup-database">
                                 <span class="fa fa-database"></span> 数据库备份
                             </button>
-                            <button type="button" class="btn btn-danger btn-lg restore-database">
+                            <span class="text-muted ml-2">需要安装"mysql"，并能够直接执行指令"mysqldump"。</span>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-danger restore-database">
                                 <span class="fa fa-database"></span> 数据库还原
                             </button>
+                            <span class="text-danger ml-2">注意：请慎重点击"数据库还原"，此功能会选择最近的备份进行数据覆盖。</span>
                         </div>
-                        <div class="card-footer text-right"></div>
                         <div class="card-block">
                             <table class="table table-striped table-sm admin-list">
                                 <thead>
                                 <tr>
                                     <th>编号</th>
-                                    <th>备份文件</th>
+                                    <th>文件名称</th>
+                                    <th>文件路径</th>
                                     <th>操作人</th>
                                     <th></th>
                                 </tr>
@@ -50,6 +54,7 @@
                                     <tr>
                                         <td>${loop.index + 1}</td>
                                         <td>${f.getName()}</td>
+                                        <td>${f.getAbsolutePath()}</td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-danger" title="删除备份">
                                                 <i class="fa fa-remove"></i> 删除

@@ -10,12 +10,22 @@ public interface OrgClassStudentsService {
 
     List<OrgClassStudents> queryOrgClassStudentsListByClassId(Integer classId);
 
+    List<OrgClassStudents> queryOrgClassStudentsListByOrderNo(String orderNo);
+
     OrgClassStudents getOrgClassStudents(Integer id);
 
     int totalAllStudentsCount(String startTime, String endTime);
 
+    List<OrgClassStudents> queryOrgClassStudentsListByDate(String startTime, String endTime);
+
     int addOrgClassStudents(OrgClassStudents orgClassStudents);
 
+    int addOrgClassStudentsBath(List<OrgClassStudents> orgClassStudentsList);
+
     int delOrgClassStudents(OrgClassStudents orgClassStudents);
+
+    int delOrgClassStudentsBatch(List<OrgClassStudents> orgClassStudentsList);
+
+    int saveOrgClassStudents(OrgClassStudents orgClassStudents);
 
 }

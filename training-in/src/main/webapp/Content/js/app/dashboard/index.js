@@ -96,46 +96,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
     });
 
     /* 统计班级量 */
-    function totalClassCount(type) {
-        $(".total-class .dropdown-item[data-type='" + type + "']").addClass("active").siblings().removeClass("active");
-
-        $.getJSON('/admin/dashboard/class/total', {type: type}, function (res) {
-            var data = res.data;
-
-            if (res.code == 1) {
-                console.log(data);
-                $(".total-class .total-class-count").text(data.start + data.working + data.end);
-                $(".total-class .total-class-name").text(type == "year" ? "年班级数量（个）" : (type == "total" ? "总班级数量（个）" : "月班级数量（个）"));
-            } else {
-                jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "统计班级数量失败，请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
-                });
-            }
-        });
-    }
-    totalClassCount("year");
-    $(".total-class").on("click", ".dropdown-item", function (e) {
-        e.preventDefault();
-
-        totalClassCount($(this).attr("data-type"));
-    });
-
-    var classNum = {
-        labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
-        datasets: [
-            {
-                label: '班级数量',
-                backgroundColor: $.brandInfo,
-                borderColor: 'rgba(255,255,255,.55)',
-                data: [65, 59, 84, 84, 51, 55, 40, 65, 59, 84, 65, 59]
-            }
-        ]
-    };
-    var classOpt = {
+    var classOptions = {
         maintainAspectRatio: false,
         legend: {
             display: false
@@ -173,14 +134,53 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
             }
         }
     };
-    new Chart($('#total_class_chart'), {
-        type: 'line',
-        data: classNum,
-        options: classOpt
+    function totalClassCount(type) {
+        $(".total-class .dropdown-item[data-type='" + type + "']").addClass("active").siblings().removeClass("active");
+
+        $.getJSON('/admin/dashboard/class/total', {type: type}, function (res) {
+            var data = res.data;
+
+            if (res.code == 1) {
+                var dateCell = type == "year" ? "年" : (type == "total" ? "总" : "月");
+                $(".total-class .total-class-count").text(dateCell+ "：" + data.working + "/" + (data.start + data.working + data.end));
+
+                var classNum = {
+                    labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
+                    datasets: [
+                        {
+                            label: '班级数量',
+                            backgroundColor: $.brandInfo,
+                            borderColor: 'rgba(255,255,255,.55)',
+                            data: [65, 59, 84, 84, 51, 55, 40, 65, 59, 84, 65, 59]
+                        }
+                    ]
+                };
+                new Chart($('#total_class_chart'), {
+                    type: 'line',
+                    data: classNum,
+                    options: classOptions
+                });
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : "统计班级数量失败，请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+            }
+        });
+    }
+    totalClassCount("year");
+    $(".total-class").on("click", ".dropdown-item", function (e) {
+        e.preventDefault();
+
+        totalClassCount($(this).attr("data-type"));
     });
     //end
 
-    var options = {
+    /* 统计收支 */
+    var incomeOptions = {
         maintainAspectRatio: false,
         legend: {
             display: false
@@ -191,7 +191,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
             }],
             yAxes: [{
                 display: false
-            }],
+            }]
         },
         elements: {
             line: {
@@ -200,74 +200,113 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
             point: {
                 radius: 0,
                 hitRadius: 10,
-                hoverRadius: 4,
-            },
+                hoverRadius: 4
+            }
         }
     };
-    var data = {
-        labels: labels,
-        datasets: [
-            {
-                label: 'My First dataset',
-                backgroundColor: 'rgba(255,255,255,.2)',
-                borderColor: 'rgba(255,255,255,.55)',
-                data: [78, 81, 80, 45, 34, 12, 40]
-            },
-        ]
-    };
-    var ctx = $('#card-chart3');
-    var cardChart3 = new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: options
-    });
-
-    //Random Numbers
-    function random(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
-    var elements = 16;
-    var labels = [];
-    var data = [];
-
-    for (var i = 2000; i <= 2000 + elements; i++) {
-        labels.push(i);
-        data.push(random(40, 100));
-    }
-
-    var options = {
+    var expendOptions = {
         maintainAspectRatio: false,
         legend: {
             display: false
         },
         scales: {
             xAxes: [{
-                display: false,
-                barPercentage: 0.6,
+                display: false
             }],
             yAxes: [{
-                display: false,
+                display: false
             }]
         },
+        elements: {
+            line: {
+                borderWidth: 2
+            },
+            point: {
+                radius: 0,
+                hitRadius: 10,
+                hoverRadius: 4
+            }
+        }
 
     };
-    var data = {
-        labels: labels,
-        datasets: [
-            {
-                backgroundColor: 'rgba(255,255,255,.3)',
-                borderColor: 'transparent',
-                data: data
-            },
-        ]
-    };
-    var ctx = $('#card-chart4');
-    var cardChart4 = new Chart(ctx, {
-        type: 'bar',
-        data: data,
-        options: options
+    function totalIncomeExpendClassCount(type, cell) {
+        if (cell == "all" || cell == "income") {
+            $(".income-class .dropdown-item[data-type='" + type + "']").addClass("active").siblings().removeClass("active");
+        }
+
+        if (cell == "all" || cell == "expend") {
+            $(".expend-class .dropdown-item[data-type='" + type + "']").addClass("active").siblings().removeClass("active");
+        }
+
+        $.getJSON('/admin/dashboard/money/total', {type: type}, function (res) {
+            var data = res.data;
+
+            if (res.code == 1) {
+                var dateCell = (type == "year" ? "年" : (type == "total" ? "总" : "月"));
+
+                if (cell == "all" || cell == "income") {
+                    $(".income-class .income-class-count").text(dateCell + ":" + data.total + "元");
+
+                    var incomeNum = {
+                        labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
+                        datasets: [
+                            {
+                                label: '入账金额',
+                                backgroundColor: 'rgba(255,255,255,.3)',
+                                borderColor: 'rgba(255,255,255,.55)',
+                                data: [65, 59, 84, 84, 51, 55, 40, 65, 59, 84, 65, 59]
+                            }
+                        ]
+                    };
+                    new Chart($('#income_class_chart'), {
+                        type: 'line',
+                        data: incomeNum,
+                        options: incomeOptions
+                    });
+                }
+
+                if (cell == "all" || cell == "expend") {
+                    $(".expend-class .expend-class-count").text(dateCell + ":" + data.refund + "元");
+                    var expendNum = {
+                        labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
+                        datasets: [
+                            {
+                                label: '入账金额',
+                                backgroundColor: 'rgba(255,255,255,.3)',
+                                borderColor: 'transparent',
+                                data: [65, 59, 84, 84, 51, 55, 40, 65, 59, 84, 65, 59]
+                            }
+                        ]
+                    };
+                    new Chart($('#expend_class_chart'), {
+                        type: 'line',
+                        data: expendNum,
+                        options: expendOptions
+                    });
+                }
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : "统计收支金额失败，请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+            }
+        });
+    }
+    totalIncomeExpendClassCount("year", "all");
+    $(".income-class").on("click", ".dropdown-item", function (e) {
+        e.preventDefault();
+
+        totalIncomeExpendClassCount($(this).attr("data-type"), "income");
     });
+    $(".expend-class").on("click", ".dropdown-item", function (e) {
+        e.preventDefault();
+
+        totalIncomeExpendClassCount($(this).attr("data-type"), "expend");
+    });
+    //end
 
     /*统计学员数量*/
     /* 统计班级量 */
@@ -280,7 +319,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
         scales: {
             xAxes: [{
                 gridLines: {
-                    drawOnChartArea: false
+                    drawOnChartArea: true
                 }
             }],
             yAxes: [{
@@ -291,6 +330,10 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
             }]
         },
         elements: {
+            line: {
+                tension: 0.00001,
+                borderWidth: 1
+            },
             point: {
                 radius: 4,
                 hitRadius: 10,
@@ -304,7 +347,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
             var data = res.data;
 
             if (res.code == 1) {
-                $(".total-students-date").text(data.startTime + " 至 " + data.endTime);
+                $(".total-students-date").text(data.titleShow);
                 $(".total-students-all").text(data.total + " Users");
                 $(".total-students-class").text(data.totalCreate + " Users");
                 $(".total-students-create").text(data.totalCurrent + " Users");

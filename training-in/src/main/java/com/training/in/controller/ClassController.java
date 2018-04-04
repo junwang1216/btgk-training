@@ -324,22 +324,58 @@ public class ClassController extends BaseController {
         }
     }
 
+    @Desc("删除排班")
+    @ResponseBody
+    @RequestMapping(value = "/deleteClassSchedule", method = RequestMethod.POST)
+    public ResponseBean deleteClassSchedule(@RequestBody OrgClassSchedule orgClassSchedule) {
+        try {
+            int result = 1;
+
+            OrgClass orgClass = orgClassService.getOrgClass(orgClassSchedule.getClassId());
+            if (orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode()) {
+                result = orgClassScheduleService.deleteClassSchedule(orgClassSchedule.getId());
+            }
+
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "删除班级[" + orgClass.getClassName() + "]排期计划");
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
     @Desc("保存排班")
     @ResponseBody
     @RequestMapping(value = "/saveClassSchedule", method = RequestMethod.POST)
     public ResponseBean saveClassSchedule(@RequestBody OrgClassScheduleRequest orgClassScheduleRequest) {
         try {
-            orgClassScheduleService.clearAllByClassId(orgClassScheduleRequest.getClassId());
+            //orgClassScheduleService.clearAllByClassId(orgClassScheduleRequest.getClassId());
 
             int result;
 
+            OrgClass orgClass = orgClassService.getOrgClass(orgClassScheduleRequest.getClassId());
+            List<OrgClassSchedule> orgClassScheduleList = new ArrayList<>();
             for (OrgClassSchedule orgClassSchedule : orgClassScheduleRequest.getOrgClassScheduleList()) {
                 orgClassSchedule.setCreateTime(DateUtil.getNowDate());
                 orgClassSchedule.setClassId(orgClassScheduleRequest.getClassId());
-            }
-            result = orgClassScheduleService.addOrgClassScheduleBatch(orgClassScheduleRequest.getOrgClassScheduleList());
 
-            OrgClass orgClass = orgClassService.getOrgClass(orgClassScheduleRequest.getClassId());
+                if (orgClassSchedule.getId() == null) {
+                    orgClassScheduleList.add(orgClassSchedule);
+                }
+            }
+
+            if (orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode()) {
+                result = orgClassScheduleService.addOrgClassScheduleBatch(orgClassScheduleList);
+            } else {
+                orgClassScheduleService.clearAllByClassId(orgClassScheduleRequest.getClassId());
+
+                result = orgClassScheduleService.addOrgClassScheduleBatch(orgClassScheduleRequest.getOrgClassScheduleList());
+            }
+
             log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "设置班级[" + orgClass.getClassName() + "]排期计划");
 
             return new ResponseBean(result > 0);

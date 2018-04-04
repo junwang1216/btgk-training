@@ -40,12 +40,40 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
                     'isModalClose' : true
                 });
                 window.setTimeout(function () {
-                    //window.location.reload();
+                    window.location.reload();
                 }, 1500);
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',
                     'content'   : "备份数据库失败，请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+            }
+        });
+    });
+
+    // 还原数据库
+    $(".restore-database").on("click", function (e) {
+        e.preventDefault();
+
+        $.post('/admin/settings/restore', {}, function (res) {
+            if (res.code == 1) {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-ok.png',
+                    'content'   : "还原数据库成功",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+                window.setTimeout(function () {
+                    //window.location.reload();
+                }, 1500);
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : "还原数据库失败，请稍后重试",
                     'closeTime' : 2000,
                     'modal'        : true,
                     'isModalClose' : true

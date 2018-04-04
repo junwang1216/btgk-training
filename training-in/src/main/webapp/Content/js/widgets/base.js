@@ -136,4 +136,20 @@ define(["jquery"], function ($) {
 
     });
 
+    /** * 自定义校验 * **/
+    /**
+     * 不等于校验
+     * <input type="text" value="" name="cus" id="cus" data-val="true" data-val-notequal="姓名不能够等于 123" data-val-notequal-va="123"/>
+     * <span data-valmsg-for="cus" data-valmsg-replace="true"></span>
+     */
+    /*$.validator.addMethod('notequal', function (value, element, params) {
+        return value != params["va"];
+    });
+    $.validator.unobtrusive.adapters.add("notequal", ["va"], function (options) {
+        options.rules["notequal"] = {
+            va: options.params.va
+        };
+        options.messages["notequal"] = options.message;
+    });*/
+
 });

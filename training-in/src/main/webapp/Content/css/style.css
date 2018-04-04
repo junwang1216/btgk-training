@@ -11,3 +11,7 @@
 a {
     text-decoration: none !important;
 }
+
+.alert-btn-p {
+    margin-bottom: 0;
+}
