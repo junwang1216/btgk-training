@@ -33,13 +33,16 @@
                     <form id="class_status_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                         <input type="hidden" id="info_class_id" name="id" value="">
                         <div class="form-group row">
-                            <div class="col-md-12">
-                                <select class="form-control" id="info_class_status" name="status">
-                                    <c:forEach var="st" items="${ClassStatusEnum}">
-                                        <option value="${st.code}">${st.desc}</option>
-                                    </c:forEach>
-                                </select>
-                                <div data-valmsg-for="status" data-valmsg-replace="true"></div>
+                            <div class="col-md-12 hidden-sm-down">
+                                <div class="btn-toolbar" role="toolbar">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <c:forEach var="st" items="${ClassStatusEnum}" varStatus="loop">
+                                            <label class="btn btn-outline-primary">
+                                                <input type="radio" name="status" id="info_class_status${loop.index}" value="${st.code}"> ${st.desc}
+                                            </label>
+                                        </c:forEach>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>

@@ -1,6 +1,7 @@
 package com.training.core.common.enums;
 
 public enum OrderTypeEnum {
+    ORDER_TYPE_INIT(99, "--"),
     ORDER_TYPE_CLASS(1, "培训班费用"),
     ORDER_TYPE_REFUND(2, "培训班退费"),
     ;
@@ -18,7 +19,7 @@ public enum OrderTypeEnum {
                 return type;
             }
         }
-        return null;
+        return ORDER_TYPE_INIT;
     }
 
 

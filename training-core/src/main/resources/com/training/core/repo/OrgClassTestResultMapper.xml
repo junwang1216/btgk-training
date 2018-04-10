@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgClassTestResultMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgClassTestResult">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="testId" jdbcType="INTEGER" property="testId" />
+    <result column="studentId" jdbcType="INTEGER" property="studentId" />
+    <result column="skillId" jdbcType="INTEGER" property="skillId" />
+    <result column="testScore" jdbcType="INTEGER" property="testScore" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+    <result column="testRemark" jdbcType="VARCHAR" property="testRemark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, studentId, skillId, testScore, createTime, updateTime, testId, testRemark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_class_test_result
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_class_test_result
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClassTestResult">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class_test_result (studentId, skillId, testScore, createTime, updateTime, testId, testRemark)
+    values (#{studentId,jdbcType=INTEGER}, #{skillId,jdbcType=INTEGER}, #{testScore,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}, #{testId,jdbcType=INTEGER}, #{testRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class_test_result (studentId, skillId, testScore, createTime, updateTime, testId, testRemark)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.studentId,jdbcType=INTEGER}, #{item.skillId,jdbcType=INTEGER}, #{item.testScore,jdbcType=INTEGER},
+      #{item.createTime,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=VARCHAR}, #{item.testId,jdbcType=INTEGER},
+      #{item.testRemark,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgClassTestResult">
+    update org_class_test_result
+    set studentId = #{studentId,jdbcType=INTEGER},
+      skillId = #{skillId,jdbcType=INTEGER},
+      testScore = #{testScore,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=VARCHAR},
+      updateTime = #{updateTime,jdbcType=VARCHAR},
+      testId = #{testId,jdbcType=INTEGER},
+      testRemark = #{testRemark,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from org_class_test_result
+    where 1 = 1
+    <if test="testId != null">
+      and testId = #{testId,jdbcType=INTEGER}
+    </if>
+    <if test="studentId != null">
+      and studentId = #{studentId,jdbcType=INTEGER}
+    </if>
+    order by skillId asc
+  </select>
+  <delete id="clearTestResultByStudentId" parameterType="java.lang.Integer">
+    delete from org_class_test_result
+    where studentId = #{studentId,jdbcType=INTEGER}
+  </delete>
+</mapper>

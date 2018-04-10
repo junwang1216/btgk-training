@@ -14,8 +14,11 @@ import com.training.core.repo.po.*;
 import com.training.core.service.*;
 import com.training.in.request.OrgClassQueryRequest;
 import com.training.in.request.OrgClassScheduleRequest;
+import com.training.in.request.OrgClassTestQueryRequest;
+import com.training.in.request.OrgClassTestResultRequest;
 import com.training.in.response.OrgAttendanceResponse;
 import com.training.in.response.OrgClassResponse;
+import com.training.in.response.OrgClassTestResponse;
 import com.training.in.response.OrgStudentsResponse;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
@@ -55,6 +58,9 @@ public class ClassController extends BaseController {
     private OrgSportsCoachesService orgSportsCoachesService;
 
     @Resource
+    private OrgSportsSkillsService orgSportsSkillsService;
+
+    @Resource
     private OrgAttendanceService orgAttendanceService;
 
     @Resource
@@ -62,6 +68,12 @@ public class ClassController extends BaseController {
 
     @Resource
     private OrgClassStudentsService orgClassStudentsService;
+
+    @Resource
+    private OrgClassTestService orgClassTestService;
+
+    @Resource
+    private OrgClassTestResultService orgClassTestResultService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
@@ -220,8 +232,15 @@ public class ClassController extends BaseController {
 
         Map<String, Object> map = new HashMap<>();
         List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(Integer.parseInt(classId));
+        List<OrgClassSchedule> orgClassScheduleList1 = new ArrayList<>();
+        for (OrgClassSchedule orgClassSchedule : orgClassScheduleList) {
+            if (orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode() && orgClassSchedule.getClassDate() == null) {
+                continue;
+            }
+            orgClassScheduleList1.add(orgClassSchedule);
+        }
 
-        if (orgClassScheduleList.size() == 0) {
+        if (orgClassScheduleList1.size() == 0) {
             OrgClassSchedule orgClassSchedule = new OrgClassSchedule();
             map.put("startDate", orgClassSchedule.getStartDate());
             map.put("endDate", orgClassSchedule.getEndDate());
@@ -230,7 +249,7 @@ public class ClassController extends BaseController {
             map.put("classDateStyle", "display:none;");
         }
         else {
-            OrgClassSchedule orgClassSchedule = orgClassScheduleList.get(0);
+            OrgClassSchedule orgClassSchedule = orgClassScheduleList1.get(0);
             map.put("startDate", orgClassSchedule.getStartDate());
             map.put("endDate", orgClassSchedule.getEndDate());
             if (orgClassSchedule.getClassDate() == null) {
@@ -246,7 +265,7 @@ public class ClassController extends BaseController {
         }
 
         modelAndView.addObject("orgClassSchedule", map);
-        modelAndView.addObject("orgClassScheduleList", orgClassScheduleList);
+        modelAndView.addObject("orgClassScheduleList", orgClassScheduleList1);
 
 
         OrgCourses orgCourses = orgCoursesService.getOrgCourses(orgClass.getCourseId());
@@ -303,16 +322,73 @@ public class ClassController extends BaseController {
     @Desc("保存班级状态")
     @ResponseBody
     @RequestMapping(value = "/saveClassStatus", method = RequestMethod.POST)
-    public ResponseBean saveClassStatus(OrgClass orgClass) {
+    public ResponseBean saveClassStatus(OrgClass orgClass) throws Exception {
         try {
 
             int result;
+            OrgClass orgClass1 = orgClassService.getOrgClass(orgClass.getId());
+
+            if (orgClass.getStatus().intValue() == orgClass1.getStatus().intValue()) {
+                // 未做改动
+                return new ResponseBean(false);
+            }
+
+            if (orgClass1.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode() && orgClass.getStatus() == ClassStatusEnum.STATUS_START.getCode()) {
+                // 上课中 -> 已开班
+                return new ResponseBean(false);
+            }
+
+            if (orgClass1.getStatus() == ClassStatusEnum.STATUS_END.getCode() && orgClass.getStatus() == ClassStatusEnum.STATUS_START.getCode()) {
+                // 已完结 -> 已开班
+                return new ResponseBean(false);
+            }
+
+            if (orgClass1.getStatus() == ClassStatusEnum.STATUS_END.getCode() && orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode()) {
+                // 已完结 -> 上课中
+                return new ResponseBean(false);
+            }
 
             orgClass.setUpdateTime(DateUtil.getNowDate());
             result = orgClassService.saveOrgClassStatus(orgClass);
 
-            OrgClass orgClass1 = orgClassService.getOrgClass(orgClass.getId());
             log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "切换班级[" + orgClass1.getClassName() + "]状态");
+
+            if (orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode() && result > 0) {
+                List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(orgClass.getId());
+                List<OrgClassSchedule> orgClassScheduleAllList = new ArrayList<>();
+                for (OrgClassSchedule orgClassSchedule : orgClassScheduleList) {
+                    if (orgClassSchedule.getClassDate() != null) {
+                        orgClassScheduleAllList.clear();
+                        break;
+                    }
+
+                    for (String week : DateUtil.getDateScopeWeekList(orgClassSchedule.getStartDate(), orgClassSchedule.getEndDate(), orgClassSchedule.getClassWeek())) {
+                        OrgClassSchedule orgClassSchedule1 = new OrgClassSchedule();
+
+                        orgClassSchedule1.setClassId(orgClassSchedule.getClassId());
+                        orgClassSchedule1.setClassDate(week);
+                        orgClassSchedule1.setStartTime(orgClassSchedule.getStartTime());
+                        orgClassSchedule1.setEndTime(orgClassSchedule.getEndTime());
+                        orgClassSchedule1.setCoachId(orgClassSchedule.getCoachId());
+                        orgClassSchedule1.setCreateTime(DateUtil.getNowDate());
+                        orgClassSchedule1.setClassWeek(null);
+                        orgClassSchedule1.setStartDate(null);
+                        orgClassSchedule1.setEndDate(null);
+
+                        orgClassScheduleAllList.add(orgClassSchedule1);
+                    }
+                }
+
+                if (orgClassScheduleAllList.size() > 0) {
+                    Collections.sort(orgClassScheduleAllList, new Comparator<OrgClassSchedule> () {
+                        public int compare(OrgClassSchedule arg0, OrgClassSchedule arg1) {
+                            return arg0.getClassDate().compareTo(arg1.getClassDate());
+                        }
+                    });
+
+                    result = orgClassScheduleService.addOrgClassScheduleBatch(orgClassScheduleAllList);
+                }
+            }
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {
@@ -390,10 +466,211 @@ public class ClassController extends BaseController {
 
     /** 其他班级设置 **/
 
+    private OrgClass getOrgClass(Integer classId, List<OrgClass> orgClassList) {
+        for (OrgClass orgClass : orgClassList) {
+            if (orgClass.getId().intValue() == classId.intValue()) {
+                return orgClass;
+            }
+        }
+
+        return null;
+    }
+
     @Desc("班级评测")
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String renderClassTest() {
-        return "Class/Test";
+    public ModelAndView renderClassTest(OrgClassTestQueryRequest orgClassTestQueryRequest) {
+
+        ModelAndView modelAndView = new ModelAndView("Class/Test");
+
+        int totalOrgClassCount = orgClassService.queryOrgClassCount(null, ClassStatusEnum.STATUS_WORKING.getCode());
+        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(null, ClassStatusEnum.STATUS_WORKING.getCode(), 0, totalOrgClassCount);
+
+        modelAndView.addObject("orgClassList", orgClassList);
+
+        int total = orgClassTestService.queryOrgClassTestCount(orgClassTestQueryRequest.getClassId(), orgClassTestQueryRequest.getStatus());
+        int start = orgClassTestQueryRequest.getPage() < 1 ? 0 : orgClassTestQueryRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgClassTest> orgClassTestList = orgClassTestService.queryOrgClassTestList(orgClassTestQueryRequest.getClassId(), orgClassTestQueryRequest.getStatus(), start * pageSize, pageSize);
+
+        List<OrgClassTestResponse> orgClassTestResponseList = new ArrayList<>();
+        for (OrgClassTest orgClassTest : orgClassTestList) {
+            OrgClassTestResponse orgClassTestResponse = new OrgClassTestResponse();
+
+            orgClassTestResponse.setOrgClassTest(orgClassTest);
+
+            OrgClass orgClass = getOrgClass(orgClassTest.getClassId(), orgClassList);
+            if (orgClass != null) {
+                orgClassTestResponse.setOrgClass(orgClass);
+
+                OrgCoaches orgCoaches = orgCoachesService.getOrgCoaches(orgClass.getCoachId());
+                orgClassTestResponse.setOrgCoaches(orgCoaches);
+
+                OrgClassSchedule orgClassSchedule = orgClassScheduleService.getClassSchedule(orgClassTest.getClassDate());
+                orgClassTestResponse.setOrgClassSchedule(orgClassSchedule);
+            }
+
+            orgClassTestResponseList.add(orgClassTestResponse);
+        }
+
+        modelAndView.addObject("orgClassTestList", orgClassTestResponseList);
+
+        Page page = new Page(pageSize, total);
+        page.setPage(orgClassTestQueryRequest.getPage());
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/class/test?classId=" + orgClassTestQueryRequest.getClassId() + "&status=" + orgClassTestQueryRequest.getStatus());
+        modelAndView.addObject("page", page);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("获取某个班级的评测日期")
+    @ResponseBody
+    @RequestMapping(value = "/getClassDateByClassId", method = RequestMethod.GET)
+    public ResponseBean getClassDateByClassId(String classId) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            if (classId == null) {
+                return new ResponseBean(false);
+            }
+
+            List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(Integer.parseInt(classId));
+            map.put("orgClassScheduleList", orgClassScheduleList);
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("获取评测结果")
+    @ResponseBody
+    @RequestMapping(value = "/getClassTestResult", method = RequestMethod.GET)
+    public ResponseBean getClassTestResult(String testId, String classId, boolean isView) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            if (testId == null || classId == null) {
+                return new ResponseBean(false);
+            }
+
+            OrgClass orgClass = orgClassService.getOrgClass(Integer.parseInt(classId));
+            OrgCourses orgCourses = orgCoursesService.getOrgCourses(orgClass.getCourseId());
+
+            List<OrgSportsSkills> orgSportsSkillsList = orgSportsSkillsService.queryOrgSportsSkillsList(orgCourses.getSportId());
+            map.put("orgSportsSkillsList", orgSportsSkillsList);
+
+            List<OrgClassStudents> orgClassStudentsList = orgClassStudentsService.queryOrgClassStudentsListByClassId(Integer.parseInt(classId));
+            List<OrgStudents> orgStudentsList = new ArrayList<>();
+            List<Map> scoreList = new ArrayList<>();
+            for (OrgClassStudents orgClassStudents : orgClassStudentsList) {
+                OrgStudents orgStudents = orgStudentsService.getOrgStudents(orgClassStudents.getStudentId());
+
+                if (isView) {
+                    List<OrgClassTestResult> orgClassTestResultList = orgClassTestResultService.queryOrgClassTestResultList(Integer.parseInt(testId), orgStudents.getId());
+                    Map scoreItem = new HashMap();
+                    int totalValue = 0;
+                    int totalMaxValue = 0;
+                    for (OrgClassTestResult orgClassTestResult : orgClassTestResultList) {
+                        for (OrgSportsSkills orgSportsSkills : orgSportsSkillsList) {
+                            if (orgSportsSkills.getId().intValue() == orgClassTestResult.getSkillId()) {
+                                totalValue += orgClassTestResult.getTestScore();
+                                totalMaxValue += orgSportsSkills.getMaxValue();
+                                scoreItem.put(orgSportsSkills.getSkillName(), orgClassTestResult.getTestScore().toString());
+                            }
+                        }
+                        if (orgClassTestResult.getTestRemark() != null) {
+                            scoreItem.put("testRemark", orgClassTestResult.getTestRemark());
+                        }
+                    }
+                    scoreItem.put("总计", totalValue + "/" + totalMaxValue);
+                    scoreItem.put("学员", orgStudents.getRealName());
+                    scoreItem.put("totalValue", totalValue);
+                    scoreItem.put("totalMaxValue", totalMaxValue);
+                    scoreItem.put("studentId", orgStudents.getId());
+                    scoreItem.put("classId", classId);
+                    scoreItem.put("testId", testId);
+                    scoreList.add(scoreItem);
+                }
+
+                orgStudentsList.add(orgStudents);
+            }
+            map.put("orgStudentsList", orgStudentsList);
+            map.put("scoreList", scoreList);
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("保存班级评测")
+    @ResponseBody
+    @RequestMapping(value = "/saveClassTest", method = RequestMethod.POST)
+    public ResponseBean saveClassTest(OrgClassTest orgClassTest) {
+        try {
+            int result;
+
+            if (orgClassTest.getId() != null) {
+                result = orgClassTestService.saveOrgClassTest(orgClassTest);
+            } else {
+                orgClassTest.setCreateTime(DateUtil.getNowDate());
+                orgClassTest.setStatus(StatusEnum.STATUS_OK.getCode());
+
+                result = orgClassTestService.addOrgClassTest(orgClassTest);
+            }
+
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "添加或者保存班级评测[" + orgClassTest.getTestName() + "]");
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("保存班级评测结果")
+    @ResponseBody
+    @RequestMapping(value = "/saveClassTestResult", method = RequestMethod.POST)
+    public ResponseBean saveClassTestResult(@RequestBody OrgClassTestResultRequest orgClassTestResultRequest) {
+        try {
+
+            int result;
+
+            orgClassTestResultService.clearTestResultByStudentId(orgClassTestResultRequest.getStudentId());
+
+            for (OrgClassTestResult orgClassTestResult : orgClassTestResultRequest.getOrgClassTestResultList()) {
+                orgClassTestResult.setCreateTime(DateUtil.getNowDate());
+                orgClassTestResult.setUpdateTime(DateUtil.getNowDate());
+                orgClassTestResult.setStudentId(orgClassTestResultRequest.getStudentId());
+                orgClassTestResult.setTestId(orgClassTestResultRequest.getTestId());
+                orgClassTestResult.setTestRemark(orgClassTestResultRequest.getTestRemark());
+            }
+
+            result = orgClassTestResultService.addOrgClassTestResultBatch(orgClassTestResultRequest.getOrgClassTestResultList());
+
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "添加或者保存学元评测结果[" + orgClassTestResultRequest.getStudentId() + "]");
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
     }
 
     private int checkClassSign(List<OrgAttendance> orgAttendanceList, int userId, String inDate, int inRole) {
@@ -467,6 +744,9 @@ public class ClassController extends BaseController {
                 orgClassScheduleAllList.add(orgClassSchedule);
             }
             else {
+                if (orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode()) {
+                    continue;
+                }
                 for (String week : DateUtil.getDateScopeWeekList(orgClassSchedule.getStartDate(), orgClassSchedule.getEndDate(), orgClassSchedule.getClassWeek())) {
                     OrgClassSchedule orgClassSchedule1 = new OrgClassSchedule();
 

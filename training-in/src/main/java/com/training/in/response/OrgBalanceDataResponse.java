@@ -12,12 +12,12 @@ public class OrgBalanceDataResponse implements Serializable {
     /**
      * 费用类型
      */
-    private Integer balanceType;
+    private String balanceType;
 
     /**
      * 费用支付类型
      */
-    private Integer balancePayType;
+    private String balancePayType;
 
     /**
      * 费用金额
@@ -62,19 +62,19 @@ public class OrgBalanceDataResponse implements Serializable {
         this.balanceNo = balanceNo;
     }
 
-    public Integer getBalanceType() {
+    public String getBalanceType() {
         return balanceType;
     }
 
-    public void setBalanceType(Integer balanceType) {
+    public void setBalanceType(String balanceType) {
         this.balanceType = balanceType;
     }
 
-    public Integer getBalancePayType() {
+    public String getBalancePayType() {
         return balancePayType;
     }
 
-    public void setBalancePayType(Integer balancePayType) {
+    public void setBalancePayType(String balancePayType) {
         this.balancePayType = balancePayType;
     }
 

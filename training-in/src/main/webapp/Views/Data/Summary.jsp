@@ -6,8 +6,20 @@
 <%@ taglib uri="http://www.sports.com/tags/tag" prefix="layout" %>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
+    <script type="text/javascript">
+        window.summary = {
+            labelList : '${labelList}'.replace(/\]|\[|\s/g,"").split(","),
+            titleShow : '${titleShow}',
+            valuePaymentTotal : ${valuePaymentTotal},
+            valuePaymentList  : ${valuePaymentList},
+            valueRefundTotal  : ${valueRefundTotal},
+            valueRefundList   : ${valueRefundList},
+            startTime : '${startTime}',
+            endTime   : '${endTime}'
+        };
+    </script>
     <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
-            data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
+            data-main="Content/js/app/data/summary.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -23,40 +35,29 @@
                         <div class="card-block">
                             <form action="" method="post" class="form-horizontal">
                                 <div class="form-group row">
-                                    <div class="col-md-2">
-                                        <a href="#" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 昨日
+                                    <div class="col-md-12">
+                                        <a href="/admin/data/summary?typeTime=prev_month" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-minus-o"></i> 上 月
                                         </a>
-                                        <a href="#" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-check-o"></i> 今日
+                                        <a href="/admin/data/summary?typeTime=month" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-check-o"></i> 本 月
                                         </a>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <select id="income_date" name="summaryDate" class="form-control">
-                                            <option>自定义期限</option>
-                                            <option>最近一个月</option>
-                                            <option>最近三个月</option>
-                                            <option>最近六个月</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" id="summary_start" name="summaryStart" class="form-control" placeholder="开始日期">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" id="summary_end" name="summaryEnd" class="form-control" placeholder="结束日期">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-primary">
-                                            <i class="fa fa-search"></i> 检 索
-                                        </button>
+                                        <a href="/admin/data/summary?typeTime=prev_year" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-minus-o"></i> 去 年
+                                        </a>
+                                        <a href="/admin/data/summary?typeTime=year" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-check-o"></i> 本 年
+                                        </a>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="card-footer"></div>
                         <div class="card-block">
-                            <p>场馆收支统计</p>
-                            <img src="/Content/images/demo/chart2.png" style="width: 100%">
+                            <p>培训收支统计</p>
+                            <div class="chart-wrapper" style="height:400px;">
+                                <canvas id="data_summary_chart" class="chart" height="400"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>

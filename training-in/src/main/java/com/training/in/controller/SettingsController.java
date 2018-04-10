@@ -207,6 +207,12 @@ public class SettingsController extends BaseController {
             }
         }
 
+        Collections.sort(fileList, new Comparator<File> () {
+            public int compare(File arg0, File arg1) {
+                return arg0.getName().compareTo(arg1.getName());
+            }
+        });
+
         modelAndView.addObject("fileList", fileList);
         return setModelAndView(modelAndView);
     }

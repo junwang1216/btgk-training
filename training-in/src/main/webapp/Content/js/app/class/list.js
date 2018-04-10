@@ -44,7 +44,12 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         var classStatus = $(this).parents("tr").attr("data-status");
 
         $("#info_class_id").val(classId);
-        $("#info_class_status").val(classStatus);
+
+        $("#class_status").find(".btn-outline-primary.active").removeClass("active");
+        $("#class_status").find("input[name='status']:checked").prop("checked", false);
+
+        $("#class_status").find("input[name='status'][value='" + classStatus + "']").prop("checked", true);
+        $("#class_status").find("input[name='status'][value='" + classStatus + "']").parents(".btn-outline-primary").addClass("active");
     });
 
     // 保存班级状态

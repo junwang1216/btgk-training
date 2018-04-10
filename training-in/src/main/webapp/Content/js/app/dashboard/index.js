@@ -19,7 +19,7 @@ requirejs.config({
         },
         "alert": {
             deps: ["jquery"]
-        },
+        }
     },  // 依赖关系
     waitSeconds: 0,
     urlArgs: '_=' + new Date().getTime()
@@ -142,7 +142,8 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
 
             if (res.code == 1) {
                 var dateCell = type == "year" ? "年" : (type == "total" ? "总" : "月");
-                $(".total-class .total-class-count").text(dateCell+ "：" + data.working + "/" + (data.start + data.working + data.end));
+                $(".total-class .total-class-name").html(dateCell + "班级数量（正上课/全部）");
+                $(".total-class .total-class-count").html("<i class='fa fa-graduation-cap'></i>&nbsp;" + data.working + "/" + (data.start + data.working + data.end));
 
                 var classNum = {
                     labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
@@ -245,7 +246,8 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
                 var dateCell = (type == "year" ? "年" : (type == "total" ? "总" : "月"));
 
                 if (cell == "all" || cell == "income") {
-                    $(".income-class .income-class-count").text(dateCell + ":" + data.total + "元");
+                    $(".income-class .income-class-name").html(dateCell + "入账金额（元）");
+                    $(".income-class .income-class-count").html("<i class='fa fa-jpy'></i>&nbsp;" + data.total);
 
                     var incomeNum = {
                         labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
@@ -266,7 +268,8 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
                 }
 
                 if (cell == "all" || cell == "expend") {
-                    $(".expend-class .expend-class-count").text(dateCell + ":" + data.refund + "元");
+                    $(".expend-class .expend-class-name").html(dateCell + "出账金额（元）");
+                    $(".expend-class .expend-class-count").html("<i class='fa fa-jpy'></i>&nbsp;" + data.refund);
                     var expendNum = {
                         labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
                         datasets: [

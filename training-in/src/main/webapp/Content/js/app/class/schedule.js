@@ -98,10 +98,20 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
         if ($this.attr("submitting") == "submitting") {
             return false;
         }
+        $this.attr("submitting", "submitting");
 
         var submitData = {
             id: $item.find("[name='id']").val()
         };
+
+        if (!submitData.id) {
+            $this.attr("submitting", "");
+
+            $item.remove();
+            $(".class-week-list").find(".form-group:last-child .class-week-add").show();
+            setDatePicker();
+            return;
+        }
 
         $.postJSON('/admin/class/deleteClassSchedule', submitData, function (res) {
             $this.attr("submitting", "");
@@ -159,10 +169,20 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
         if ($this.attr("submitting") == "submitting") {
             return false;
         }
+        $this.attr("submitting", "submitting");
 
         var submitData = {
             id: $item.find("[name='id']").val()
         };
+
+        if (!submitData.id) {
+            $this.attr("submitting", "");
+
+            $item.remove();
+            $(".class-date-list").find(".form-group:last-child .class-date-add").show();
+            setDatePicker();
+            return;
+        }
 
         $.postJSON('/admin/class/deleteClassSchedule', submitData, function (res) {
             $this.attr("submitting", "");
@@ -212,7 +232,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
             var endDate = $("#class_schedule_endDate").val();
             for (i = 0; i < length; i++) {
                 submitData.push({
-                    id: $item.eq(i).find("[name='id']").val(),
+                    id: $item.eq(i).find("[name='id']").val() || "",
                     classWeek: $item.eq(i).find("[name='classWeek']").val(),
                     startDate: startDate,
                     endDate: endDate,
@@ -226,7 +246,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "timepicker", "date
             length = $item.length;
             for (i = 0; i < length; i++) {
                 submitData.push({
-                    id: $item.eq(i).find("[name='id']").val(),
+                    id: $item.eq(i).find("[name='id']").val() || "",
                     classDate: $item.eq(i).find("[name='classDate']").val(),
                     startTime: $item.eq(i).find("[name='startTime']").val(),
                     endTime: $item.eq(i).find("[name='endTime']").val(),

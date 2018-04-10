@@ -110,7 +110,7 @@
                                         </c:forEach>
                                     </c:if>
                                     <c:if test="${orgClassSchedule.classSchedule == 'date' || (orgClassSchedule.classSchedule == 'week' && orgClassScheduleList.size() == 0)}">
-                                        <div class="form-group row">
+                                        <div class="form-group row schedule-item">
                                             <div class="offset-2 col-md-2">
                                                 <select class="form-control" name="classWeek">
                                                     <option value="1">周一</option>
@@ -184,7 +184,7 @@
                                         </c:forEach>
                                     </c:if>
                                     <c:if test="${orgClassSchedule.classSchedule == 'week' || (orgClassSchedule.classSchedule == 'date' && orgClassScheduleList.size() == 0)}">
-                                        <div class="form-group row">
+                                        <div class="form-group row schedule-item">
                                             <div class="offset-2 col-md-2">
                                                 <input type="text" class="form-control datepicker" placeholder="上课日期" name="classDate">
                                             </div>

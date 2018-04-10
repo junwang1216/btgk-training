@@ -18,7 +18,7 @@
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
     <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
-            data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
+            data-main="Content/js/app/data/expend.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -54,32 +54,27 @@
                             <small>Expend</small>
                         </div>
                         <div class="card-block">
-                            <form action="" method="post" class="form-horizontal">
+                            <form id="expend_form" action="" method="post" class="form-horizontal" onsubmit="return false;">
                                 <div class="form-group row">
-                                    <div class="col-md-2">
-                                        <a href="#" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 昨日
+                                    <div class="col-md-3">
+                                        <a href="/admin/data/expend?typeTime=year" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-minus-o"></i> 本 年
                                         </a>
-                                        <a href="#" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-check-o"></i> 今日
+                                        <a href="/admin/data/expend?typeTime=month" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-minus-o"></i> 本 月
+                                        </a>
+                                        <a href="/admin/data/expend?typeTime=day" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-check-o"></i> 今 日
                                         </a>
                                     </div>
                                     <div class="col-md-2">
-                                        <select id="expend_date" name="expendDate" class="form-control">
-                                            <option>自定义期限</option>
-                                            <option>最近一个月</option>
-                                            <option>最近三个月</option>
-                                            <option>最近六个月</option>
-                                        </select>
+                                        <input type="text" id="expend_start" name="startTime" class="form-control" placeholder="开始日期">
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="text" id="expend_start" name="expendStart" class="form-control" placeholder="开始日期">
+                                        <input type="text" id="expend_end" name="endTime" class="form-control" placeholder="结束日期">
                                     </div>
-                                    <div class="col-md-2">
-                                        <input type="text" id="expend_end" name="incomeEnd" class="form-control" placeholder="结束日期">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-primary">
+                                    <div class="col-md-5">
+                                        <button type="button" class="btn btn-primary search-expend">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>
                                         <a href="#" class="btn btn-primary pull-right"
@@ -99,136 +94,32 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active">
-                                    <table class="table table-striped table-sm income-list">
+                                    <table class="table table-striped table-sm expend-list">
                                         <thead>
                                         <tr>
-                                            <th class="expend-no">编号</th>
-                                            <th class="expend-type">缴费类型</th>
-                                            <th class="expend-student">交费学员</th>
-                                            <th class="expend-money">缴费金额</th>
-                                            <th class="expend-venue">所属场馆</th>
-                                            <th class="expend-date">缴费时间</th>
-                                            <th class="expend-person">经办人</th>
-                                            <th class="expend-person">审核人</th>
-                                            <th class="expend-date">审核时间</th>
+                                            <th class="expend-no">退费编号</th>
+                                            <th class="expend-type">退费类型</th>
+                                            <th class="expend-type">支付类型</th>
+                                            <th class="expend-money">退费金额</th>
+                                            <th class="expend-date">退费时间</th>
                                             <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr data-id="">
-                                            <td class="expend-no">1</td>
-                                            <td class="expend-type">取消缴费</td>
-                                            <td class="expend-student">王大锤</td>
-                                            <td class="expend-money">¥3000.00</td>
-                                            <td class="expend-venue">奥体中心</td>
-                                            <td class="expend-date">2017-12-18 12:11:22</td>
-                                            <td class="expend-person">李逵</td>
-                                            <td class="expend-person">林冲</td>
-                                            <td class="expend-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="expend-no">2</td>
-                                            <td class="expend-type">学员退费</td>
-                                            <td class="expend-student">王大锤</td>
-                                            <td class="expend-money">¥3000.00</td>
-                                            <td class="expend-venue">奥体中心</td>
-                                            <td class="expend-date">2017-12-18 12:11:22</td>
-                                            <td class="expend-person">李逵</td>
-                                            <td class="expend-person">--</td>
-                                            <td class="expend-date">--</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-danger" title="审核">
-                                                    <i class="fa fa-clock-o"></i> 审核
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="expend-no">3</td>
-                                            <td class="expend-type">场地费</td>
-                                            <td class="expend-student">王大锤</td>
-                                            <td class="expend-money">¥3000.00</td>
-                                            <td class="expend-venue">奥体中心</td>
-                                            <td class="expend-date">2017-12-18 12:11:22</td>
-                                            <td class="expend-person">李逵</td>
-                                            <td class="expend-person">林冲</td>
-                                            <td class="expend-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="expend-no">4</td>
-                                            <td class="expend-type">学员退费</td>
-                                            <td class="expend-student">王大锤</td>
-                                            <td class="expend-money">¥3000.00</td>
-                                            <td class="expend-venue">奥体中心</td>
-                                            <td class="expend-date">2017-12-18 12:11:22</td>
-                                            <td class="expend-person">李逵</td>
-                                            <td class="expend-person">林冲</td>
-                                            <td class="expend-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="expend-no">5</td>
-                                            <td class="expend-type">学员退费</td>
-                                            <td class="expend-student">王大锤</td>
-                                            <td class="expend-money">¥3000.00</td>
-                                            <td class="expend-venue">奥体中心</td>
-                                            <td class="expend-date">2017-12-18 12:11:22</td>
-                                            <td class="expend-person">李逵</td>
-                                            <td class="expend-person">--</td>
-                                            <td class="expend-date">--</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-danger" title="审核">
-                                                    <i class="fa fa-clock-o"></i> 审核
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr data-id="">
-                                            <td class="expend-no">6</td>
-                                            <td class="expend-type">场地费</td>
-                                            <td class="expend-student">王大锤</td>
-                                            <td class="expend-money">¥3000.00</td>
-                                            <td class="expend-venue">奥体中心</td>
-                                            <td class="expend-date">2017-12-18 12:11:22</td>
-                                            <td class="expend-person">李逵</td>
-                                            <td class="expend-person">林冲</td>
-                                            <td class="expend-date">2017-12-18 18:15:00</td>
-                                            <td>
-                                                <a href="#" class="btn btn-sm btn-primary" title="查看详情">
-                                                    <i class="fa fa-search"></i> 查看
-                                                </a>
-                                                <button class="btn btn-sm btn-success" title="审核" disabled>
-                                                    <i class="fa fa-check"></i> 已审
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        <c:forEach var="balance" items="${orgBalanceDataResponseList}" varStatus="loop">
+                                            <tr data-id="${balance.balanceNo}">
+                                                <td class="expend-no">${balance.balanceNo}</td>
+                                                <td class="expend-type">${balance.balanceType}</td>
+                                                <td class="expend-type">${balance.balancePayType}</td>
+                                                <td class="expend-money">¥${balance.balanceAmount}</td>
+                                                <td class="expend-date">${balance.balanceTime}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-success" title="审核" disabled>
+                                                        <i class="fa fa-check"></i> 已审
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
                                         </tbody>
                                     </table>
                                     <div>

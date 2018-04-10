@@ -39,6 +39,11 @@ public class OrgClassScheduleServiceImpl implements OrgClassScheduleService {
         return orgClassScheduleMapper.clearAllByClassId(classId);
     }
 
+    @Override
+    public OrgClassSchedule getClassSchedule(int scheduleId) {
+        return orgClassScheduleMapper.selectByPrimaryKey(scheduleId);
+    }
+
 }
 
 

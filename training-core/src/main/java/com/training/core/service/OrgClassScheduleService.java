@@ -16,4 +16,6 @@ public interface OrgClassScheduleService {
 
     int clearAllByClassId(int classId);
 
+    OrgClassSchedule getClassSchedule(int scheduleId);
+
 }

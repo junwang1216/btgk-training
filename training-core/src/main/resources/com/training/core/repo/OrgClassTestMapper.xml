@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgClassTestMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgClassTest">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="testName" jdbcType="VARCHAR" property="testName" />
+    <result column="testNote" jdbcType="VARCHAR" property="testNote" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="classId" jdbcType="INTEGER" property="classId" />
+    <result column="classDate" jdbcType="INTEGER" property="classDate" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, testName, testNote, createTime, classId, classDate, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_class_test
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_class_test
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClassTest">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_class_test (testName, testNote, createTime, classId, classDate, status)
+    values (#{testName,jdbcType=VARCHAR}, #{testNote,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR},
+      #{classId,jdbcType=INTEGER}, #{classDate,jdbcType=INTEGER}, #{status,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClassTest">
+    update org_class_test
+    set testName = #{testName,jdbcType=VARCHAR},
+      testNote = #{testNote,jdbcType=VARCHAR},
+      createTime = #{createTime,jdbcType=VARCHAR},
+      classId = #{classId,jdbcType=INTEGER},
+      classDate = #{classDate,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateStatusByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClassTest">
+    update org_class_test
+    set status = #{classDate,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_class_test
+    where 1 = 1
+    <if test="classId != null">
+      and classId = #{classId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    order by classDate desc
+    limit #{start}, #{pageSize}
+  </select>
+  <select id="queryAllCount" resultType="java.lang.Integer">
+    select count(*)
+    from org_class_test
+    where 1 = 1
+    <if test="classId != null">
+      and classId = #{classId,jdbcType=INTEGER}
+    </if>
+    <if test="status != null and status != 0">
+      and status = #{status,jdbcType=INTEGER}
+    </if>
+    order by classDate desc
+  </select>
+</mapper>

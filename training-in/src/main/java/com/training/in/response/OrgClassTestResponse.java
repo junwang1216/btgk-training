@@ -4,17 +4,15 @@ import com.training.core.repo.po.*;
 
 import java.io.Serializable;
 
-public class OrgClassResponse implements Serializable {
+public class OrgClassTestResponse implements Serializable {
 
     private OrgClass orgClass;
 
-    private OrgVenues orgVenues;
-
     private OrgCoaches orgCoaches;
 
-    private OrgCourses orgCourses;
+    private OrgClassTest orgClassTest;
 
-    private OrgSports orgSports;
+    private OrgClassSchedule orgClassSchedule;
 
     private int orgClassStudentsLength;
 
@@ -25,13 +23,6 @@ public class OrgClassResponse implements Serializable {
         this.orgClass = orgClass;
     }
 
-    public OrgVenues getOrgVenues() {
-        return orgVenues;
-    }
-    public void setOrgVenues(OrgVenues orgVenues) {
-        this.orgVenues = orgVenues;
-    }
-
     public OrgCoaches getOrgCoaches() {
         return orgCoaches;
     }
@@ -39,18 +30,18 @@ public class OrgClassResponse implements Serializable {
         this.orgCoaches = orgCoaches;
     }
 
-    public OrgSports getOrgSports() {
-        return orgSports;
+    public OrgClassTest getOrgClassTest() {
+        return orgClassTest;
     }
-    public void setOrgSports(OrgSports orgSports) {
-        this.orgSports = orgSports;
+    public void setOrgClassTest(OrgClassTest orgClassTest) {
+        this.orgClassTest = orgClassTest;
     }
 
-    public OrgCourses getOrgCourses() {
-        return orgCourses;
+    public OrgClassSchedule getOrgClassSchedule() {
+        return orgClassSchedule;
     }
-    public void setOrgCourses(OrgCourses orgCourses) {
-        this.orgCourses = orgCourses;
+    public void setOrgClassSchedule(OrgClassSchedule orgClassSchedule) {
+        this.orgClassSchedule = orgClassSchedule;
     }
 
     public int getOrgClassStudentsLength() {

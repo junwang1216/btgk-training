@@ -38,10 +38,22 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="/admin/dashboard/index">
-                    <i class="icon-screen-desktop"></i> 场馆运营系统
+                    <i class="icon-screen-desktop"></i> 场馆运营管理系统
                 </a>
                 <a class="dropdown-item" href="/admin/dashboard/index">
-                    <i class="icon-screen-desktop"></i> 培训管理系统
+                    <i class="icon-screen-desktop"></i> 场馆票务管理系统
+                </a>
+                <a class="dropdown-item" href="/admin/dashboard/index">
+                    <i class="icon-screen-desktop"></i> 场馆培训管理系统
+                </a>
+                <a class="dropdown-item" href="/admin/dashboard/index">
+                    <i class="icon-screen-desktop"></i> 赛事活动报名系统
+                </a>
+                <a class="dropdown-item" href="/admin/dashboard/index">
+                    <i class="icon-screen-desktop"></i> 场馆商品零售系统
+                </a>
+                <a class="dropdown-item" href="/admin/dashboard/index">
+                    <i class="icon-screen-desktop"></i> 智能硬件控制系统
                 </a>
             </div>
         </li>

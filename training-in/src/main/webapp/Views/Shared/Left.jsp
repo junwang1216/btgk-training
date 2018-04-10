@@ -15,7 +15,7 @@
 
             <li class="nav-item nav-dropdown <c:if test="${param.menu == 'venue'}">open</c:if>">
                 <a class="nav-link nav-dropdown-toggle" href="javascript:;">
-                    <i class="icon-settings"></i> 机构设置
+                    <i class="icon-home"></i> 机构设置
                 </a>
                 <ul class="nav-dropdown-items">
                     <li class="nav-item <c:if test="${param.subMenu == 'settings'}">open</c:if>">
@@ -84,6 +84,34 @@
                 </ul>
             </li>
 
+            <li class="nav-item nav-dropdown <c:if test="${param.menu == 'class'}">open</c:if>" style="display: none">
+                <a class="nav-link nav-dropdown-toggle" href="javascript:;">
+                    <i class="icon-calendar"></i> 约课管理
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item <c:if test="${param.subMenu == 'add'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'add'}">active</c:if>" href="/admin/class/add">
+                            <i class="icon-arrow-right"></i> 约课发布
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'list' || param.subMenu == 'edit' || param.subMenu == 'schedule'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'list' || param.subMenu == 'edit' || param.subMenu == 'schedule'}">active</c:if>" href="/admin/class/list">
+                            <i class="icon-arrow-right"></i> 约课列表
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'progress'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'progress'}">active</c:if>" href="/admin/class/progress">
+                            <i class="icon-arrow-right"></i> 约课课表
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'student'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'student'}">active</c:if>" href="/admin/class/student/sign">
+                            <i class="icon-arrow-right"></i> 学员签到
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="nav-item nav-dropdown <c:if test="${param.menu == 'students'}">open</c:if>">
                 <a class="nav-link nav-dropdown-toggle" href="javascript:;">
                     <i class="icon-people"></i> 学员管理
@@ -132,7 +160,7 @@
                             <i class="icon-arrow-right"></i> 收支统计
                         </a>
                     </li>
-                    <li class="nav-item <c:if test="${param.subMenu == 'setting'}">open</c:if>">
+                    <li class="nav-item <c:if test="${param.subMenu == 'setting'}">open</c:if>" style="display: none">
                         <a class="nav-link <c:if test="${param.subMenu == 'setting'}">active</c:if>" href="/admin/data/settings">
                             <i class="icon-arrow-right"></i> 收支类型设置
                         </a>

@@ -18,7 +18,7 @@
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
     <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
-            data-main="Content/js/app/students/list.js?v=${static_resource_version}"></script>
+            data-main="Content/js/app/data/income.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -28,6 +28,7 @@
                 <div class="modal-body row">
                     <div class="col-md-6 text-center">
                         <p>收入类型对比</p>
+                        <div id="income_pay_type_chart"></div>
                         <img src="/Content/images/demo/chart1.png" style="width: 100%">
                     </div>
                     <div class="col-md-6 text-center">
@@ -54,32 +55,27 @@
                             <small>Income</small>
                         </div>
                         <div class="card-block">
-                            <form action="" method="post" class="form-horizontal">
+                            <form id="income_form" action="" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                                 <div class="form-group row">
-                                    <div class="col-md-2">
-                                        <a href="#" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 昨日
+                                    <div class="col-md-3">
+                                        <a href="/admin/data/income?typeTime=year" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-minus-o"></i> 本 年
                                         </a>
-                                        <a href="#" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-check-o"></i> 今日
+                                        <a href="/admin/data/income?typeTime=month" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-minus-o"></i> 本 月
+                                        </a>
+                                        <a href="/admin/data/income?typeTime=day" class="btn btn-outline-secondary">
+                                            <i class="fa fa-calendar-check-o"></i> 今 日
                                         </a>
                                     </div>
                                     <div class="col-md-2">
-                                        <select id="income_date" name="incomeDate" class="form-control">
-                                            <option>自定义期限</option>
-                                            <option>最近一个月</option>
-                                            <option>最近三个月</option>
-                                            <option>最近六个月</option>
-                                        </select>
+                                        <input type="text" id="income_start" name="startTime" class="form-control" placeholder="开始日期">
                                     </div>
                                     <div class="col-md-2">
-                                        <input type="text" id="income_start" name="incomeStart" class="form-control" placeholder="开始日期">
+                                        <input type="text" id="income_end" name="endTime" class="form-control" placeholder="结束日期">
                                     </div>
-                                    <div class="col-md-2">
-                                        <input type="text" id="income_end" name="incomeEnd" class="form-control" placeholder="结束日期">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button type="button" class="btn btn-primary">
+                                    <div class="col-md-5">
+                                        <button type="button" class="btn btn-primary search-income">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>
                                         <a href="#" class="btn btn-primary pull-right"
@@ -104,13 +100,9 @@
                                         <tr>
                                             <th class="income-no">缴费编号</th>
                                             <th class="income-type">缴费类型</th>
-                                            <th class="income-student">交费学员</th>
+                                            <th class="income-type">支付类型</th>
                                             <th class="income-money">缴费金额</th>
-                                            <th class="income-venue">所属场馆</th>
                                             <th class="income-date">缴费时间</th>
-                                            <th class="income-person">经办人</th>
-                                            <th class="income-person">审核人</th>
-                                            <th class="income-date">审核时间</th>
                                             <th></th>
                                         </tr>
                                         </thead>
@@ -119,13 +111,9 @@
                                             <tr data-id="${balance.balanceNo}">
                                                 <td class="income-no">${balance.balanceNo}</td>
                                                 <td class="income-type">${balance.balanceType}</td>
-                                                <td class="income-student">${balance.balanceUserId}</td>
+                                                <td class="income-type">${balance.balancePayType}</td>
                                                 <td class="income-money">¥${balance.balanceAmount}</td>
-                                                <td class="income-venue">${balance.balanceNo}</td>
                                                 <td class="income-date">${balance.balanceTime}</td>
-                                                <td class="income-person">${balance.operateId}</td>
-                                                <td class="income-person">${balance.reviewId}</td>
-                                                <td class="income-date">${balance.reviewTime}</td>
                                                 <td>
                                                     <button class="btn btn-sm btn-success" title="审核" disabled>
                                                         <i class="fa fa-check"></i> 已审
