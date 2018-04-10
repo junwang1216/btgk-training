@@ -21,7 +21,7 @@
                 <div class="weui-tab__bd">
                     <div id="course_start" class="weui-tab__bd-item">
                         <c:if test="${orgClassStartList.size() == 0}">
-                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何报名记录！</p>
+                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何分班记录！</p>
                         </c:if>
                         <c:forEach var="cls" items="${orgClassStartList}" varStatus="loop">
                             <a class="weui-flex course-item" href="/student/center/class/detail?type=1&classId=${cls.orgClass.id}">
