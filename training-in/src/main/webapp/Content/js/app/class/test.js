@@ -35,14 +35,14 @@ requirejs.config({
 require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 'jquery.validate.unobtrusive'], function ($, jqueryAlert) {
     'use strict';
 
-    $.postJSON = function(url, data, callback) {
+    $.postJSON = function (url, data, callback) {
         return $.ajax({
-            'type' : 'POST',
-            'url' : url,
-            'contentType' : 'application/json',
-            'data' : JSON.stringify(data),
-            'dataType' : 'json',
-            'success' : callback
+            'type': 'POST',
+            'url': url,
+            'contentType': 'application/json',
+            'data': JSON.stringify(data),
+            'dataType': 'json',
+            'success': callback
         });
     };
 
@@ -89,11 +89,11 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 $("#test_edit_classDate").html(html.join(""));
             } else {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "查询评测班次失败，请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-error.png',
+                    'content': "查询评测班次失败，请稍后重试",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
             }
         });
@@ -103,7 +103,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     $(".save-test").on("click", function (e) {
         e.preventDefault();
 
-        var $form= $("#test_edit_form");
+        var $form = $("#test_edit_form");
         var conditions = $form.serialize();
 
         if ($form.attr("submitting") == "submitting" || !$form.valid()) {
@@ -116,11 +116,11 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
 
             if (res.code == 1) {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-ok.png',
-                    'content'   : "保存班级评测成功",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-ok.png',
+                    'content': "保存班级评测成功",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
 
                 window.setTimeout(function () {
@@ -128,11 +128,11 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 }, 1500);
             } else {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "保存班级评测失败, 请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-error.png',
+                    'content': "保存班级评测失败, 请稍后重试",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
             }
         });
@@ -171,7 +171,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
             var tpl = '<div class="form-group row">' +
                 '<label class="col-md-3 form-control-label"><span class="text-danger">*</span> $skillName</label>' +
                 '<div class="col-md-6">' +
-                    '<input type="range" class="form-control pl-0 pr-0" id="test_start_$skillId" name="skill_$skillId" min="0" max="$maxValue" value="0">' +
+                '<input type="range" class="form-control pl-0 pr-0" id="test_start_$skillId" name="skill_$skillId" min="0" max="$maxValue" value="0">' +
                 '</div><div class="col-md-3 range-value pt-1">分数：0</div>' +
                 '</div>';
             var html = [];
@@ -201,11 +201,11 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 $("#test_start_studentId").html(shtml.join(""));
             } else {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "查询评测技能失败，请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-error.png',
+                    'content': "查询评测技能失败，请稍后重试",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
             }
         });
@@ -215,7 +215,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     $(".save-test-start").on("click", function (e) {
         e.preventDefault();
 
-        var $form= $("#test_start_form");
+        var $form = $("#test_start_form");
         var conditions = $form.serializeArray();
 
         if ($form.attr("submitting") == "submitting" || !$form.valid()) {
@@ -243,21 +243,21 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
 
             if (res.code == 1) {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-ok.png',
-                    'content'   : "保存班级评测结果成功",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-ok.png',
+                    'content': "保存班级评测结果成功",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
 
-               $("#test_start").modal("hide");
+                $("#test_start").modal("hide");
             } else {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "保存班级评测结果失败, 请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-error.png',
+                    'content': "保存班级评测结果失败, 请稍后重试",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
             }
         });
@@ -311,11 +311,11 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 $("#test_start_studentId").val(studentId);
             } else {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "查询评测技能失败，请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-error.png',
+                    'content': "查询评测技能失败，请稍后重试",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
             }
         });
@@ -338,7 +338,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 var headerValue = [];
                 var headerTpl = '<thead><tr><th>##</th><th>学员</th>';
                 !!data.orgSportsSkillsList && data.orgSportsSkillsList.forEach(function (item) {
-                    headerTpl += '<th>' + item.skillName  + '</th>';
+                    headerTpl += '<th>' + item.skillName + '</th>';
                     headerTitle.push(item.skillName);
                     headerValue.push(item.maxValue);
                 });
@@ -347,7 +347,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 var bodyTpl = '<tbody>';
                 !!data.scoreList && data.scoreList.forEach(function (item, index) {
                     bodyTpl += '<tr data-student="' + item["studentId"] + '" data-class="' + item["classId"] + '" data-test="' + item["testId"] + '">' +
-                        '<td class="text-muted">' + (index + 1)  + '</td>' +
+                        '<td class="text-muted">' + (index + 1) + '</td>' +
                         '<td class="text-muted">' + item["学员"] + '</td>';
 
                     for (var i = 0; i < headerTitle.length; i++) {
@@ -366,7 +366,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                         bodyTpl += '<td class="' + className + '">' + (item[headerTitle[i]] || 0) + "/" + (headerValue[i]) + '</td>';
                     }
 
-                    bodyTpl += '<td class="text-muted">' + item["总计"]  + '</td>';
+                    bodyTpl += '<td class="text-muted">' + item["总计"] + '</td>';
                     if (!!item["testRemark"]) {
                         bodyTpl += '<td><a href="javascript:;" class="btn btn-sm btn-primary test-comment" data-toggle="popover" data-trigger="hover" ' +
                             'title="" data-content="' + item["testRemark"] + '" data-original-title="评语">' +
@@ -388,12 +388,65 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 });
             } else {
                 jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "查询评测技能结果失败，请稍后重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
+                    'icon': '/Content/images/icon-error.png',
+                    'content': "查询评测技能结果失败，请稍后重试",
+                    'closeTime': 2000,
+                    'modal': true,
+                    'isModalClose': true
                 });
+            }
+        });
+    });
+
+    // 评测删除
+    $(".class-test-list").on("click", ".test-delete", function (e) {
+        e.preventDefault();
+
+        var $this = $(this);
+
+        var $alert = jqueryAlert({
+            'title' : "提示",
+            'content' : "您确定要删除此评测吗？",
+            'modal'   : true,
+            'contentTextAlign' : 'center',
+            'buttons' :{
+                '关闭' : function () {
+                    $alert.close();
+                },
+                '确定': function () {
+                    var testId = $this.parents("tr").attr("data-id");
+
+                    if ($this.attr("submitting") == "submitting") {
+                        return false;
+                    }
+                    $this.attr("submitting", "submitting");
+
+                    $.postJSON('/admin/class/deleteClassTest', {id: testId}, function (res) {
+                        $this.attr("submitting", "");
+
+                        if (res.code == 1) {
+                            jqueryAlert({
+                                'icon': '/Content/images/icon-ok.png',
+                                'content': "删除班级评测成功",
+                                'closeTime': 2000,
+                                'modal': true,
+                                'isModalClose': true
+                            });
+
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            jqueryAlert({
+                                'icon': '/Content/images/icon-error.png',
+                                'content': "删除班级评测失败, 请稍后重试",
+                                'closeTime': 2000,
+                                'modal': true,
+                                'isModalClose': true
+                            });
+                        }
+                    });
+                }
             }
         });
     });

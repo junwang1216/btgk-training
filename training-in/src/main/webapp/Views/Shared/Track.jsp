@@ -126,8 +126,8 @@
     <!-- Breadcrumb Menu-->
     <li class="breadcrumb-menu d-md-down-none">
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-            <a class="btn btn-secondary" href="#">
-                <i class="icon-speech"></i> &nbsp;在线帮助
+            <a class="btn btn-secondary" href="javascript:;" data-target="#contact_online" data-toggle="modal">
+                <i class="icon-speech"></i> &nbsp;联系我们
             </a>
             <a class="btn btn-secondary" href="/admin/dashboard/index">
                 <i class="icon-graph"></i> &nbsp;工作面板
@@ -138,3 +138,26 @@
         </div>
     </li>
 </ol>
+
+<div class="modal fade" id="contact_online" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-success modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <table class="table table-responsive-sm table-bordered">
+                    <tr>
+                        <th class="text-center"><i class="fa fa-2x fa-mobile"></i></th><td>12345678901</td>
+                    </tr>
+                    <tr>
+                        <th class="text-center"><i class="fa fa-2x fa-phone"></i></th><td>(010)-1234567</td>
+                    </tr>
+                    <tr>
+                        <th class="text-center"><i class="fa fa-2x fa-at"></i></th><td>test1234@test.com</td>
+                    </tr>
+                    <tr>
+                        <th class="text-center"><i class="fa fa-2x fa-location-arrow"></i></th><td>北京市海淀区某某路100号某某大厦1232室</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -203,4 +203,14 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
 
         location.assign(location.href.replace(/&status=\d/, "") + "&status=2");
     });
+
+    // 检索
+    $(".search-class").on("click", function (e) {
+        e.preventDefault();
+
+        var $form = $("#class_form");
+        var conditions = $form.serialize();
+
+        window.location.assign("/admin/class/progress?" + conditions);
+    });
 });

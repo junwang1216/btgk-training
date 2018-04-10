@@ -37,12 +37,13 @@
       testNote = #{testNote,jdbcType=VARCHAR},
       createTime = #{createTime,jdbcType=VARCHAR},
       classId = #{classId,jdbcType=INTEGER},
-      classDate = #{classDate,jdbcType=INTEGER}
+      classDate = #{classDate,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateStatusByPrimaryKey" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgClassTest">
     update org_class_test
-    set status = #{classDate,jdbcType=INTEGER}
+    set status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="queryAll" resultMap="BaseResultMap">

@@ -58,15 +58,39 @@
                             <form id="income_form" action="" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                                 <div class="form-group row">
                                     <div class="col-md-3">
-                                        <a href="/admin/data/income?typeTime=year" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 本 年
-                                        </a>
-                                        <a href="/admin/data/income?typeTime=month" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 本 月
-                                        </a>
-                                        <a href="/admin/data/income?typeTime=day" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-check-o"></i> 今 日
-                                        </a>
+                                        <c:if test="${condition.typeTime == 'year'}">
+                                            <a href="/admin/data/income?typeTime=year" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 本 年
+                                            </a>
+                                            <a href="/admin/data/income?typeTime=month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/income?typeTime=day" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 今 日
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${condition.typeTime == 'month'}">
+                                            <a href="/admin/data/income?typeTime=year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 年
+                                            </a>
+                                            <a href="/admin/data/income?typeTime=month" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/income?typeTime=day" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 今 日
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${condition.typeTime == 'day'}">
+                                            <a href="/admin/data/income?typeTime=year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 年
+                                            </a>
+                                            <a href="/admin/data/income?typeTime=month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/income?typeTime=day" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 今 日
+                                            </a>
+                                        </c:if>
                                     </div>
                                     <div class="col-md-2">
                                         <input type="text" id="income_start" name="startTime" class="form-control" placeholder="开始日期">

@@ -84,8 +84,8 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
             point: {
                 radius: 4,
                 hitRadius: 10,
-                hoverRadius: 4,
-            },
+                hoverRadius: 4
+            }
         }
     };
     var ctx = $('#card-chart1');
@@ -247,7 +247,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
 
                 if (cell == "all" || cell == "income") {
                     $(".income-class .income-class-name").html(dateCell + "入账金额（元）");
-                    $(".income-class .income-class-count").html("<i class='fa fa-jpy'></i>&nbsp;" + data.total);
+                    $(".income-class .income-class-count").html("<i class='fa fa-jpy'></i>&nbsp;" + $.moneyFormat(data.total, 0, ".", ","));
 
                     var incomeNum = {
                         labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
@@ -269,7 +269,7 @@ require(['jquery', 'alert', 'chart', 'bootstrap', 'pace', 'base', 'override'], f
 
                 if (cell == "all" || cell == "expend") {
                     $(".expend-class .expend-class-name").html(dateCell + "出账金额（元）");
-                    $(".expend-class .expend-class-count").html("<i class='fa fa-jpy'></i>&nbsp;" + data.refund);
+                    $(".expend-class .expend-class-count").html("<i class='fa fa-jpy'></i>&nbsp;" + $.moneyFormat(data.refund, 0, ".", ","));
                     var expendNum = {
                         labels: ["01月", "02月", "03月", "04月", "05月", "06月", "07月", "08月", "09月", "10月", "11月", "12月"],
                         datasets: [

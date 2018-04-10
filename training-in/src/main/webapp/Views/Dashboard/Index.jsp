@@ -22,14 +22,13 @@
                                     <i class="icon-settings"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#">当  日</a>
-                                    <a class="dropdown-item" href="#">近一周</a>
-                                    <a class="dropdown-item" href="#">近一月</a>
-                                    <a class="dropdown-item" href="#">总  量</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="month">本  月</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="year">本  年</a>
+                                    <a class="dropdown-item" href="javascript:;" data-type="total">总  量</a>
                                 </div>
                             </div>
-                            <h4 class="mb-0">2/10</h4>
-                            <p>上课统计（班次/课时）</p>
+                            <h4 class="mb-0">0/0</h4>
+                            <p>未使用的区块</p>
                         </div>
                         <div class="chart-wrapper px-1" style="height:70px;">
                             <canvas id="card-chart1" class="chart" height="70"></canvas>

@@ -280,7 +280,7 @@
                                                data-target="#test_detail" data-toggle="modal">
                                                 <i class="fa fa-trophy"></i> 结果
                                             </a>
-                                            <a href="javascript:;" class="btn btn-sm btn-danger test-query" title="删除">
+                                            <a href="javascript:;" class="btn btn-sm btn-danger test-delete" title="删除">
                                                 <i class="fa fa-remove"></i> 删除
                                             </a>
                                         </td>

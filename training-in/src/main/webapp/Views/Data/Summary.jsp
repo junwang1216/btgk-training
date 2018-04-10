@@ -36,18 +36,62 @@
                             <form action="" method="post" class="form-horizontal">
                                 <div class="form-group row">
                                     <div class="col-md-12">
-                                        <a href="/admin/data/summary?typeTime=prev_month" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 上 月
-                                        </a>
-                                        <a href="/admin/data/summary?typeTime=month" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-check-o"></i> 本 月
-                                        </a>
-                                        <a href="/admin/data/summary?typeTime=prev_year" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-minus-o"></i> 去 年
-                                        </a>
-                                        <a href="/admin/data/summary?typeTime=year" class="btn btn-outline-secondary">
-                                            <i class="fa fa-calendar-check-o"></i> 本 年
-                                        </a>
+                                        <c:if test="${condition.typeTime == 'year'}">
+                                            <a href="/admin/data/summary?typeTime=prev_month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 上 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=prev_year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 去 年
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=year" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 本 年
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${condition.typeTime == 'prev_year'}">
+                                            <a href="/admin/data/summary?typeTime=prev_month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 上 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=prev_year" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 去 年
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 年
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${condition.typeTime == 'month'}">
+                                            <a href="/admin/data/summary?typeTime=prev_month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 上 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=month" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=prev_year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 去 年
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 年
+                                            </a>
+                                        </c:if>
+                                        <c:if test="${condition.typeTime == 'prev_month'}">
+                                            <a href="/admin/data/summary?typeTime=prev_month" class="btn btn-outline-primary">
+                                                <i class="fa fa-calendar-check-o"></i> 上 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=month" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 月
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=prev_year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 去 年
+                                            </a>
+                                            <a href="/admin/data/summary?typeTime=year" class="btn btn-outline-secondary">
+                                                <i class="fa fa-calendar-minus-o"></i> 本 年
+                                            </a>
+                                        </c:if>
                                     </div>
                                 </div>
                             </form>

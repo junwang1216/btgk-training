@@ -487,10 +487,10 @@ public class ClassController extends BaseController {
 
         modelAndView.addObject("orgClassList", orgClassList);
 
-        int total = orgClassTestService.queryOrgClassTestCount(orgClassTestQueryRequest.getClassId(), orgClassTestQueryRequest.getStatus());
+        int total = orgClassTestService.queryOrgClassTestCount(orgClassTestQueryRequest.getClassId(), StatusEnum.STATUS_OK.getCode());
         int start = orgClassTestQueryRequest.getPage() < 1 ? 0 : orgClassTestQueryRequest.getPage() - 1;
         int pageSize = 10;
-        List<OrgClassTest> orgClassTestList = orgClassTestService.queryOrgClassTestList(orgClassTestQueryRequest.getClassId(), orgClassTestQueryRequest.getStatus(), start * pageSize, pageSize);
+        List<OrgClassTest> orgClassTestList = orgClassTestService.queryOrgClassTestList(orgClassTestQueryRequest.getClassId(), StatusEnum.STATUS_OK.getCode(), start * pageSize, pageSize);
 
         List<OrgClassTestResponse> orgClassTestResponseList = new ArrayList<>();
         for (OrgClassTest orgClassTest : orgClassTestList) {
@@ -641,6 +641,30 @@ public class ClassController extends BaseController {
         }
     }
 
+    @Desc("删除班级评测")
+    @ResponseBody
+    @RequestMapping(value = "/deleteClassTest", method = RequestMethod.POST)
+    public ResponseBean deleteClassTest(@RequestBody OrgClassTest orgClassTest) {
+        try {
+            int result;
+
+            OrgClassTest orgClassTest1 = orgClassTestService.getOrgClassTest(orgClassTest.getId());
+            orgClassTest1.setStatus(StatusEnum.STATUS_ERROR.getCode());
+
+            result = orgClassTestService.saveOrgClassTestStatus(orgClassTest1);
+
+            log(LogTypeEnum.LOG_TYPE_CLASS_SETTINGS, getLoginUser().getOrgId(), "删除班级评测[" + orgClassTest1.getTestName() + "]");
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
     @Desc("保存班级评测结果")
     @ResponseBody
     @RequestMapping(value = "/saveClassTestResult", method = RequestMethod.POST)
@@ -698,6 +722,10 @@ public class ClassController extends BaseController {
         ModelAndView modelAndView = new ModelAndView("Class/Progress");
 
         modelAndView.addObject("status", status);
+
+        int totalOrgClassCount = orgClassService.queryOrgClassCount(null, null);
+        List<OrgClass> orgClassList = orgClassService.queryOrgClassList(null, null, 0, totalOrgClassCount);
+        modelAndView.addObject("orgClassList", orgClassList);
 
         if (classId == null) {
             return setModelAndView(modelAndView);

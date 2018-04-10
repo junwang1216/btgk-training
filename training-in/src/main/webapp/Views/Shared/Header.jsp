@@ -31,7 +31,7 @@
                 <span class="badge badge-pill badge-danger">5</span>
             </a>
         </li>
-        <li class="nav-item dropdown pr-4">
+        <li class="nav-item dropdown pr-4" style="display: none;">
             <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
                aria-haspopup="true" aria-expanded="false">
                 <i class="icon-list"></i> 系统切换

@@ -113,7 +113,12 @@
                             <form id="class_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                                 <div class="form-group row">
                                     <div class="col-md-3">
-                                        <input type="text" class="form-control" placeholder="班级名称" name="className" value="${orgClass.className}">
+                                        <select class="form-control" id="class_test_classId" name="classId">
+                                            <option value="">请选择班级</option>
+                                            <c:forEach var="cls" items="${orgClassList}" varStatus="loop">
+                                                <option value="${cls.id}" <c:if test="${orgClass.id == cls.id}">selected</c:if> >${cls.className}</option>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                     <div class="col-md-9">
                                         <button type="button" class="btn btn-primary search-class">
