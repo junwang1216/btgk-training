@@ -15,11 +15,11 @@
             <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
             <div class="weui-msg__text-area">
                 <h2 class="weui-msg__title">报名成功</h2>
-                <p class="weui-msg__desc">您已经成功报名《青少年足球训练营》!</p>
+                <p class="weui-msg__desc">您已经成功报名《${orgClass.className}》!</p>
             </div>
             <div class="weui-msg__opr-area">
                 <p class="weui-btn-area">
-                    <a href="javascript:;" class="weui-btn weui-btn_primary">个人中心</a>
+                    <a href="/student/center/index" class="weui-btn weui-btn_primary">个人中心</a>
                 </p>
             </div>
             <div class="weui-msg__extra-area">

@@ -10,6 +10,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
+    <script type="text/javascript" src="/Content/js/student/center/profile.js?ver=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -40,7 +41,7 @@
                 <div class="weui-cell__bd">
                     <select name="sex" class="weui-input">
                         <option value="1" <c:if test="${User.sex == 1}"> selected </c:if> >男</option>
-                        <option value="2" <c:if test="${User.sex == 1}"> selected </c:if> >女</option>
+                        <option value="2" <c:if test="${User.sex == 2}"> selected </c:if> >女</option>
                     </select>
                 </div>
             </div>

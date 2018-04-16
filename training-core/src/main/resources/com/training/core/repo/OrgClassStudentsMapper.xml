@@ -27,7 +27,7 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into org_class_students (classId, studentId, createTime, orderNo, status)
-    values (#{classId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER})
+    values (#{classId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER})
   </insert>
   <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">

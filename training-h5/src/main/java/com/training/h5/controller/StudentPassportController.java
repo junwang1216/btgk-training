@@ -12,7 +12,6 @@ import com.training.core.repo.po.OrgStudents;
 import com.training.core.repo.query.OrgStudentRequest;
 import com.training.core.service.OrgStudentsService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;

@@ -12,34 +12,18 @@
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
     <div class="page__bd">
         <div class="course-list">
-            <a class="weui-flex course-item" href="/student/apply/detail?applyId=123456">
-                <div class="weui-flex__item course-info">
-                    <div class="course-title">青少年篮球训练营</div>
-                    <div class="course-teacher">张益帆</div>
-                    <div class="course-date">报名时间：2018-01-23 至 2018-01-30</div>
-                </div>
-            </a>
-            <a class="weui-flex course-item" href="/student/apply/detail?applyId=123456">
-                <div class="weui-flex__item course-info">
-                    <div class="course-title">青少年篮球训练营</div>
-                    <div class="course-teacher">王清妍</div>
-                    <div class="course-date">报名时间：2018-01-23 至 2018-01-30</div>
-                </div>
-            </a>
-            <a class="weui-flex course-item" href="/student/apply/detail?applyId=123456">
-                <div class="weui-flex__item course-info">
-                    <div class="course-title">青少年篮球训练营</div>
-                    <div class="course-teacher">李尚</div>
-                    <div class="course-date">报名时间：2018-01-23 至 2018-01-30</div>
-                </div>
-            </a>
-            <a class="weui-flex course-item" href="/student/apply/detail?applyId=123456">
-                <div class="weui-flex__item course-info">
-                    <div class="course-title">青少年篮球训练营</div>
-                    <div class="course-teacher">赵一鸣</div>
-                    <div class="course-date">报名时间：2018-01-23 至 2018-01-30</div>
-                </div>
-            </a>
+            <c:forEach var="cls" items="${orgClassList}" varStatus="loop">
+                <a class="weui-flex course-item" href="/student/apply/detail?classId=${cls.orgClass.id}">
+                    <div class="weui-flex__item course-info">
+                        <div class="course-title">${cls.orgClass.className}</div>
+                        <div class="course-teacher">${cls.orgCoaches.realName}</div>
+                        <div class="course-date">已报名：${cls.orgClassStudentsLength}人</div>
+                    </div>
+                </a>
+            </c:forEach>
+            <c:if test="${orgClassList.size() == 0}">
+                <p class="weui-cells__tip">没有任何可报名的班级！</p>
+            </c:if>
         </div>
     </div>
 </layout:override>

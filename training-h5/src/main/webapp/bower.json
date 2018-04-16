@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "vue": "^1.0.26",
-    "vue-resource": "^1.0.3"
+    "vue-resource": "^1.0.3",
+    "jquery-qrcode": "jquery.qrcode#^0.14.0"
   }
 }
