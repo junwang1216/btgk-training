@@ -24,10 +24,10 @@
             $this.attr("submitting", "");
 
             if (res.code == 1) {
-                alert("用户保存成功");
+                $.toast("用户保存成功");
             } else {
-                console.log(res.message || "用户登录失败, 请稍后重试");
-                alert(res.message || "用户登录失败, 请稍后重试");
+                console.log(res.message || "保存信息失败, 请稍后重试");
+                $.toast(res.message || "保存信息失败, 请稍后重试", "cancel");
             }
         });
     });

@@ -41,6 +41,11 @@ public class OrgClassStudentsServiceImpl implements OrgClassStudentsService {
     }
 
     @Override
+    public OrgClassStudents getOrgClassStudents(Integer classId, Integer studentId) {
+        return orgClassStudentsMapper.getOrgClassStudents(classId, studentId, StatusEnum.STATUS_OK.getCode());
+    }
+
+    @Override
     public int totalAllStudentsCount(String startTime, String endTime) {
         return orgClassStudentsMapper.totalAllStudentsCount(startTime, endTime);
     }

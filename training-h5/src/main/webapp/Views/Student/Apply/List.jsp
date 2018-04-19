@@ -21,10 +21,12 @@
                     </div>
                 </a>
             </c:forEach>
-            <c:if test="${orgClassList.size() == 0}">
-                <p class="weui-cells__tip">没有任何可报名的班级！</p>
-            </c:if>
         </div>
+        <c:if test="${orgClassListLength == 0}">
+            <div class="weui-loadmore weui-loadmore_line">
+                <span class="weui-loadmore__tips">暂无数据</span>
+            </div>
+        </c:if>
     </div>
 </layout:override>
 

@@ -49,8 +49,15 @@ public class StudentCenterController extends BaseController {
     @Resource
     private OrgAttendanceService orgAttendanceService;
 
+    @Resource
+    private OrgVenuesService orgVenuesService;
+
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("User", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
+    }
+
+    private OrgStudents getLoginStudents() {
+        return (OrgStudents)(super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
     }
 
     @Desc("个人中心")
@@ -92,14 +99,73 @@ public class StudentCenterController extends BaseController {
 
     @Desc("班级详情")
     @RequestMapping(value = "/class/detail", method = RequestMethod.GET)
-    public String renderCenterClassDetail(int type, int classId) {
+    public ModelAndView renderCenterClassDetail(int type, int classId) throws Exception {
 
-        HttpServletRequest httpServletRequest = HttpServlets.getRequest();
+        ModelAndView modelAndView = new ModelAndView("Student/Center/ClassDetail" + type);
 
-        httpServletRequest.setAttribute("type", type);
-        httpServletRequest.setAttribute("classId", classId);
+        OrgClass orgClass = orgClassService.getOrgClass(classId);
+        modelAndView.addObject("orgClass", orgClass);
 
-        return "Student/Center/ClassDetail" + type;
+        OrgCoaches orgCoaches = orgCoachesService.getOrgCoaches(orgClass.getCoachId());
+        modelAndView.addObject("orgCoaches", orgCoaches);
+
+        OrgCourses orgCourses = orgCoursesService.getOrgCourses(orgClass.getCourseId());
+        modelAndView.addObject("orgCourses", orgCourses);
+
+        OrgVenues orgVenues = orgVenuesService.getOrgVenues(orgClass.getVenueId());
+        modelAndView.addObject("orgVenues", orgVenues);
+
+        List<OrgClassStudents> orgClassStudentsList = orgClassStudentsService.queryOrgClassStudentsListByClassId(orgClass.getId());
+        modelAndView.addObject("orgClassStudentsLength", orgClassStudentsList.size());
+
+        OrgStudents orgStudents = getLoginStudents();
+        modelAndView.addObject("orgStudents", orgStudents);
+
+        if (orgStudents != null) {
+            OrgClassStudents orgClassStudents = orgClassStudentsService.getOrgClassStudents(orgClass.getId(), orgStudents.getId());
+            modelAndView.addObject("isClassStudent", orgClassStudents != null);
+        }
+
+        List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(orgClass.getId());
+        if (orgClassScheduleList.size() == 0) {
+            modelAndView.addObject("orgClassScheduleAllList", orgClassScheduleList);
+
+            return modelAndView;
+        }
+
+        List<OrgClassSchedule> orgClassScheduleAllList = new ArrayList<>();
+        for (OrgClassSchedule orgClassSchedule : orgClassScheduleList) {
+            if (orgClassSchedule.getClassDate() != null) {
+                orgClassScheduleAllList.add(orgClassSchedule);
+            }
+            else {
+                if (orgClass.getStatus() == ClassStatusEnum.STATUS_WORKING.getCode()) {
+                    continue;
+                }
+                for (String week : DateUtil.getDateScopeWeekList(orgClassSchedule.getStartDate(), orgClassSchedule.getEndDate(), orgClassSchedule.getClassWeek())) {
+                    OrgClassSchedule orgClassSchedule1 = new OrgClassSchedule();
+
+                    orgClassSchedule1.setClassDate(week);
+                    orgClassSchedule1.setClassId(orgClassSchedule.getClassId());
+                    orgClassSchedule1.setClassWeek(orgClassSchedule.getClassWeek());
+                    orgClassSchedule1.setCoachId(orgClassSchedule.getCoachId());
+                    orgClassSchedule1.setStartDate(orgClassSchedule.getStartDate());
+                    orgClassSchedule1.setEndDate(orgClassSchedule.getEndDate());
+                    orgClassSchedule1.setId(orgClassSchedule.getId());
+
+                    orgClassScheduleAllList.add(orgClassSchedule1);
+                }
+            }
+        }
+
+        Collections.sort(orgClassScheduleAllList, new Comparator<OrgClassSchedule> () {
+            public int compare(OrgClassSchedule arg0, OrgClassSchedule arg1) {
+                return arg0.getClassDate().compareTo(arg1.getClassDate());
+            }
+        });
+        modelAndView.addObject("orgClassScheduleAllList", orgClassScheduleAllList);
+
+        return modelAndView;
     }
 
     @Desc("签到记录")
@@ -223,6 +289,9 @@ public class StudentCenterController extends BaseController {
 
             OrgCoaches orgCoaches = orgCoachesService.getOrgCoaches(orgClass.getCoachId());
             orgClassResponse.setOrgCoaches(orgCoaches);
+
+            List<OrgClassStudents> orgClassStudentsList2 = orgClassStudentsService.queryOrgClassStudentsListByClassId(orgClass.getId());
+            orgClassResponse.setOrgClassStudentsLength(orgClassStudentsList2.size());
 
             if (ClassStatusEnum.STATUS_START.getCode() == orgClass.getStatus()) {
                 orgClassStartList.add(orgClassResponse);

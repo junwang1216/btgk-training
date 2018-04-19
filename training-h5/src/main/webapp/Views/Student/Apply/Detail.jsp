@@ -49,7 +49,12 @@
         </div>
 
         <p class="weui-btn-area">
-            <a href="/student/apply/confirm?classId=${orgClass.id}" class="weui-btn weui-btn_primary">我要报名</a>
+            <c:if test="${isClassStudent}">
+                <a href="javascript:;" class="weui-btn weui-btn_primary weui-btn_disabled">已经报名</a>
+            </c:if>
+            <c:if test="${!isClassStudent}">
+                <a href="/student/apply/confirm?classId=${orgClass.id}" class="weui-btn weui-btn_primary">我要报名</a>
+            </c:if>
         </p>
     </div>
 </layout:override>

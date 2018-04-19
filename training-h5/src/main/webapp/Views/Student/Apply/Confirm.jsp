@@ -19,18 +19,6 @@
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
     <script type="text/javascript" src="/Content/js/student/apply/confirm.js?ver=${static_resource_version}"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-//            $.modal({
-//                title: "支付确认",
-//                text: "你已经报名成功，请去支付！",
-//                buttons: [
-//                    { text: "支付", onClick: function () { console.log(2)} },
-//                    { text: "取消", className: "default", onClick: function() { console.log(3)} }
-//                ]
-//            });
-        });
-    </script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -52,7 +40,7 @@
                         <label class="weui-label">真实姓名</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" name="realName" placeholder="请输入真实姓名" value="王梓睿">
+                        <input class="weui-input" type="text" name="realName" placeholder="请输入真实姓名">
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -60,7 +48,7 @@
                         <label class="weui-label">手机号码</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="tel" name="mobile" placeholder="请输入手机号码" value="15801223456">
+                        <input class="weui-input" type="tel" name="mobile" placeholder="请输入手机号码">
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -68,7 +56,7 @@
                         <label class="weui-label">出生日期</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="date" name="birthday" placeholder="请选择出生日期" value="1995-12-12">
+                        <input class="weui-input" type="date" name="birthday" placeholder="请选择出生日期">
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -76,7 +64,7 @@
                         <label class="weui-label">体重(kg)</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="tel" name="weight" placeholder="请输入体重" value="50">
+                        <input class="weui-input" type="tel" name="weight" placeholder="请输入体重">
                     </div>
                 </div>
                 <div class="weui-cell">
@@ -84,7 +72,7 @@
                         <label class="weui-label">身高(cm)</label>
                     </div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="tel" name="height" placeholder="请输入身高" value="140">
+                        <input class="weui-input" type="tel" name="height" placeholder="请输入身高">
                     </div>
                 </div>
             </c:if>
@@ -135,11 +123,16 @@
 
         <label for="weuiAgree" class="weui-agree">
             <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox" checked style="display: none">
-            <span class="weui-agree__text">阅读并同意<a href="javascript:void(0);">《乐享培训报名协议》</a></span>
+            <span class="weui-agree__text">阅读并同意<a href="javascript:void(0);">《北体培训报名协议》</a></span>
         </label>
 
         <p class="weui-btn-area">
-            <a id="confirm_apply" href="javascript:;" class="weui-btn weui-btn_primary">确认报名</a>
+            <c:if test="${isClassStudent}">
+                <a href="javascript:;" class="weui-btn weui-btn_primary weui-btn_disabled">已经报名</a>
+            </c:if>
+            <c:if test="${!isClassStudent}">
+                <a id="confirm_apply" href="javascript:;" class="weui-btn weui-btn_primary">确认报名</a>
+            </c:if>
         </p>
     </div>
 

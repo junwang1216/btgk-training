@@ -19,6 +19,8 @@ public interface OrgClassStudentsMapper {
 
     OrgClassStudents selectByPrimaryKey(Integer id);
 
+    OrgClassStudents getOrgClassStudents(@Param("classId") Integer classId, @Param("studentId") Integer studentId, @Param("status") Integer status);
+
     int updateByPrimaryKey(OrgClassStudents record);
 
     List<OrgClassStudents> queryOrgClassStudentsList(@Param("classId") Integer classId, @Param("studentId") Integer studentId, @Param("orderNo") String orderNo, @Param("status") Integer status);

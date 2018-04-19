@@ -3,9 +3,11 @@ package com.training.h5.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.annotation.NotProtected;
 import com.training.core.common.bean.ResponseBean;
+import com.training.core.common.config.WebConfig;
 import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.*;
 import com.training.core.common.exception.MessageException;
+import com.training.core.common.util.DataCryptUtil;
 import com.training.core.common.util.DateUtil;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
@@ -51,6 +53,10 @@ public class StudentApplyController extends BaseController {
     @Resource
     private OrgOrdersService orgOrdersService;
 
+    private OrgStudents getLoginStudents() {
+        return (OrgStudents)(super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
+    }
+
     @Desc("课程列表")
     @NotProtected
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -73,6 +79,7 @@ public class StudentApplyController extends BaseController {
         }
 
         modelAndView.addObject("orgClassList", orgClassResponseList);
+        modelAndView.addObject("orgClassListLength", orgClassResponseList.size());
 
         return modelAndView;
     }
@@ -102,6 +109,14 @@ public class StudentApplyController extends BaseController {
 
         List<OrgClassStudents> orgClassStudentsList = orgClassStudentsService.queryOrgClassStudentsListByClassId(orgClass.getId());
         modelAndView.addObject("orgClassStudentsLength", orgClassStudentsList.size());
+
+        OrgStudents orgStudents = getLoginStudents();
+        modelAndView.addObject("orgStudents", orgStudents);
+
+        if (orgStudents != null) {
+            OrgClassStudents orgClassStudents = orgClassStudentsService.getOrgClassStudents(orgClass.getId(), orgStudents.getId());
+            modelAndView.addObject("isClassStudent", orgClassStudents != null);
+        }
 
         List<OrgClassSchedule> orgClassScheduleList = orgClassScheduleService.queryOrgClassScheduleList(orgClass.getId());
         if (orgClassScheduleList.size() == 0) {
@@ -156,11 +171,16 @@ public class StudentApplyController extends BaseController {
             classId = "0";
         }
 
-        OrgStudents orgStudents = (OrgStudents)(super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
+        OrgStudents orgStudents = getLoginStudents();
         modelAndView.addObject("orgStudents", orgStudents);
 
         OrgClass orgClass = orgClassService.getOrgClass(Integer.parseInt(classId));
         modelAndView.addObject("orgClass", orgClass);
+
+        if (orgStudents != null) {
+            OrgClassStudents orgClassStudents = orgClassStudentsService.getOrgClassStudents(orgClass.getId(), orgStudents.getId());
+            modelAndView.addObject("isClassStudent", orgClassStudents != null);
+        }
 
         return modelAndView;
     }
@@ -173,9 +193,10 @@ public class StudentApplyController extends BaseController {
         try {
             int count = orgStudentsService.queryOrgStudentsListCount(null, orgStudents.getMobile(), null);
             if (count > 0) {
-                return new ResponseBean("该手机号已经存在！");
+                return new ResponseBean("该手机号已经被占用");
             }
 
+            orgStudents.setPassword(DataCryptUtil.encrypt(WebConfig.getUserDefaultPassword()));
             orgStudents.setCreateTime(DateUtil.getNowDate());
             orgStudents.setUpdateTime(DateUtil.getNowDate());
             int result = orgStudentsService.addOrgStudents(orgStudents);
@@ -224,7 +245,13 @@ public class StudentApplyController extends BaseController {
 
                 orgOrders.setOrderType(OrderTypeEnum.ORDER_TYPE_CLASS.getCode());
                 orgOrders.setOrderStatus(OrderStatusEnum.ORDER_STATUS_UNPAID.getCode());
-                orgOrdersService.addOrgOrders(orgOrders);
+                result = orgOrdersService.addOrgOrders(orgOrders);
+
+                if (result <= 0) {
+                    return new ResponseBean("生成支付订单失败");
+                }
+            } else {
+                return new ResponseBean("分配班级失败");
             }
 
             Map map = new HashMap();

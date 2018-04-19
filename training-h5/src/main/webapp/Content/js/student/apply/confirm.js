@@ -76,7 +76,7 @@
                     });
                 } else {
                     console.log(stu.message || "学员报名失败, 请稍后重试");
-                    $.toast(res.message || "学员报名失败, 请稍后重试", "cancel");
+                    $.toast(stu.message || "学员报名失败, 请稍后重试", "cancel");
                     //alert(res.message || "学员报名失败, 请稍后重试");
                 }
             });

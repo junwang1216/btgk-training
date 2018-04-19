@@ -57,6 +57,14 @@
       status = #{status,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="getOrgClassStudents" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_class_students
+    where classId = #{classId,jdbcType=INTEGER}
+      and studentId = #{studentId,jdbcType=INTEGER}
+      and status = #{status,jdbcType=INTEGER}
+  </select>
   <select id="queryOrgClassStudentsList" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

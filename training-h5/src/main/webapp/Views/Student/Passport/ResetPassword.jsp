@@ -10,7 +10,7 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
-    <script type="text/javascript" src="Content/js/student/passport/login.js?v=${static_resource_version}"></script>
+    <script type="text/javascript" src="Content/js/student/passport/reset.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -27,27 +27,27 @@
             </div>
             <div class="input-container">
                 <label><img src="/Content/images/passport/icon2.png?v=${static_resource_version}" alt=""></label>
-                <div class="flex"><input type="password" name="password" placeholder="请输入密码"></div>
+                <div class="flex"><input type="password" name="password" placeholder="请输入旧密码"></div>
+                <div class="delete"><img src="/Content/images/passport/icon3.png?v=${static_resource_version}" alt=""></div>
+            </div>
+            <div class="input-container">
+                <label><img src="/Content/images/passport/icon2.png?v=${static_resource_version}" alt=""></label>
+                <div class="flex"><input type="password" name="password" placeholder="请输入新密码"></div>
+                <div class="delete"><img src="/Content/images/passport/icon3.png?v=${static_resource_version}" alt=""></div>
+            </div>
+            <div class="input-container">
+                <label><img src="/Content/images/passport/icon2.png?v=${static_resource_version}" alt=""></label>
+                <div class="flex"><input type="password" name="password" placeholder="请输入确认密码"></div>
                 <div class="delete"><img src="/Content/images/passport/icon3.png?v=${static_resource_version}" alt=""></div>
             </div>
         </div>
 
-        <div class="weui-flex">
-            <div class="weui-flex__item">
-                <label for="weuiAgree" class="weui-agree">
-                    <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
-                    <span class="weui-agree__text">自动登陆</span>
-                </label>
-            </div>
-            <div class="weui-flex__item wj-mm"><a href="/student/passport/forget">忘记密码?</a></div>
-        </div>
-
         <div style="padding:10px;">
-            <button class="weui-btn weui-btn_yellow to-login">登 录</button>
+            <button class="weui-btn weui-btn_yellow to-reset">重置密码</button>
         </div>
     </div>
 </layout:override>
 
 <c:import url="../../Shared/GeneralLayout.jsp">
-    <c:param name="title" value="学员登录"/>
+    <c:param name="title" value="修改密码"/>
 </c:import>

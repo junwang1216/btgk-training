@@ -38,6 +38,15 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
 
+    <style type="text/css">
+        .weui-toast {
+            width: auto;
+        }
+        .weui-toast .weui-toast_content {
+            margin: 0 10px 22px;
+        }
+    </style>
+
     <layout:block name="<%=Blocks.BLOCK_HEADER_CSS%>"/>
 </head>
 

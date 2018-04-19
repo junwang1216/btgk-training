@@ -23,7 +23,7 @@
                 <div class="weui-form-preview__ft">
                     <a class="weui-form-preview__btn weui-form-preview__btn_primary"
                        href="/student/center/attendance">每日签到</a>
-                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:">我的收藏</a>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="/student/apply/list">课程报名</a>
                 </div>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="weui-cells center-list">
             <a class="weui-cell weui-cell_access" href="/student/center/class">
                 <div class="weui-cell__hd">
-                    <img src="/Content/images/icon-order.png">
+                    <img src="/Content/images/icon-order.png?v=${static_resource_version}">
                 </div>
                 <div class="weui-cell__bd">
                     <p>我的班级</p>
@@ -40,10 +40,19 @@
             </a>
             <a class="weui-cell weui-cell_access" href="/student/center/class/log">
                 <div class="weui-cell__hd">
-                    <img src="/Content/images/icon-unpaid7.png">
+                    <img src="/Content/images/icon-unpaid7.png?v=${static_resource_version}">
                 </div>
                 <div class="weui-cell__bd">
                     <p>上课进度</p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access" href="/student/passport/reset">
+                <div class="weui-cell__hd">
+                    <img src="/Content/images/icon-password.png?v=${static_resource_version}">
+                </div>
+                <div class="weui-cell__bd">
+                    <p>修改密码</p>
                 </div>
                 <div class="weui-cell__ft"></div>
             </a>
@@ -52,7 +61,7 @@
         <div class="weui-cells center-list">
             <a class="weui-cell weui-cell_access" href="javascript:;">
                 <div class="weui-cell__hd">
-                    <img src="/Content/images/icon-about.png">
+                    <img src="/Content/images/icon-about.png?v=${static_resource_version}">
                 </div>
                 <div class="weui-cell__bd">
                     <p>关于我们</p>
@@ -61,7 +70,7 @@
             </a>
             <a class="weui-cell weui-cell_access" href="javascript:;">
                 <div class="weui-cell__hd">
-                    <img src="/Content/images/icon-phone.png">
+                    <img src="/Content/images/icon-phone.png?v=${static_resource_version}">
                 </div>
                 <div class="weui-cell__bd">
                     <p>联系客服</p>

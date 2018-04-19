@@ -14,6 +14,8 @@ public interface OrgClassStudentsService {
 
     OrgClassStudents getOrgClassStudents(Integer id);
 
+    OrgClassStudents getOrgClassStudents(Integer classId, Integer studentId);
+
     int totalAllStudentsCount(String startTime, String endTime);
 
     List<OrgClassStudents> queryOrgClassStudentsListByDate(String startTime, String endTime);

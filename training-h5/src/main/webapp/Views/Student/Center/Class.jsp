@@ -21,21 +21,21 @@
                 <div class="weui-tab__bd">
                     <div id="course_start" class="weui-tab__bd-item">
                         <c:if test="${orgClassStartList.size() == 0}">
-                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何分班记录！</p>
+                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何报名班级！</p>
                         </c:if>
                         <c:forEach var="cls" items="${orgClassStartList}" varStatus="loop">
                             <a class="weui-flex course-item" href="/student/center/class/detail?type=1&classId=${cls.orgClass.id}">
                                 <div class="weui-flex__item course-info">
                                     <div class="course-title">${cls.orgClass.className}</div>
                                     <div class="course-teacher">${cls.orgCoaches.realName}</div>
-                                    <div class="course-date">报名时间：2018-01-23 至 2018-01-30</div>
+                                    <div class="course-date">已报名：${cls.orgClassStudentsLength}人</div>
                                 </div>
                             </a>
                         </c:forEach>
                     </div>
                     <div id="course_going" class="weui-tab__bd-item weui-tab__bd-item--active">
                         <c:if test="${orgClassGoingList.size() == 0}">
-                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何上课记录！</p>
+                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何上课班级！</p>
                         </c:if>
 
                         <c:forEach var="cls" items="${orgClassGoingList}" varStatus="loop">
@@ -50,7 +50,7 @@
                     </div>
                     <div id="course_end" class="weui-tab__bd-item">
                         <c:if test="${orgClassEndList.size() == 0}">
-                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何结课记录！</p>
+                            <p class="no-log"><img src="/Content/images/icon-order.png?ver=${static_resource_version}"> 没有任何结课班级！</p>
                         </c:if>
 
                         <c:forEach var="cls" items="${orgClassEndList}" varStatus="loop">
