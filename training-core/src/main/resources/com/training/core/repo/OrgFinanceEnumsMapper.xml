@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgFinanceEnumsMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgFinanceEnums">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="enumName" jdbcType="VARCHAR" property="enumName" />
+    <result column="enumNote" jdbcType="VARCHAR" property="enumNote" />
+    <result column="enumValue" jdbcType="INTEGER" property="enumValue" />
+    <result column="enumGroup" jdbcType="VARCHAR" property="enumGroup" />
+    <result column="enumPriority" jdbcType="INTEGER" property="enumPriority" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, enumName, enumNote, enumValue, enumGroup, enumPriority
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_finance_enums
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_finance_enums
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgFinanceEnums">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_finance_enums (enumName, enumNote, enumValue, 
+      enumGroup, enumPriority)
+    values (#{enumName,jdbcType=VARCHAR}, #{enumNote,jdbcType=VARCHAR}, #{enumValue,jdbcType=INTEGER}, 
+      #{enumGroup,jdbcType=VARCHAR}, #{enumPriority,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgFinanceEnums">
+    update org_finance_enums
+    set enumName = #{enumName,jdbcType=VARCHAR},
+      enumNote = #{enumNote,jdbcType=VARCHAR},
+      enumValue = #{enumValue,jdbcType=INTEGER},
+      enumGroup = #{enumGroup,jdbcType=VARCHAR},
+      enumPriority = #{enumPriority,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_finance_enums
+    where 1 = 1
+    <if test="enumGroup != null">
+      and enumGroup = #{enumGroup,jdbcType=VARCHAR}
+    </if>
+    order by enumPriority desc
+  </select>
+</mapper>

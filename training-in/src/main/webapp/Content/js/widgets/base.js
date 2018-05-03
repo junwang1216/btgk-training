@@ -117,7 +117,7 @@ define(["jquery"], function ($) {
      * CARDS ACTIONS
      */
 
-    $(document).on('click', '.card-actions a', function (e) {
+    /*$(document).on('click', '.card-actions a', function (e) {
         e.preventDefault();
 
         if ($(this).hasClass('btn-close')) {
@@ -134,7 +134,7 @@ define(["jquery"], function ($) {
             $('#myModal').modal('show');
         }
 
-    });
+    });*/
 
     /** 公共函数 **/
     /*

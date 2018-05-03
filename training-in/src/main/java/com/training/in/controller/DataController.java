@@ -3,15 +3,20 @@ package com.training.in.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.constant.IPlatformConstant;
+import com.training.core.common.enums.LogTypeEnum;
 import com.training.core.common.enums.OrderStatusEnum;
 import com.training.core.common.enums.OrderTypeEnum;
 import com.training.core.common.enums.PayTypeEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
+import com.training.core.common.util.Page;
+import com.training.core.common.util.StrUtil;
+import com.training.core.common.util.StringUtil;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
 import com.training.in.request.OrgBalanceSettingsRequest;
 import com.training.in.request.OrgDataRequest;
+import com.training.in.request.OrgFinanceLogRequest;
 import com.training.in.response.OrgBalanceDataResponse;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
@@ -22,10 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 /**
  * Created by wangjun on 2017/5/1.
@@ -39,6 +42,12 @@ public class DataController extends BaseController {
 
     @Resource
     private OrgBalanceSettingsService orgBalanceSettingsService;
+
+    @Resource
+    private OrgFinanceEnumsService orgFinanceEnumsService;
+
+    @Resource
+    private OrgFinanceService orgFinanceService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
@@ -362,6 +371,248 @@ public class DataController extends BaseController {
             e.printStackTrace();
             return new ResponseBean(false);
         }
+    }
+
+    private int getStringValue(Object value) {
+        return value != null ? Integer.parseInt(value.toString()) : 0;
+    }
+
+    @Desc("运用财务")
+    @RequestMapping(value = "/operation/finance", method = RequestMethod.GET)
+    public ModelAndView renderDataOperationFinance() {
+
+        ModelAndView modelAndView = new ModelAndView("Data/OperationFinance");
+
+        List<OrgFinanceEnums> orgFinanceChannelList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CHANNEL");
+        modelAndView.addObject("orgFinanceChannelList", orgFinanceChannelList);
+
+        List<OrgFinanceEnums> orgFinanceBusinessList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_BUSINESS");
+        modelAndView.addObject("orgFinanceBusinessList", orgFinanceBusinessList);
+
+        List<OrgFinanceEnums> orgFinanceBaseList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_BASE");
+        modelAndView.addObject("orgFinanceBaseList", orgFinanceBaseList);
+
+        int total = orgFinanceService.queryOrgFinanceCount();
+        List<OrgFinance> orgFinanceList = orgFinanceService.queryOrgFinanceList(0, total);
+        //modelAndView.addObject("orgFinanceList", orgFinanceList);
+
+        List<Map> financeList = new ArrayList<>();
+        Map checkMap = new HashMap();
+        int i = 0;
+        for (OrgFinance orgFinance : orgFinanceList) {
+            Map map;
+
+            if (checkMap.get(orgFinance.getRealName()) == null) {
+                checkMap.put(orgFinance.getRealName(), i);
+
+                map = new HashMap();
+
+                map.put("baseType", orgFinance.getBaseType());
+                map.put("realName", orgFinance.getRealName());
+
+                // 流水
+                map.put("pipelineValue", orgFinance.getPipelineValue());
+                map.put("pipelineTarget", orgFinance.getPipelineTarget());
+                map.put("pipelineChallenge", orgFinance.getPipelineChallenge());
+
+                map.put("pipelineValue" + orgFinance.getChannelType(), orgFinance.getPipelineValue());
+
+                // 收入
+                map.put("incomeValue", orgFinance.getIncomeValue());
+                map.put("incomeTarget", orgFinance.getIncomeTarget());
+                map.put("incomeChallenge", orgFinance.getIncomeChallenge());
+
+                map.put("incomeValue" + orgFinance.getChannelType(), orgFinance.getIncomeValue());
+
+                // 人数
+                map.put("registerCount", orgFinance.getRegisterCount());
+                map.put("classCount", orgFinance.getClassCount());
+
+                map.put("registerCount" + orgFinance.getChannelType(), orgFinance.getRegisterCount());
+                map.put("classCount" + orgFinance.getChannelType(), orgFinance.getClassCount());
+
+                // 体验
+                map.put("accessCount", orgFinance.getAccessCount());
+                map.put("businessCount", orgFinance.getBusinessCount());
+
+                map.put("accessCount" + orgFinance.getChannelType(), orgFinance.getAccessCount());
+                map.put("businessCount" + orgFinance.getChannelType(), orgFinance.getBusinessCount());
+
+                financeList.add(map);
+            } else {
+                i = Integer.parseInt(checkMap.get(orgFinance.getRealName()).toString());
+
+                map = financeList.get(i);
+
+                // 流水
+                map.put("pipelineValue", getStringValue(map.get("pipelineValue")) + orgFinance.getPipelineValue());
+                map.put("pipelineTarget", getStringValue(map.get("pipelineTarget")) + orgFinance.getPipelineTarget());
+                map.put("pipelineChallenge", getStringValue(map.get("pipelineChallenge")) + orgFinance.getPipelineChallenge());
+
+
+                map.put("pipelineValue" + orgFinance.getChannelType(), getStringValue(map.get("pipelineValue" + orgFinance.getChannelType())) + orgFinance.getPipelineValue());
+
+                // 收入
+                map.put("incomeValue", getStringValue(map.get("incomeValue")) + orgFinance.getIncomeValue());
+                map.put("incomeTarget", getStringValue(map.get("incomeTarget")) + orgFinance.getIncomeTarget());
+                map.put("incomeChallenge", getStringValue(map.get("incomeChallenge")) + orgFinance.getIncomeChallenge());
+
+                map.put("incomeValue" + orgFinance.getChannelType(), getStringValue(map.get("incomeValue" + orgFinance.getChannelType())) + orgFinance.getIncomeValue());
+
+                // 人数
+                map.put("registerCount", getStringValue(map.get("registerCount")) + orgFinance.getRegisterCount());
+                map.put("classCount", getStringValue(map.get("classCount")) + orgFinance.getClassCount());
+
+                map.put("registerCount" + orgFinance.getChannelType(), getStringValue(map.get("registerCount" + orgFinance.getChannelType())) + orgFinance.getRegisterCount());
+                map.put("classCount" + orgFinance.getChannelType(), getStringValue(map.get("classCount" + orgFinance.getChannelType())) + orgFinance.getClassCount());
+
+                // 体验
+                map.put("accessCount", getStringValue(map.get("accessCount")) + orgFinance.getAccessCount());
+                map.put("businessCount", getStringValue(map.get("businessCount")) + orgFinance.getBusinessCount());
+
+                map.put("accessCount" + orgFinance.getChannelType(), getStringValue(map.get("accessCount" + orgFinance.getChannelType())) + orgFinance.getAccessCount());
+                map.put("businessCount" + orgFinance.getChannelType(), getStringValue(map.get("businessCount" + orgFinance.getChannelType())) + orgFinance.getBusinessCount());
+            }
+
+            i++;
+        }
+
+        for (Map map : financeList) {
+            map.put("pipelineTargetPercent", getStringValue(map.get("pipelineValue")) / getStringValue(map.get("pipelineTarget")));
+            map.put("pipelineChallengePercent", getStringValue(map.get("pipelineValue")) / getStringValue(map.get("pipelineChallenge")));
+
+            map.put("incomeTargetPercent", getStringValue(map.get("incomeValue")) / getStringValue(map.get("incomeTarget")));
+            map.put("incomeChallengePercent", getStringValue(map.get("incomeValue")) / getStringValue(map.get("incomeChallenge")));
+
+            map.put("businessCountPercent", getStringValue(map.get("businessCount")) / getStringValue(map.get("accessCount")));
+
+            int accessCountPerson = 0;
+            int businessCountPerson = 0;
+            for (OrgFinanceEnums orgFinanceEnums : orgFinanceChannelList) {
+                String accessCount = "accessCount" + orgFinanceEnums.getEnumValue();
+                String businessCount = "businessCount" + orgFinanceEnums.getEnumValue();
+
+                if (map.get(accessCount) != null) {
+                    map.put(businessCount + "Percent", getStringValue(map.get(businessCount)) / getStringValue(map.get(accessCount)));
+                } else {
+                    map.put(accessCount, 0);
+                    map.put(businessCount, 0);
+                    map.put(businessCount + "Percent", 1);
+                }
+
+                if (!orgFinanceEnums.getEnumName().equals("company")) {
+                    accessCountPerson += getStringValue(map.get(accessCount));
+                    businessCountPerson += getStringValue(map.get(businessCount));
+                }
+
+                String registerCount = "registerCount" + orgFinanceEnums.getEnumValue();
+                String classCount = "classCount" + orgFinanceEnums.getEnumValue();
+                if (map.get(registerCount) == null) {
+                    map.put(registerCount, 0);
+                    map.put(classCount, 0);
+                }
+
+                String pipelineValue = "pipelineValue" + orgFinanceEnums.getEnumValue();
+                String incomeValue = "incomeValue" + orgFinanceEnums.getEnumValue();
+                if (map.get(pipelineValue) == null) {
+                    map.put(pipelineValue, 0);
+                }
+                if (map.get(incomeValue) == null) {
+                    map.put(incomeValue, 0);
+                }
+            }
+            map.put("businessCountPerson", businessCountPerson / accessCountPerson);
+        }
+
+        modelAndView.addObject("orgFinanceList", financeList);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("运用财务编辑")
+    @RequestMapping(value = "/operation/finance/edit", method = RequestMethod.GET)
+    public ModelAndView renderDataOperationFinanceEdit(String businessNo) {
+
+        ModelAndView modelAndView = new ModelAndView("Data/OperationFinanceEdit");
+
+        OrgFinance orgFinance = new OrgFinance();
+        if (businessNo != null) {
+            orgFinance = orgFinanceService.getOrgFinance(businessNo);
+        }
+        modelAndView.addObject("orgFinance", orgFinance);
+
+        List<OrgFinanceEnums> orgFinanceChannelList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CHANNEL");
+        modelAndView.addObject("orgFinanceChannelList", orgFinanceChannelList);
+
+        List<OrgFinanceEnums> orgFinanceBusinessList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_BUSINESS");
+        modelAndView.addObject("orgFinanceBusinessList", orgFinanceBusinessList);
+
+        List<OrgFinanceEnums> orgFinanceBaseList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_BASE");
+        modelAndView.addObject("orgFinanceBaseList", orgFinanceBaseList);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("运用财务编辑提交")
+    @ResponseBody
+    @RequestMapping(value = "/saveOperationFinance", method = RequestMethod.POST)
+    public ResponseBean saveOperationFinance(OrgFinance orgFinance) {
+        try {
+
+            int result;
+;
+            orgFinance.setOperatorId(getLoginUser().getId());
+
+            if (orgFinance.getBusinessNo() != null) {
+                orgFinance.setUpdateTime(DateUtil.getNowDate());
+                result = orgFinanceService.saveOrgFinance(orgFinance);
+            }
+            else {
+                orgFinance.setBusinessNo(StrUtil.getUUID());
+                orgFinance.setCreateTime(DateUtil.getNowDate());
+                orgFinance.setUpdateTime(DateUtil.getNowDate());
+                result = orgFinanceService.addOrgFinance(orgFinance);
+            }
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("运用财务日志")
+    @RequestMapping(value = "/operation/finance/log", method = RequestMethod.GET)
+    public ModelAndView renderDataOperationFinanceLog(OrgFinanceLogRequest orgFinanceLogRequest) {
+
+        ModelAndView modelAndView = new ModelAndView("Data/OperationFinanceLog");
+
+        List<OrgFinanceEnums> orgFinanceChannelList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CHANNEL");
+        modelAndView.addObject("orgFinanceChannelList", orgFinanceChannelList);
+
+        List<OrgFinanceEnums> orgFinanceBusinessList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_BUSINESS");
+        modelAndView.addObject("orgFinanceBusinessList", orgFinanceBusinessList);
+
+        List<OrgFinanceEnums> orgFinanceBaseList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_BASE");
+        modelAndView.addObject("orgFinanceBaseList", orgFinanceBaseList);
+
+        int total = orgFinanceService.queryOrgFinanceCount();
+        int start = orgFinanceLogRequest.getPage() < 1 ? 0 : orgFinanceLogRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgFinance> orgFinanceList = orgFinanceService.queryOrgFinanceList(start * pageSize, pageSize);
+        modelAndView.addObject("orgFinanceList", orgFinanceList);
+
+        Page page = new Page(pageSize, total);
+        page.setPage(orgFinanceLogRequest.getPage());
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/data/operation/finance/log?_t=" + DateUtil.getNowDate());
+        modelAndView.addObject("page", page);
+
+        return setModelAndView(modelAndView);
     }
 
 }

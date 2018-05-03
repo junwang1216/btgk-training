@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgFinanceMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgFinance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="businessNo" jdbcType="VARCHAR" property="businessNo" />
+    <result column="businessDate" jdbcType="VARCHAR" property="businessDate" />
+    <result column="businessType" jdbcType="INTEGER" property="businessType" />
+    <result column="baseType" jdbcType="INTEGER" property="baseType" />
+    <result column="realName" jdbcType="VARCHAR" property="realName" />
+    <result column="channelType" jdbcType="INTEGER" property="channelType" />
+    <result column="pipelineValue" jdbcType="INTEGER" property="pipelineValue" />
+    <result column="pipelineTarget" jdbcType="INTEGER" property="pipelineTarget" />
+    <result column="pipelineChallenge" jdbcType="INTEGER" property="pipelineChallenge" />
+    <result column="incomeValue" jdbcType="INTEGER" property="incomeValue" />
+    <result column="incomeTarget" jdbcType="INTEGER" property="incomeTarget" />
+    <result column="incomeChallenge" jdbcType="INTEGER" property="incomeChallenge" />
+    <result column="registerCount" jdbcType="INTEGER" property="registerCount" />
+    <result column="classCount" jdbcType="INTEGER" property="classCount" />
+    <result column="accessCount" jdbcType="INTEGER" property="accessCount" />
+    <result column="businessCount" jdbcType="INTEGER" property="businessCount" />
+    <result column="nullCount" jdbcType="INTEGER" property="nullCount" />
+    <result column="nullTotalCount" jdbcType="INTEGER" property="nullTotalCount" />
+    <result column="hotTotalCount" jdbcType="INTEGER" property="hotTotalCount" />
+    <result column="hotCount" jdbcType="INTEGER" property="hotCount" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+    <result column="operatorId" jdbcType="INTEGER" property="operatorId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, businessNo, businessDate, businessType, baseType, realName, channelType, pipelineValue, 
+    pipelineTarget, pipelineChallenge, incomeValue, incomeTarget, incomeChallenge, registerCount,
+    classCount, accessCount, businessCount, nullCount, nullTotalCount, hotTotalCount, 
+    hotCount, createTime, updateTime, operatorId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_finance
+    where businessNo = #{businessNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from org_finance
+    where businessNo = #{businessNo,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgFinance">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_finance (businessNo, businessDate, businessType, 
+      baseType, realName, channelType, 
+      pipelineValue, pipelineTarget, pipelineChallenge, 
+      incomeValue, incomeTarget, incomeChallenge,
+      registerCount, classCount, accessCount, 
+      businessCount, nullCount, nullTotalCount, 
+      hotTotalCount, hotCount, createTime, 
+      updateTime, operatorId)
+    values (#{businessNo,jdbcType=VARCHAR}, #{businessDate,jdbcType=VARCHAR}, #{businessType,jdbcType=INTEGER}, 
+      #{baseType,jdbcType=INTEGER}, #{realName,jdbcType=VARCHAR}, #{channelType,jdbcType=INTEGER}, 
+      #{pipelineValue,jdbcType=INTEGER}, #{pipelineTarget,jdbcType=INTEGER}, #{pipelineChallenge,jdbcType=INTEGER}, 
+      #{incomeValue,jdbcType=INTEGER}, #{incomeTarget,jdbcType=INTEGER}, #{incomeChallenge,jdbcType=INTEGER},
+      #{registerCount,jdbcType=INTEGER}, #{classCount,jdbcType=INTEGER}, #{accessCount,jdbcType=INTEGER}, 
+      #{businessCount,jdbcType=INTEGER}, #{nullCount,jdbcType=INTEGER}, #{nullTotalCount,jdbcType=INTEGER}, 
+      #{hotTotalCount,jdbcType=INTEGER}, #{hotCount,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=VARCHAR}, #{operatorId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgFinance">
+    update org_finance
+    set businessType = #{businessType,jdbcType=INTEGER},
+      baseType = #{baseType,jdbcType=INTEGER},
+      channelType = #{channelType,jdbcType=INTEGER},
+      pipelineValue = #{pipelineValue,jdbcType=INTEGER},
+      pipelineTarget = #{pipelineTarget,jdbcType=INTEGER},
+      pipelineChallenge = #{pipelineChallenge,jdbcType=INTEGER},
+      incomeValue = #{incomeValue,jdbcType=INTEGER},
+      incomeTarget = #{incomeTarget,jdbcType=INTEGER},
+      incomeChallenge = #{incomeChallenge,jdbcType=INTEGER},
+      registerCount = #{registerCount,jdbcType=INTEGER},
+      classCount = #{classCount,jdbcType=INTEGER},
+      accessCount = #{accessCount,jdbcType=INTEGER},
+      businessCount = #{businessCount,jdbcType=INTEGER},
+      nullCount = #{nullCount,jdbcType=INTEGER},
+      nullTotalCount = #{nullTotalCount,jdbcType=INTEGER},
+      hotTotalCount = #{hotTotalCount,jdbcType=INTEGER},
+      hotCount = #{hotCount,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR},
+      operatorId = #{operatorId,jdbcType=INTEGER}
+    where businessNo = #{businessNo,jdbcType=VARCHAR}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_finance
+    where 1 = 1
+    order by businessDate desc
+    limit #{start}, #{pageSize}
+  </select>
+  <select id="queryAllCount" resultType="java.lang.Integer">
+    select count(*)
+    from org_finance
+    where 1 = 1
+    order by businessDate desc
+  </select>
+</mapper>

@@ -140,6 +140,11 @@
                     <i class="icon-chart"></i> 数据统计
                 </a>
                 <ul class="nav-dropdown-items">
+                    <li class="nav-item <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit'}">active</c:if>" href="/admin/data/operation/finance">
+                            <i class="icon-arrow-right"></i> 运营财务
+                        </a>
+                    </li>
                     <li class="nav-item <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">open</c:if>">
                         <a class="nav-link <c:if test="${param.subMenu == 'orders' || param.subMenu == 'detail'}">active</c:if>" href="/admin/order/list">
                             <i class="icon-arrow-right"></i> 我的订单

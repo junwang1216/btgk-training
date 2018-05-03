@@ -92,6 +92,18 @@
                     <li class="breadcrumb-item"><a href="/admin/order/list">我的订单</a></li>
                     <li class="breadcrumb-item active">订单详情</li>
                 </c:when>
+                <c:when test="${param.subMenu == 'finance'}">
+                    <li class="breadcrumb-item active">运营财务</li>
+                </c:when>
+                <c:when test="${param.subMenu == 'finance_log'}">
+                    <li class="breadcrumb-item"><a href="/admin/data/operation/finance">运营财务</a></li>
+                    <li class="breadcrumb-item active">详情日志</li>
+                </c:when>
+                <c:when test="${param.subMenu == 'finance_edit'}">
+                    <li class="breadcrumb-item"><a href="/admin/data/operation/finance">运营财务</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/data/operation/finance/log">详情日志</a></li>
+                    <li class="breadcrumb-item active">详情编辑</li>
+                </c:when>
                 <c:when test="${param.subMenu == 'income'}">
                     <li class="breadcrumb-item active">收入流水</li>
                 </c:when>
