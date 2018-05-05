@@ -14,7 +14,7 @@ public interface OrgFinanceMapper {
 
     int updateByPrimaryKey(OrgFinance record);
 
-    List<OrgFinance> queryAll(@Param("start") Integer start, @Param("pageSize") Integer pageSize);
+    List<OrgFinance> queryAll(@Param("startTime") String startTime, @Param("endTime") String endTime, @Param("start") Integer start, @Param("pageSize") Integer pageSize);
 
-    int queryAllCount();
+    int queryAllCount(@Param("startTime") String startTime, @Param("endTime") String endTime);
 }

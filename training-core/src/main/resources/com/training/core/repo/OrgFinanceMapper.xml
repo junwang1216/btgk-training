@@ -92,6 +92,12 @@
     <include refid="Base_Column_List" />
     from org_finance
     where 1 = 1
+    <if test="startTime != null">
+      and createTime &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and createTime &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
     order by businessDate desc
     limit #{start}, #{pageSize}
   </select>
@@ -99,6 +105,12 @@
     select count(*)
     from org_finance
     where 1 = 1
+    <if test="startTime != null">
+      and createTime &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and createTime &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
     order by businessDate desc
   </select>
 </mapper>

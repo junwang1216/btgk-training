@@ -12,8 +12,8 @@ public interface OrgFinanceService {
 
     int saveOrgFinance(OrgFinance orgFinance);
 
-    List<OrgFinance> queryOrgFinanceList(Integer start, Integer pageSize);
+    List<OrgFinance> queryOrgFinanceList(String startTime, String endTime, Integer start, Integer pageSize);
 
-    int queryOrgFinanceCount();
+    int queryOrgFinanceCount(String startTime, String endTime);
 
 }

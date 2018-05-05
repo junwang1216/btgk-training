@@ -5,7 +5,6 @@ requirejs.config({
         "tether"    : 'bower_components/tether/dist/js/tether',
         "bootstrap" : 'bower_components/bootstrap/dist/js/bootstrap',
         "pace"      : 'bower_components/pace/pace',
-        "chart"     : 'bower_components/chart.js/dist/Chart',
 
         "base"      : 'js/widgets/base',
         "override"  : 'js/widgets/override'
@@ -22,13 +21,37 @@ requirejs.config({
 require(['jquery', 'override', 'bootstrap', 'base'], function ($) {
     'use strict';
 
-    // 检索
-    $(".search-expend").on("click", function (e) {
+    function setOverflow() {
+        var bodyWidth = $("body").width();
+
+        var sideBarWidth = $(".sidebar").width();
+        if ($("body.sidebar-hidden").length > 0) {
+            sideBarWidth = 0;
+        }
+        var paddingWidth = 15;
+
+        $(".table-overflow").width((bodyWidth - sideBarWidth - paddingWidth * 4) + "px");
+        $(".table-children").width((bodyWidth - sideBarWidth - paddingWidth * 6) + "px");
+    }
+    setOverflow();
+
+    $(".table-overflow").on("scroll", function (e) {
+       e.preventDefault();
+
+        $(".table-children").css({
+            "margin-left": $(this).scrollLeft() + "px"
+        });
+    });
+
+    window.addEventListener("resize", function (e) {
         e.preventDefault();
 
-        var $form = $("#expend_form");
-        var conditions = $form.serialize();
+        setOverflow();
+    });
 
-        window.location.assign("/admin/data/expend?" + conditions);
+    $("[name='total_students_type']").on("change", function (e) {
+        e.preventDefault();
+
+        window.location.href = "/admin/data/operation/finance?typeTime=" +  $("[name='total_students_type']:checked").val()
     });
 });

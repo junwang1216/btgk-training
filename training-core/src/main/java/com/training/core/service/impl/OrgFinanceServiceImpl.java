@@ -30,13 +30,13 @@ public class OrgFinanceServiceImpl implements OrgFinanceService {
     }
 
     @Override
-    public List<OrgFinance> queryOrgFinanceList(Integer start, Integer pageSize) {
-        return orgFinanceMapper.queryAll(start, pageSize);
+    public List<OrgFinance> queryOrgFinanceList(String startTime, String endTime, Integer start, Integer pageSize) {
+        return orgFinanceMapper.queryAll(startTime, endTime, start, pageSize);
     }
 
     @Override
-    public int queryOrgFinanceCount() {
-        return orgFinanceMapper.queryAllCount();
+    public int queryOrgFinanceCount(String startTime, String endTime) {
+        return orgFinanceMapper.queryAllCount(startTime, endTime);
     }
 
 }
