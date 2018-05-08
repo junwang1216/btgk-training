@@ -1,7 +1,6 @@
 package com.training.core.repo;
 
 import com.training.core.repo.po.OrgFinanceUsers;
-import com.training.core.repo.po.OrgFinanceUsersExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

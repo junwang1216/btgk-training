@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgFinanceGoalsMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgFinanceGoals">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="busType" jdbcType="INTEGER" property="busType" />
+    <result column="goalType" jdbcType="INTEGER" property="goalType" />
+    <result column="venueId" jdbcType="INTEGER" property="venueId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="year" jdbcType="INTEGER" property="year" />
+    <result column="month" jdbcType="INTEGER" property="month" />
+    <result column="minValue" jdbcType="INTEGER" property="minValue" />
+    <result column="maxValue" jdbcType="INTEGER" property="maxValue" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, busType, goalType, venueId, userId, `year`, `month`, minValue, `maxValue`, createTime, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_finance_goals
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_finance_goals
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgFinanceGoals">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_finance_goals (busType, goalType, venueId, userId, `year`, `month`, minValue, `maxValue`, createTime, updateTime)
+    values (#{busType,jdbcType=INTEGER}, #{goalType,jdbcType=INTEGER}, #{venueId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
+      #{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER}, #{minValue,jdbcType=INTEGER}, 
+      #{maxValue,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgFinanceGoals">
+    update org_finance_goals
+    set busType = #{busType,jdbcType=INTEGER},
+      venueId = #{venueId,jdbcType=INTEGER},
+      userId = #{userId,jdbcType=INTEGER},
+      goalType = #{goalType,jdbcType=INTEGER},
+      `year` = #{year,jdbcType=INTEGER},
+      `month` = #{month,jdbcType=INTEGER},
+      minValue = #{minValue,jdbcType=INTEGER},
+      `maxValue` = #{maxValue,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_finance_goals
+    where 1 = 1
+    <if test="year != null">
+      and `year` = #{year,jdbcType=INTEGER}
+    </if>
+    <if test="busType != null">
+      and busType = #{busType,jdbcType=INTEGER}
+    </if>
+    <if test="goalType != null">
+      and goalType = #{goalType,jdbcType=INTEGER}
+    </if>
+    <if test="venueId != null">
+      and venueId = #{venueId,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null">
+      and userId = #{userId,jdbcType=INTEGER}
+    </if>
+    order by `month` asc
+  </select>
+</mapper>
