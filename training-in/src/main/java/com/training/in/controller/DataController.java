@@ -984,7 +984,7 @@ public class DataController extends BaseController {
 ;
             orgFinance.setOperatorId(getLoginUser().getId());
 
-            if (orgFinance.getBusinessNo() != null) {
+            if (orgFinance.getBusinessNo() != null && !orgFinance.getBusinessNo().equals("")) {
                 orgFinance.setUpdateTime(DateUtil.getNowDate());
                 result = orgFinanceService.saveOrgFinance(orgFinance);
             }
@@ -1032,6 +1032,24 @@ public class DataController extends BaseController {
         modelAndView.addObject("total", total);
         modelAndView.addObject("pageURL", "/admin/data/operation/finance/log?_t=" + DateUtil.getNowDate());
         modelAndView.addObject("page", page);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("运用财务图表")
+    @RequestMapping(value = "/operation/finance/chart", method = RequestMethod.GET)
+    public ModelAndView renderDataOperationFinanceChart(OrgFinanceLogRequest orgFinanceLogRequest) {
+
+        ModelAndView modelAndView = new ModelAndView("Data/OperationFinanceChart");
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("运用财务参数设置")
+    @RequestMapping(value = "/operation/finance/settings", method = RequestMethod.GET)
+    public ModelAndView renderDataOperationFinanceSettings(OrgFinanceLogRequest orgFinanceLogRequest) {
+
+        ModelAndView modelAndView = new ModelAndView("Data/OperationFinanceSettings");
 
         return setModelAndView(modelAndView);
     }

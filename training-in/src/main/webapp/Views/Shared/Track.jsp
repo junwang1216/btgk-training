@@ -99,6 +99,14 @@
                     <li class="breadcrumb-item"><a href="/admin/data/operation/finance">运营财务</a></li>
                     <li class="breadcrumb-item active">详情日志</li>
                 </c:when>
+                <c:when test="${param.subMenu == 'finance_chart'}">
+                    <li class="breadcrumb-item"><a href="/admin/data/operation/finance">运营财务</a></li>
+                    <li class="breadcrumb-item active">图表展示</li>
+                </c:when>
+                <c:when test="${param.subMenu == 'finance_settings'}">
+                    <li class="breadcrumb-item"><a href="/admin/data/operation/finance">运营财务</a></li>
+                    <li class="breadcrumb-item active">参数设置</li>
+                </c:when>
                 <c:when test="${param.subMenu == 'finance_edit'}">
                     <li class="breadcrumb-item"><a href="/admin/data/operation/finance">运营财务</a></li>
                     <li class="breadcrumb-item"><a href="/admin/data/operation/finance/log">详情日志</a></li>
@@ -115,6 +123,24 @@
                 </c:when>
                 <c:when test="${param.subMenu == 'settings'}">
                     <li class="breadcrumb-item active">收支类型设置</li>
+                </c:when>
+            </c:choose>
+        </c:when>
+
+        <c:when test="${param.menu == 'finance'}">
+            <li class="breadcrumb-item">财务报表</li>
+            <c:choose>
+                <c:when test="${param.subMenu == 'relationship'}">
+                    <li class="breadcrumb-item active">组织管理</li>
+                </c:when>
+                <c:when test="${param.subMenu == 'settings'}">
+                    <li class="breadcrumb-item active">参数设置</li>
+                </c:when>
+                <c:when test="${param.subMenu == 'performance'}">
+                    <li class="breadcrumb-item active">业绩排名</li>
+                </c:when>
+                <c:when test="${param.subMenu == 'summary'}">
+                    <li class="breadcrumb-item active">数据汇总</li>
                 </c:when>
             </c:choose>
         </c:when>

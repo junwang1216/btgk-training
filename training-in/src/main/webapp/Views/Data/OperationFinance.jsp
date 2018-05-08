@@ -34,9 +34,13 @@
                             <small>Operation Finance</small>
 
                             <div class="card-actions">
-                                <a href="/admin/data/operation/finance/edit" class="btn-settings" title="详情编辑"><i class="icon-settings"></i></a>
+                                <a href="/admin/data/operation/finance/edit" class="btn-settings" title="详情编辑"><i class="icon-note"></i></a>
                                 <a href="/admin/data/operation/finance/log" class="btn-list" title="详情日志"><i class="icon-list"></i></a>
-                                <a href="/admin/data/operation/finance/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank"><i class="icon-cloud-download"></i></a>
+                                <a href="/admin/data/operation/finance/settings" class="btn-settings" title="指标设置"><i class="icon-settings"></i></a>
+                                <a href="/admin/data/operation/finance/chart" class="btn-list" title="图表统计"><i class="icon-chart"></i></a>
+                                <a href="/admin/data/operation/finance/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
+                                    <i class="icon-cloud-download"></i>
+                                </a>
                             </div>
                         </div>
                         <div class="card-block">

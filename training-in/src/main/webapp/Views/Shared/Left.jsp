@@ -140,8 +140,8 @@
                     <i class="icon-chart"></i> 数据统计
                 </a>
                 <ul class="nav-dropdown-items">
-                    <li class="nav-item <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit'}">open</c:if>">
-                        <a class="nav-link <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit'}">active</c:if>" href="/admin/data/operation/finance">
+                    <li class="nav-item <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit' || param.subMenu == 'finance_chart' || param.subMenu == 'finance_settings'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit' || param.subMenu == 'finance_chart' || param.subMenu == 'finance_settings'}">active</c:if>" href="/admin/data/operation/finance">
                             <i class="icon-arrow-right"></i> 运营财务
                         </a>
                     </li>
@@ -168,6 +168,34 @@
                     <li class="nav-item <c:if test="${param.subMenu == 'setting'}">open</c:if>" style="display: none">
                         <a class="nav-link <c:if test="${param.subMenu == 'setting'}">active</c:if>" href="/admin/data/settings">
                             <i class="icon-arrow-right"></i> 收支类型设置
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item nav-dropdown <c:if test="${param.menu == 'finance'}">open</c:if>">
+                <a class="nav-link nav-dropdown-toggle" href="javascript:;">
+                    <i class="icon-settings"></i> 财务报表
+                </a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item <c:if test="${param.subMenu == 'relationship'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'relationship'}">active</c:if>" href="/admin/finance/relationship">
+                            <i class="icon-arrow-right"></i> 组织管理
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'settings'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'settings'}">active</c:if>" href="/admin/finance/settings">
+                            <i class="icon-arrow-right"></i> 参数设置
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'performance'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'performance'}">active</c:if>" href="/admin/finance/performance">
+                            <i class="icon-arrow-right"></i> 业绩排名
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'summary'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'summary'}">active</c:if>" href="/admin/finance/data">
+                            <i class="icon-arrow-right"></i> 数据汇总
                         </a>
                     </li>
                 </ul>
