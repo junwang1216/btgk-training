@@ -11,7 +11,7 @@
             padding: 0.75rem;
         }
         .settings-list td {
-            padding: 0.75rem;
+            padding: 0.45rem;
         }
         .dropdown-item.active, .dropdown-item:active {
             color: #fff !important;
@@ -48,11 +48,17 @@
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
+    <c:forEach var="venue" items="${orgFinanceVenuesList}">
+        <c:if test="${venue.id == conditions.venueId}">
+            <c:set var="venueName" value="${venue.venueName}"/>
+        </c:if>
+    </c:forEach>
+
     <div class="modal fade" id="month_detail" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-primary" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <table class="table table-responsive table-sm settings-list">
+                    <table class="table table-responsive table-sm settings-list month-detail-list">
                         <thead>
                         <tr>
                             <th colspan="2">目标日期</th>
@@ -60,55 +66,152 @@
                             <th>挑战目标</th>
                         </tr>
                         </thead>
-                        <tbody>
-                        <tr>
-                            <td>合计目标</td>
-                            <td>01月01日 -- 01月31日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        <tr>
-                            <td>月均目标</td>
-                            <td>01月01日 -- 01月31日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        <tr>
-                            <td>01周(3天)</td>
-                            <td>01月01日 -- 01月06日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        <tr>
-                            <td>02周(7天)</td>
-                            <td>01月01日 -- 01月06日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        <tr>
-                            <td>03周(7天)</td>
-                            <td>01月01日 -- 01月06日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        <tr>
-                            <td>04周(7天)</td>
-                            <td>01月01日 -- 01月06日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        <tr>
-                            <td>05周(7天)</td>
-                            <td>01月01日 -- 01月06日</td>
-                            <td>20,000元</td>
-                            <td>20,000元</td>
-                        </tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
                         <i class="fa fa-close"></i> 关 闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="flow_edit" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="finance_flow_form" class="form-horizontal" novalidate onsubmit="return false;">
+                        <input type="hidden" name="id" id="flow_id">
+                        <input type="hidden" name="busType" value="${conditions.busType}">
+                        <input type="hidden" name="goalType" value="1">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <select class="form-control" name="venueId" id="flow_venue_id">
+                                    <c:forEach var="venue" items="${orgFinanceVenuesList}">
+                                        <option value="${venue.id}" <c:if test="${venue.id == conditions.venueId}">selected</c:if> >${venue.venueName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" name="userId" id="flow_user_id">
+                                    <option value="0">所有人</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <select class="form-control" name="year">
+                                    <c:forEach var="year" items="${yearList}">
+                                        <option value="${year}" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" name="month">
+                                    <option value="0">月均值</option>
+                                    <option value="1">01月</option>
+                                    <option value="2">02月</option>
+                                    <option value="3">03月</option>
+                                    <option value="4">04月</option>
+                                    <option value="5">05月</option>
+                                    <option value="6">06月</option>
+                                    <option value="7">07月</option>
+                                    <option value="8">08月</option>
+                                    <option value="9">09月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="最低目标" name="minValue">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="挑战目标" name="maxValue">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-close"></i> 取 消
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary save-finance-flow">
+                        <i class="fa fa-check"></i> 保 存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="income_edit" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-primary" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="finance_income_form" class="form-horizontal" novalidate onsubmit="return false;">
+                        <input type="hidden" name="id" id="income_id">
+                        <input type="hidden" name="busType" value="${conditions.busType}">
+                        <input type="hidden" name="goalType" value="2">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <select class="form-control" name="venueId" id="income_venue_id">
+                                    <c:forEach var="venue" items="${orgFinanceVenuesList}">
+                                        <option value="${venue.id}" <c:if test="${venue.id == conditions.venueId}">selected</c:if> >${venue.venueName}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" name="userId" id="income_user_id">
+                                    <option value="0">所有人</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <select class="form-control" name="year">
+                                    <c:forEach var="year" items="${yearList}">
+                                        <option value="year" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" name="month">
+                                    <option value="0">月均值</option>
+                                    <option value="1">01月</option>
+                                    <option value="2">02月</option>
+                                    <option value="3">03月</option>
+                                    <option value="4">04月</option>
+                                    <option value="5">05月</option>
+                                    <option value="6">06月</option>
+                                    <option value="7">07月</option>
+                                    <option value="8">08月</option>
+                                    <option value="9">09月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="最低目标" name="minValue">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="挑战目标" name="maxValue">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-close"></i> 取 消
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary save-finance-income">
+                        <i class="fa fa-check"></i> 保 存
                     </button>
                 </div>
             </div>
@@ -142,57 +245,30 @@
                             </div>
                         </div>
                         <div class="card-block">
-                            <form id="finance_flow_form" class="form-horizontal" novalidate onsubmit="return false;">
-                                <div class="form-group row">
-                                    <div class="col-md-3">
-                                        <select class="form-control" name="venueId" id="flow_venue_id">
-                                            <c:forEach var="venue" items="${orgFinanceVenuesList}">
-                                                <option value="${venue.id}" <c:if test="${venue.id == conditions.venueId}">selected</c:if> >${venue.venueName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="form-control" name="userId" id="flow_user_id">
-                                            <option value="0">所有人</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="form-control">
-                                            <c:forEach var="year" items="${yearList}">
-                                                <option value="year" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="form-control">
-                                            <option value="0">月均值</option>
-                                            <option value="1">01月</option>
-                                            <option value="2">02月</option>
-                                            <option value="3">03月</option>
-                                            <option value="4">04月</option>
-                                            <option value="5">05月</option>
-                                            <option value="6">06月</option>
-                                            <option value="7">07月</option>
-                                            <option value="8">08月</option>
-                                            <option value="9">09月</option>
-                                            <option value="10">10月</option>
-                                            <option value="11">11月</option>
-                                            <option value="12">12月</option>
-                                        </select>
-                                    </div>
+                            <form id="finance_flow_query_form" class="form-horizontal row" novalidate onsubmit="return false;">
+                                <div class="col-md-4">
+                                    <select class="form-control" name="year">
+                                        <c:forEach var="year" items="${yearList}">
+                                            <option value="${year}" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-md-5">
-                                        <input type="text" class="form-control" placeholder="最低目标">
-                                    </div>
-                                    <div class="col-md-5">
-                                        <input type="text" class="form-control" placeholder="挑战目标">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-primary save-finance-flow">
-                                            <i class="fa fa-check"></i> 保 存
-                                        </button>
-                                    </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="userId">
+                                        <option value="0">整个基地</option>
+                                        <c:forEach var="user" items="${orgFinanceUsersList}">
+                                            <option value="${user.id}" <c:if test="${user.id == conditions.userId}">selected</c:if> >${user.realName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary search-finance-flow">
+                                        <i class="fa fa-search"></i> 检 索
+                                    </button>
+                                    <button type="button" class="btn btn-primary add-finance-flow"
+                                            data-target="#flow_edit" data-toggle="modal">
+                                        <i class="fa fa-plus"></i> 添 加
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -200,9 +276,7 @@
                         <div class="card-block">
                             <div class="card">
                                 <div class="card-header">
-                                    <c:forEach var="venue" items="${orgFinanceVenuesList}">
-                                        <c:if test="${venue.id == conditions.venueId}"><strong>${venue.venueName}</strong></c:if>
-                                    </c:forEach>
+                                    <strong>${venueName}</strong>
 
                                     <div class="card-actions">
                                         <a href="javascript:;" class="btn-direction dropdown-toggle" title="切换基地" data-toggle="dropdown">
@@ -222,23 +296,6 @@
                                     </div>
                                 </div>
                                 <div class="card-block">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <select class="form-control">
-                                                <c:forEach var="year" items="${yearList}">
-                                                    <option value="year" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select class="form-control">
-                                                <option>整个基地</option>
-                                                <c:forEach var="user" items="${orgFinanceUsersList}">
-                                                    <option value="${user.id}" <c:if test="${user.id == conditions.userId}">selected</c:if> >"${user.realName}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <table class="table table-responsive table-sm settings-list">
                                         <thead>
                                         <tr>
@@ -246,191 +303,56 @@
                                             <th>目标月份</th>
                                             <th>最低目标</th>
                                             <th>挑战目标</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <c:forEach var="flow" items="${flowGoalsList}" varStatus="loop">
                                             <tr>
                                                 <td>
-                                                    <a href="javascript:;" data-target="#month_detail" data-toggle="modal">
-                                                        <i class="fa fa-user"></i> 叶志强
+                                                    <c:if test="${flow.id > 0}">
+                                                        <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                            data-id="${flow.id}">
+                                                            <i class="fa fa-user"></i> ${flow.userName}
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${flow.id <= 0}">
+                                                        <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                            data-venue="${flow.venueId}" data-busType="${flow.busType}"
+                                                            data-goalType="${flow.goalType}" data-year="${flow.year}" data-month="${flow.month}">
+                                                            <i class="fa fa-home"></i> ${venueName}
+                                                        </a>
+                                                    </c:if>
+                                                </td>
+                                                <td>${flow.month}月份</td>
+                                                <td>${flow.minValue}元</td>
+                                                <td>${flow.maxValue}元</td>
+                                                <td>
+                                                    <a href="javascript:;" class="btn btn-sm btn-link"
+                                                       data-target="#flow_edit" data-toggle="modal">
+                                                        <i class="fa fa-edit"></i>
                                                     </a>
                                                 </td>
-                                                <td>01月份</td>
-                                                <td>100,000元</td>
-                                                <td>200,000元</td>
                                             </tr>
-                                            <c:if test="${loop.index % 3 == 2}">
+                                            <c:if test="${flowGoalsList.size() == 12 && loop.index % 3 == 2}">
                                                 <tr class="bg-faded">
-                                                    <td>
-                                                        <i class="fa fa-database"></i> 季度目标
-                                                    </td>
+                                                    <td><i class="fa fa-database"></i> 季度目标</td>
                                                     <td>01季度</td>
                                                     <td>300,000元</td>
                                                     <td>600,000元</td>
+                                                    <td></td>
                                                 </tr>
                                             </c:if>
-                                            <c:if test="${loop.last}">
+                                            <c:if test="${flowGoalsList.size() == 12 && loop.last}">
                                                 <tr class="bg-faded">
                                                     <td><i class="fa fa-database"></i> 整年目标</td>
                                                     <td>2018年</td>
                                                     <td>1,200,000元</td>
                                                     <td>2,400,000元</td>
+                                                    <td></td>
                                                 </tr>
                                             </c:if>
                                         </c:forEach>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="javascript:;" data-target="#month_detail" data-toggle="modal">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>01月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>02月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>03月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr class="bg-faded">--%>
-                                            <%--<td>--%>
-                                                <%--<i class="fa fa-database"></i> 季度目标--%>
-                                            <%--</td>--%>
-                                            <%--<td>01季度</td>--%>
-                                            <%--<td>300,000元</td>--%>
-                                            <%--<td>600,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>04月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>05月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>06月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr class="bg-faded">--%>
-                                            <%--<td><i class="fa fa-database"></i> 季度目标</td>--%>
-                                            <%--<td>02季度</td>--%>
-                                            <%--<td>300,000元</td>--%>
-                                            <%--<td>600,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>07月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>08月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>09月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr class="bg-faded">--%>
-                                            <%--<td><i class="fa fa-database"></i> 季度目标</td>--%>
-                                            <%--<td>03季度</td>--%>
-                                            <%--<td>300,000元</td>--%>
-                                            <%--<td>600,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>10月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>11月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr>--%>
-                                            <%--<td>--%>
-                                                <%--<a href="#">--%>
-                                                    <%--<i class="fa fa-user"></i> 叶志强--%>
-                                                <%--</a>--%>
-                                            <%--</td>--%>
-                                            <%--<td>12月份</td>--%>
-                                            <%--<td>100,000元</td>--%>
-                                            <%--<td>200,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr class="bg-faded">--%>
-                                            <%--<td><i class="fa fa-database"></i> 季度目标</td>--%>
-                                            <%--<td>04季度</td>--%>
-                                            <%--<td>300,000元</td>--%>
-                                            <%--<td>600,000元</td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr class="bg-faded">--%>
-                                            <%--<td><i class="fa fa-database"></i> 整年目标</td>--%>
-                                            <%--<td>2018年</td>--%>
-                                            <%--<td>1,200,000元</td>--%>
-                                            <%--<td>2,400,000元</td>--%>
-                                        <%--</tr>--%>
                                         </tbody>
                                     </table>
                                 </div>
@@ -462,57 +384,30 @@
                             </div>
                         </div>
                         <div class="card-block">
-                            <form id="finance_income_form" class="form-horizontal" novalidate onsubmit="return false;">
-                                <div class="form-group row">
-                                    <div class="col-md-3">
-                                        <select class="form-control" name="venueId" id="income_venue_id">
-                                            <c:forEach var="venue" items="${orgFinanceVenuesList}">
-                                                <option value="${venue.id}" <c:if test="${venue.id == conditions.venueId}">selected</c:if> >${venue.venueName}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="form-control" name="userId" id="income_user_id">
-                                            <option value="0">所有人</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="form-control">
-                                            <c:forEach var="year" items="${yearList}">
-                                                <option value="year" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <select class="form-control">
-                                            <option value="0">月均值</option>
-                                            <option value="1">01月</option>
-                                            <option value="2">02月</option>
-                                            <option value="3">03月</option>
-                                            <option value="4">04月</option>
-                                            <option value="5">05月</option>
-                                            <option value="6">06月</option>
-                                            <option value="7">07月</option>
-                                            <option value="8">08月</option>
-                                            <option value="9">09月</option>
-                                            <option value="10">10月</option>
-                                            <option value="11">11月</option>
-                                            <option value="12">12月</option>
-                                        </select>
-                                    </div>
+                            <form id="finance_income_query_form" class="form-horizontal row" novalidate onsubmit="return false;">
+                                <div class="col-md-4">
+                                    <select class="form-control" name="year">
+                                        <c:forEach var="year" items="${yearList}">
+                                            <option value="${year}" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
-                                <div class="form-group row">
-                                    <div class="col-md-5">
-                                        <input type="text" class="form-control" placeholder="最低目标">
-                                    </div>
-                                    <div class="col-md-5">
-                                        <input type="text" class="form-control" placeholder="挑战目标">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-primary save-finance-income">
-                                            <i class="fa fa-check"></i> 保 存
-                                        </button>
-                                    </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="userId">
+                                        <option value="0">整个基地</option>
+                                        <c:forEach var="user" items="${orgFinanceUsersList}">
+                                            <option value="${user.id}" <c:if test="${user.id == conditions.userId}">selected</c:if> >"${user.realName}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary search-finance-income">
+                                        <i class="fa fa-search"></i> 检 索
+                                    </button>
+                                    <button type="button" class="btn btn-primary add-finance-income"
+                                            data-target="#income_edit" data-toggle="modal">
+                                        <i class="fa fa-plus"></i> 添 加
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -520,9 +415,7 @@
                         <div class="card-block">
                             <div class="card">
                                 <div class="card-header">
-                                    <c:forEach var="venue" items="${orgFinanceVenuesList}">
-                                        <c:if test="${venue.id == conditions.venueId}"><strong>${venue.venueName}</strong></c:if>
-                                    </c:forEach>
+                                    <strong>${venueName}</strong>
 
                                     <div class="card-actions">
                                         <a href="javascript:;" class="btn-direction dropdown-toggle" title="切换基地" data-toggle="dropdown">
@@ -542,23 +435,6 @@
                                     </div>
                                 </div>
                                 <div class="card-block">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <select class="form-control">
-                                                <c:forEach var="year" items="${yearList}">
-                                                    <option value="year" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <select class="form-control">
-                                                <option>整个基地</option>
-                                                <c:forEach var="user" items="${orgFinanceUsersList}">
-                                                    <option value="${user.id}" <c:if test="${user.id == conditions.userId}">selected</c:if> >"${user.realName}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </div>
                                     <table class="table table-responsive table-sm settings-list">
                                         <thead>
                                         <tr>
@@ -569,16 +445,21 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach var="flow" items="${incomeGoalsList}" varStatus="loop">
+                                        <c:forEach var="income" items="${incomeGoalsList}" varStatus="loop">
                                             <tr>
                                                 <td>
                                                     <a href="javascript:;" data-target="#month_detail" data-toggle="modal">
-                                                        <i class="fa fa-user"></i> 叶志强
+                                                        <i class="fa fa-user"></i> 用户${income.userId}
                                                     </a>
                                                 </td>
-                                                <td>01月份</td>
-                                                <td>100,000元</td>
-                                                <td>200,000元</td>
+                                                <td>${income.month}月份</td>
+                                                <td>${income.minValue}元</td>
+                                                <td>${income.maxValue}元</td>
+                                                <td>
+                                                    <a href="javascript:;" class="btn btn-sm btn-link" data-id="${income.id}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                             <c:if test="${loop.index % 3 == 2}">
                                                 <tr class="bg-faded">
@@ -588,6 +469,7 @@
                                                     <td>01季度</td>
                                                     <td>300,000元</td>
                                                     <td>600,000元</td>
+                                                    <td></td>
                                                 </tr>
                                             </c:if>
                                             <c:if test="${loop.last}">
@@ -596,6 +478,7 @@
                                                     <td>2018年</td>
                                                     <td>1,200,000元</td>
                                                     <td>2,400,000元</td>
+                                                    <td></td>
                                                 </tr>
                                             </c:if>
                                         </c:forEach>

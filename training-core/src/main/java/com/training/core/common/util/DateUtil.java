@@ -30,16 +30,28 @@ public class DateUtil {
     public static int getCurrentMonth() {
         Calendar cal = Calendar.getInstance();
 
-        return cal.get(Calendar.MONTH)+1;
+        return cal.get(Calendar.MONTH) + 1;
+    }
+    // 获取月份天数  yyyy-mm
+    public static int getMonthDay(int year, int month) {
+        Calendar time = Calendar.getInstance();
+
+        time.clear();
+        time.set(Calendar.YEAR, year);
+        time.set(Calendar.MONTH, month - 1);//注意,Calendar对象默认一月为0
+
+        return time.getActualMaximum(Calendar.DAY_OF_MONTH);//本月份的天数
     }
 
-
     // 获取本周的七天
-    public static List<String> getWeekDate(String dateStr) {
+    public static List<String> getWeekDate(String dateStr) throws Exception {
         List<String> dateList = new ArrayList<String>();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
+        if (dateStr != null) {
+            c.setTime(sdf.parse(dateStr));
+        }
         // 今天是一周中的第几天
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK );
 
@@ -459,6 +471,11 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         System.out.println(getMonthDate("2018-04-01"));
+
+        System.out.println(getDateScopeWeekList("2018-05-01", "2018-05-31", "1"));
+        System.out.println(getDateScopeWeekList("2018-05-01", "2018-05-31", "7"));
+        System.out.println(getWeekDate("2018-05-01"));
+        System.out.println(getWeekDate("2018-05-31"));
 
         /*System.out.println(getWeekTimes(addDate(new Date(), -1)));
         System.out.println(dateToString(addDate(new Date(), -1), YYYYMMDD));

@@ -5,11 +5,20 @@ package com.training.in.request;
  */
 public class OrgFinanceLogRequest {
     /** 检索参数 **/
+    private int goalId;
     private int busType;
     private int goalType;
     private int venueId;
     private int year;
+    private int month;
     private int userId;
+
+    public int getGoalId() {
+        return goalId;
+    }
+    public void setGoalId(int goalId) {
+        this.goalId = goalId;
+    }
 
     public int getBusType() {
         return busType;
@@ -37,6 +46,13 @@ public class OrgFinanceLogRequest {
     }
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+    public void setMonth(int month) {
+        this.month = month;
     }
 
     public int getUserId() {

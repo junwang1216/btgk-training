@@ -15,6 +15,7 @@ import com.training.core.service.OrgFinanceGoalsService;
 import com.training.core.service.OrgFinanceUsersService;
 import com.training.core.service.OrgFinanceVenuesService;
 import com.training.in.request.OrgFinanceLogRequest;
+import com.training.in.response.OrgFinanceGoalsResponse;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -190,84 +191,209 @@ public class FinanceController extends BaseController {
         modelAndView.addObject("BusinessGoalTypeEnumList", EnumUtils.getEnumList(BusinessGoalTypeEnum.class));
 
         List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
-        modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
-
         if (orgFinanceLogRequest.getVenueId() == 0) {
             orgFinanceLogRequest.setVenueId(orgFinanceVenuesList.get(0).getId());
         }
+        modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
 
-        int []year = {
-                Integer.parseInt(DateUtil.getAddYear(-2)), Integer.parseInt(DateUtil.getAddYear(-1)),
+        int []year = {Integer.parseInt(DateUtil.getAddYear(-2)), Integer.parseInt(DateUtil.getAddYear(-1)),
                 Integer.parseInt(DateUtil.getAddYear(0)),
-                Integer.parseInt(DateUtil.getAddYear(1)), Integer.parseInt(DateUtil.getAddYear(2))
-        };
-        modelAndView.addObject("yearList", year);
+                Integer.parseInt(DateUtil.getAddYear(1)), Integer.parseInt(DateUtil.getAddYear(2))};
         if (orgFinanceLogRequest.getYear() == 0 || Arrays.binarySearch(year, orgFinanceLogRequest.getYear()) < 0) {
             orgFinanceLogRequest.setYear(year[2]);
         }
+        modelAndView.addObject("yearList", year);
 
-        modelAndView.addObject("conditions", orgFinanceLogRequest);
+        int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
+        List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
+        List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
+        String userName = "";
+        for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+            if (orgFinanceUsers.getVenueId() == orgFinanceLogRequest.getVenueId()) {
+                orgFinanceUsersList1.add(orgFinanceUsers);
+            }
+            if (orgFinanceLogRequest.getUserId() != 0 && orgFinanceUsers.getId() == orgFinanceLogRequest.getUserId()) {
+                userName = orgFinanceUsers.getRealName();
+            }
+        }
+        modelAndView.addObject("orgFinanceUsersList", orgFinanceUsersList1);
 
         List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(),
                 orgFinanceLogRequest.getGoalType(), orgFinanceLogRequest.getVenueId(),
                 orgFinanceLogRequest.getYear(), orgFinanceLogRequest.getUserId());
 
-        List<OrgFinanceGoals> flowGoalsList = new ArrayList<>();
-        List<OrgFinanceGoals> incomeGoalsList = new ArrayList<>();
+        List<OrgFinanceGoalsResponse> flowGoalsList = new ArrayList<>();
+        List<OrgFinanceGoalsResponse> incomeGoalsList = new ArrayList<>();
+        Map checkGoals = new HashMap();
         int fIndex = 0, iIndex = 0;
         for (OrgFinanceGoals orgFinanceGoals : orgFinanceGoalsList) {
+            OrgFinanceGoalsResponse orgFinanceGoalsResponse = new OrgFinanceGoalsResponse();
 
-            if (orgFinanceGoals.getGoalType() == BusinessGoalTypeEnum.FLOW.getCode()) {
-                if (orgFinanceGoals.getMonth() != (fIndex + 1)) {
-                    int count1 = orgFinanceGoals.getMonth() - (fIndex + 1);
-                    for (int i = 0; i < count1; i++) {
-                        OrgFinanceGoals orgFinanceGoals1 = new OrgFinanceGoals();
-                        orgFinanceGoals1.setMonth(fIndex + 1);
-                        orgFinanceGoals1.setUserId(orgFinanceGoals.getUserId());
-                        orgFinanceGoals1.setMinValue(0);
-                        orgFinanceGoals1.setMaxValue(0);
-                        orgFinanceGoals1.setId(0);
+            String checkKey = "goal_" +
+                    orgFinanceGoals.getBusType().toString() + "_" +
+                    orgFinanceGoals.getGoalType().toString() + "_" +
+                    orgFinanceGoals.getVenueId().toString() + "_" +
+                    orgFinanceGoals.getYear().toString() + "_" +
+                    orgFinanceGoals.getMonth().toString();
 
-                        flowGoalsList.add(orgFinanceGoals1);
-                        fIndex++;
-                    }
+            if (orgFinanceLogRequest.getUserId() != 0) {
+                orgFinanceGoalsResponse.setBusType(orgFinanceGoals.getBusType());
+                orgFinanceGoalsResponse.setGoalType(orgFinanceGoals.getGoalType());
+                orgFinanceGoalsResponse.setVenueId(orgFinanceGoals.getVenueId());
+                orgFinanceGoalsResponse.setUserId(orgFinanceGoals.getUserId());
+                orgFinanceGoalsResponse.setUserName(userName);
+                orgFinanceGoalsResponse.setYear(orgFinanceGoals.getYear());
+                orgFinanceGoalsResponse.setMonth(orgFinanceGoals.getMonth());
+                orgFinanceGoalsResponse.setMinValue(orgFinanceGoals.getMinValue());
+                orgFinanceGoalsResponse.setMaxValue(orgFinanceGoals.getMaxValue());
+                orgFinanceGoalsResponse.setId(orgFinanceGoals.getId());
+
+                if (orgFinanceGoals.getGoalType() == BusinessGoalTypeEnum.FLOW.getCode()) {
+                    flowGoalsList.add(orgFinanceGoalsResponse);
+                } else if (orgFinanceGoals.getBusType() == BusinessGoalTypeEnum.INCOME.getCode()) {
+                    incomeGoalsList.add(orgFinanceGoalsResponse);
                 }
-                flowGoalsList.add(orgFinanceGoals);
-                fIndex++;
-            } else if (orgFinanceGoals.getBusType() == BusinessGoalTypeEnum.INCOME.getCode()) {
-                if (orgFinanceGoals.getMonth() != (iIndex + 1)) {
-                    int count2 = orgFinanceGoals.getMonth() - (iIndex + 1);
-                    for (int j = 0; j < count2; j++) {
-                        OrgFinanceGoals orgFinanceGoals2 = new OrgFinanceGoals();
-                        orgFinanceGoals2.setMonth(iIndex + 1);
-                        orgFinanceGoals2.setUserId(orgFinanceGoals.getUserId());
-                        orgFinanceGoals2.setMinValue(0);
-                        orgFinanceGoals2.setMaxValue(0);
-                        orgFinanceGoals2.setId(0);
+            } else {
+                if (checkGoals.get(checkKey) != null) {
+                    int goalIndex = Integer.parseInt(checkGoals.get(checkKey).toString());
+                    flowGoalsList.get(goalIndex).setMaxValue(orgFinanceGoals.getMaxValue() + flowGoalsList.get(goalIndex).getMaxValue());
+                    flowGoalsList.get(goalIndex).setMinValue(orgFinanceGoals.getMinValue() + flowGoalsList.get(goalIndex).getMinValue());
+                } else {
+                    orgFinanceGoalsResponse.setBusType(orgFinanceGoals.getBusType());
+                    orgFinanceGoalsResponse.setGoalType(orgFinanceGoals.getGoalType());
+                    orgFinanceGoalsResponse.setVenueId(orgFinanceGoals.getVenueId());
+                    orgFinanceGoalsResponse.setUserId(-1);
+                    orgFinanceGoalsResponse.setUserName(null);
+                    orgFinanceGoalsResponse.setYear(orgFinanceGoals.getYear());
+                    orgFinanceGoalsResponse.setMonth(orgFinanceGoals.getMonth());
+                    orgFinanceGoalsResponse.setMinValue(orgFinanceGoals.getMinValue());
+                    orgFinanceGoalsResponse.setMaxValue(orgFinanceGoals.getMaxValue());
+                    orgFinanceGoalsResponse.setId(-1);
 
-                        incomeGoalsList.add(orgFinanceGoals2);
+                    if (orgFinanceGoals.getGoalType() == BusinessGoalTypeEnum.FLOW.getCode()) {
+                        checkGoals.put(checkKey, fIndex);
+
+                        flowGoalsList.add(orgFinanceGoalsResponse);
+                        fIndex++;
+                    } else if (orgFinanceGoals.getBusType() == BusinessGoalTypeEnum.INCOME.getCode()) {
+                        checkGoals.put(checkKey, iIndex);
+
+                        incomeGoalsList.add(orgFinanceGoalsResponse);
                         iIndex++;
                     }
                 }
-                incomeGoalsList.add(orgFinanceGoals);
-                iIndex++;
             }
         }
         modelAndView.addObject("flowGoalsList", flowGoalsList);
         modelAndView.addObject("incomeGoalsList", incomeGoalsList);
 
-        int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
-        List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
-
-        List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
-        for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
-            if (orgFinanceUsers.getVenueId() == orgFinanceLogRequest.getVenueId()) {
-                orgFinanceUsersList1.add(orgFinanceUsers);
-            }
-        }
-        modelAndView.addObject("orgFinanceUsersList", orgFinanceUsersList1);
+        modelAndView.addObject("conditions", orgFinanceLogRequest);
 
         return setModelAndView(modelAndView);
+    }
+
+    @Desc("获取日目标")
+    @ResponseBody
+    @RequestMapping(value = "/getGoalsByMonth", method = RequestMethod.GET)
+    public ResponseBean getEmployeeByVenue(OrgFinanceLogRequest orgFinanceLogRequest) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            OrgFinanceGoals orgFinanceGoals = new OrgFinanceGoals();
+            if (orgFinanceLogRequest.getGoalId() > 0) {
+                orgFinanceGoals = orgFinanceGoalsService.getOrgFinanceGoals(orgFinanceLogRequest.getGoalId());
+            } else {
+                List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(),
+                        orgFinanceLogRequest.getGoalType(), orgFinanceLogRequest.getVenueId(),
+                        orgFinanceLogRequest.getYear(), 0);
+
+                orgFinanceGoals.setBusType(orgFinanceLogRequest.getBusType());
+                orgFinanceGoals.setGoalType(orgFinanceLogRequest.getGoalType());
+                orgFinanceGoals.setVenueId(orgFinanceLogRequest.getVenueId());
+                orgFinanceGoals.setYear(orgFinanceLogRequest.getYear());
+                orgFinanceGoals.setMonth(orgFinanceLogRequest.getMonth());
+                orgFinanceGoals.setMinValue(0);
+                orgFinanceGoals.setMaxValue(0);
+                for (OrgFinanceGoals orgFinanceGoals1 : orgFinanceGoalsList) {
+                    if (orgFinanceGoals1.getMonth() == orgFinanceLogRequest.getMonth()) {
+                        orgFinanceGoals.setMinValue(orgFinanceGoals.getMinValue() + orgFinanceGoals1.getMinValue());
+                        orgFinanceGoals.setMaxValue(orgFinanceGoals.getMaxValue() + orgFinanceGoals1.getMaxValue());
+                    }
+                }
+            }
+
+            int monthDay = DateUtil.getMonthDay(orgFinanceGoals.getYear(), orgFinanceGoals.getMonth());
+
+            String month = ((orgFinanceGoals.getMonth() > 9) ? "" : "0") + orgFinanceGoals.getMonth();
+            String monthStart = orgFinanceGoals.getYear() + "-" + month + "-01";
+            String monthEnd = orgFinanceGoals.getYear() + "-" + month + "-" + monthDay;
+
+            map.put("month", month);
+            map.put("monthDay", monthDay);
+            map.put("monthStart", monthStart);
+            map.put("monthEnd", monthEnd);
+
+            if (orgFinanceGoals != null) {
+                List<Map> weekDateList = new ArrayList<>();
+
+                map.put("minValue", orgFinanceGoals.getMinValue());
+                map.put("maxValue", orgFinanceGoals.getMaxValue());
+
+                int dayMinValue = orgFinanceGoals.getMinValue() / monthDay;
+                int dayMaxValue = orgFinanceGoals.getMaxValue() / monthDay;
+
+                map.put("dayMinValue", dayMinValue);
+                map.put("dayMaxValue", dayMaxValue);
+
+                String nextDate = monthStart;
+                int wIndex = 1;
+                while (true) {
+                    Map map1 = new HashMap();
+
+                    List<String> weekDate = DateUtil.getWeekDate(nextDate);
+                    if (wIndex == 1) {
+                        for (int i = 0; i < weekDate.size(); i++) {
+                            if (weekDate.get(i).compareTo(monthStart) == 0) {
+                                weekDate = weekDate.subList(i, weekDate.size());
+                                break;
+                            }
+                        }
+                    }
+
+                    if (weekDate.get(weekDate.size() - 1).compareTo(monthEnd) > 0) {
+                        for (int i = 0; i < weekDate.size(); i++) {
+                            if (weekDate.get(i).compareTo(monthEnd) == 0) {
+                                weekDate = weekDate.subList(0, i + 1);
+                                break;
+                            }
+                        }
+                    }
+
+                    map1.put("index", wIndex);
+                    map1.put("weekDate", weekDate);
+                    map1.put("weekMinValue", weekDate.size() * dayMinValue);
+                    map1.put("weekMaxValue", weekDate.size() * dayMaxValue);
+                    weekDateList.add(map1);
+
+                    if (weekDate.get(weekDate.size() - 1).compareTo(monthEnd) >= 0) {
+                        break;
+                    }
+
+                    nextDate = DateUtil.getAddDay(nextDate, 7);
+                    wIndex++;
+                }
+
+                map.put("weekDateList", weekDateList);
+            }
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
     }
 
     @Desc("保存目标")
@@ -283,9 +409,50 @@ public class FinanceController extends BaseController {
                 result = orgFinanceGoalsService.saveOrgFinanceGoals(orgFinanceGoals);
             }
             else {
-                orgFinanceGoals.setCreateTime(DateUtil.getNowDate());
-                orgFinanceGoals.setUpdateTime(DateUtil.getNowDate());
-                result = orgFinanceGoalsService.addOrgFinanceGoals(orgFinanceGoals);
+                List<Integer> userList = new ArrayList<>();
+                if (orgFinanceGoals.getUserId() != 0) {
+                    userList.add(orgFinanceGoals.getUserId());
+                } else {
+                    int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
+                    List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
+
+                    for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                        if (orgFinanceUsers.getVenueId().intValue() == orgFinanceGoals.getVenueId().intValue()) {
+                            userList.add(orgFinanceUsers.getId());
+                        }
+                    }
+                }
+
+                List<Integer> monthList = new ArrayList<>();
+                if (orgFinanceGoals.getMonth() != 0) {
+                    monthList.add(orgFinanceGoals.getMonth());
+                } else {
+                    for (int i = 0; i < 12; i++) {
+                        monthList.add(i + 1);
+                    }
+                }
+
+                List<OrgFinanceGoals> orgFinanceGoalsList = new ArrayList<>();
+                for (Integer userId : userList) {
+                    for (Integer month : monthList) {
+                        OrgFinanceGoals orgFinanceGoals1 = new OrgFinanceGoals();
+
+                        orgFinanceGoals1.setBusType(orgFinanceGoals.getBusType());
+                        orgFinanceGoals1.setGoalType(orgFinanceGoals.getGoalType());
+                        orgFinanceGoals1.setVenueId(orgFinanceGoals.getVenueId());
+                        orgFinanceGoals1.setUserId(userId);
+                        orgFinanceGoals1.setYear(orgFinanceGoals.getYear());
+                        orgFinanceGoals1.setMonth(month);
+                        orgFinanceGoals1.setMinValue(orgFinanceGoals.getMinValue());
+                        orgFinanceGoals1.setMaxValue(orgFinanceGoals.getMaxValue());
+                        orgFinanceGoals1.setCreateTime(DateUtil.getNowDate());
+                        orgFinanceGoals1.setUpdateTime(DateUtil.getNowDate());
+
+                        orgFinanceGoalsList.add(orgFinanceGoals1);
+                    }
+                }
+
+                result = orgFinanceGoalsService.addOrgFinanceGoalsBatch(orgFinanceGoalsList);
             }
 
             return new ResponseBean(result > 0);

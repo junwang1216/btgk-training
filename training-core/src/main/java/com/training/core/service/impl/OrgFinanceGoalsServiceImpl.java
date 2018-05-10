@@ -20,6 +20,11 @@ public class OrgFinanceGoalsServiceImpl implements OrgFinanceGoalsService {
     }
 
     @Override
+    public int addOrgFinanceGoalsBatch(List<OrgFinanceGoals> orgFinanceGoalsList) {
+        return orgFinanceGoalsMapper.insertBatch(orgFinanceGoalsList);
+    }
+
+    @Override
     public int saveOrgFinanceGoals(OrgFinanceGoals orgFinanceGoals) {
         return orgFinanceGoalsMapper.updateByPrimaryKey(orgFinanceGoals);
     }

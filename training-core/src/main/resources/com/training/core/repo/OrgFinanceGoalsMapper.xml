@@ -27,15 +27,26 @@
     delete from org_finance_goals
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.training.core.repo.po.OrgFinanceGoals">
+  <insert id="insert" useGeneratedKeys="true" parameterType="com.training.core.repo.po.OrgFinanceGoals">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into org_finance_goals (busType, goalType, venueId, userId, `year`, `month`, minValue, `maxValue`, createTime, updateTime)
     values (#{busType,jdbcType=INTEGER}, #{goalType,jdbcType=INTEGER}, #{venueId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
       #{year,jdbcType=INTEGER}, #{month,jdbcType=INTEGER}, #{minValue,jdbcType=INTEGER}, 
-      #{maxValue,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR}
-      )
+      #{maxValue,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{updateTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_finance_goals (busType, goalType, venueId, userId, `year`, `month`, minValue, `maxValue`, createTime, updateTime)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.busType,jdbcType=INTEGER}, #{item.goalType,jdbcType=INTEGER}, #{item.venueId,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER},
+      #{item.year,jdbcType=INTEGER}, #{item.month,jdbcType=INTEGER}, #{item.minValue,jdbcType=INTEGER},
+      #{item.maxValue,jdbcType=INTEGER}, #{item.createTime,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=VARCHAR})
+    </foreach>
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgFinanceGoals">
     update org_finance_goals
