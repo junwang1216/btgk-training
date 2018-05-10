@@ -185,7 +185,12 @@
                     </li>
                     <li class="nav-item <c:if test="${param.subMenu == 'settings'}">open</c:if>">
                         <a class="nav-link <c:if test="${param.subMenu == 'settings'}">active</c:if>" href="/admin/finance/settings">
-                            <i class="icon-arrow-right"></i> 参数设置
+                            <i class="icon-arrow-right"></i> 目标设置
+                        </a>
+                    </li>
+                    <li class="nav-item <c:if test="${param.subMenu == 'log'}">open</c:if>">
+                        <a class="nav-link <c:if test="${param.subMenu == 'log'}">active</c:if>" href="/admin/finance/log">
+                            <i class="icon-arrow-right"></i> 完成日志
                         </a>
                     </li>
                     <li class="nav-item <c:if test="${param.subMenu == 'performance'}">open</c:if>">

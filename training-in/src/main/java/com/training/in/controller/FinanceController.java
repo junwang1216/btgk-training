@@ -3,17 +3,14 @@ package com.training.in.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.constant.IPlatformConstant;
+import com.training.core.common.enums.BusinessChannelTypeEnum;
 import com.training.core.common.enums.BusinessGoalTypeEnum;
 import com.training.core.common.enums.BusinessTypeEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.*;
-import com.training.core.repo.po.OrgFinanceGoals;
-import com.training.core.repo.po.OrgFinanceUsers;
-import com.training.core.repo.po.OrgFinanceVenues;
-import com.training.core.service.OrgFinanceGoalsService;
-import com.training.core.service.OrgFinanceUsersService;
-import com.training.core.service.OrgFinanceVenuesService;
+import com.training.core.repo.po.*;
+import com.training.core.service.*;
 import com.training.in.request.OrgFinanceLogRequest;
 import com.training.in.response.OrgFinanceGoalsResponse;
 import org.apache.commons.lang3.EnumUtils;
@@ -41,6 +38,9 @@ public class FinanceController extends BaseController {
 
     @Resource
     private OrgFinanceGoalsService orgFinanceGoalsService;
+
+    @Resource
+    private OrgFinanceDataService orgFinanceDataService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
@@ -557,6 +557,96 @@ public class FinanceController extends BaseController {
             e.printStackTrace();
             return new ResponseBean(false);
         }
+    }
+
+    @Desc("运用财务编辑")
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public ModelAndView renderFinanceEdit(String businessNo) {
+
+        ModelAndView modelAndView = new ModelAndView("Finance/Edit");
+
+        OrgFinanceData orgFinanceData = new OrgFinanceData();
+        if (businessNo != null) {
+            orgFinanceData = orgFinanceDataService.getOrgFinanceData(businessNo);
+        }
+        modelAndView.addObject("orgFinanceData", orgFinanceData);
+
+        modelAndView.addObject("BusinessTypeEnumList", EnumUtils.getEnumList(BusinessTypeEnum.class));
+        modelAndView.addObject("BusinessChannelTypeEnumList", EnumUtils.getEnumList(BusinessChannelTypeEnum.class));
+
+        List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
+        modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("运用财务编辑提交")
+    @ResponseBody
+    @RequestMapping(value = "/saveFinance", method = RequestMethod.POST)
+    public ResponseBean saveFinance(OrgFinanceData orgFinanceData) {
+        try {
+
+            Map map = new HashMap();
+            int result;
+            String businessNo;
+
+            orgFinanceData.setOperatorId(getLoginUser().getId());
+
+            if (orgFinanceData.getBusinessNo() != null && !orgFinanceData.getBusinessNo().equals("")) {
+                orgFinanceData.setUpdateTime(DateUtil.getNowDate());
+                businessNo = orgFinanceData.getBusinessNo();
+
+                result = orgFinanceDataService.saveOrgFinanceData(orgFinanceData);
+            }
+            else {
+                businessNo = StrUtil.getUUID();
+
+                orgFinanceData.setBusinessNo(businessNo);
+                orgFinanceData.setCreateTime(DateUtil.getNowDate());
+                orgFinanceData.setUpdateTime(DateUtil.getNowDate());
+                result = orgFinanceDataService.addOrgFinanceData(orgFinanceData);
+            }
+
+            if (result > 0) {
+                map.put("businessNo", businessNo);
+            }
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("运用财务编辑提交")
+    @ResponseBody
+    @RequestMapping(value = "/getFinance", method = RequestMethod.GET)
+    public ResponseBean getFinance(String businessNo) {
+        try {
+            Map map = new HashMap();
+
+            map.put("orgFinanceData", orgFinanceDataService.getOrgFinanceData(businessNo));
+
+            return new ResponseBean(map);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("数据日志")
+    @RequestMapping(value = "/log", method = RequestMethod.GET)
+    public ModelAndView renderFinanceLog(OrgFinanceLogRequest orgFinanceLogRequest) {
+
+        ModelAndView modelAndView = new ModelAndView("Finance/Log");
+
+        return setModelAndView(modelAndView);
     }
 
     @Desc("个人业绩统计")
