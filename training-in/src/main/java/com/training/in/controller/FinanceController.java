@@ -177,6 +177,63 @@ public class FinanceController extends BaseController {
         }
     }
 
+    private List<OrgFinanceGoalsResponse> formatOrgFinanceGoalsResponseList(List<OrgFinanceGoalsResponse> list) {
+        OrgFinanceGoalsResponse orgFinanceGoalsResponse1 = new OrgFinanceGoalsResponse();
+        orgFinanceGoalsResponse1.setUserName("第1季度");
+        orgFinanceGoalsResponse1.setMinValue(list.get(0).getMinValue() +
+                list.get(1).getMinValue() +
+                list.get(2).getMinValue());
+        orgFinanceGoalsResponse1.setMaxValue(list.get(0).getMaxValue() +
+                list.get(1).getMaxValue() +
+                list.get(2).getMaxValue());
+
+        OrgFinanceGoalsResponse orgFinanceGoalsResponse2 = new OrgFinanceGoalsResponse();
+        orgFinanceGoalsResponse2.setUserName("第2季度");
+        orgFinanceGoalsResponse2.setMinValue(list.get(3).getMinValue() +
+                list.get(4).getMinValue() +
+                list.get(5).getMinValue());
+        orgFinanceGoalsResponse2.setMaxValue(list.get(3).getMaxValue() +
+                list.get(4).getMaxValue() +
+                list.get(5).getMaxValue());
+
+        OrgFinanceGoalsResponse orgFinanceGoalsResponse3 = new OrgFinanceGoalsResponse();
+        orgFinanceGoalsResponse3.setUserName("第3季度");
+        orgFinanceGoalsResponse3.setMinValue(list.get(6).getMinValue() +
+                list.get(7).getMinValue() +
+                list.get(8).getMinValue());
+        orgFinanceGoalsResponse3.setMaxValue(list.get(6).getMaxValue() +
+                list.get(7).getMaxValue() +
+                list.get(8).getMaxValue());
+
+        OrgFinanceGoalsResponse orgFinanceGoalsResponse4 = new OrgFinanceGoalsResponse();
+        orgFinanceGoalsResponse4.setUserName("第4季度");
+        orgFinanceGoalsResponse4.setMinValue(list.get(9).getMinValue() +
+                list.get(10).getMinValue() +
+                list.get(11).getMinValue());
+        orgFinanceGoalsResponse4.setMaxValue(list.get(9).getMaxValue() +
+                list.get(10).getMaxValue() +
+                list.get(11).getMaxValue());
+
+        OrgFinanceGoalsResponse orgFinanceGoalsResponseAll = new OrgFinanceGoalsResponse();
+        orgFinanceGoalsResponseAll.setUserName(list.get(0).getYear() + "年");
+        orgFinanceGoalsResponseAll.setMinValue(orgFinanceGoalsResponse1.getMinValue() +
+                orgFinanceGoalsResponse2.getMinValue() +
+                orgFinanceGoalsResponse3.getMinValue() +
+                orgFinanceGoalsResponse4.getMinValue());
+        orgFinanceGoalsResponseAll.setMaxValue(orgFinanceGoalsResponse1.getMaxValue() +
+                orgFinanceGoalsResponse2.getMaxValue() +
+                orgFinanceGoalsResponse3.getMaxValue() +
+                orgFinanceGoalsResponse4.getMaxValue());
+
+        list.add(3, orgFinanceGoalsResponse1);
+        list.add(7, orgFinanceGoalsResponse2);
+        list.add(11, orgFinanceGoalsResponse3);
+        list.add(15, orgFinanceGoalsResponse4);
+        list.add(orgFinanceGoalsResponseAll);
+
+        return list;
+    }
+
     @Desc("运用财务参数设置")
     @RequestMapping(value = "/settings", method = RequestMethod.GET)
     public ModelAndView renderDataOperationFinanceSettings(OrgFinanceLogRequest orgFinanceLogRequest) {
@@ -250,7 +307,7 @@ public class FinanceController extends BaseController {
 
                 if (orgFinanceGoals.getGoalType() == BusinessGoalTypeEnum.FLOW.getCode()) {
                     flowGoalsList.add(orgFinanceGoalsResponse);
-                } else if (orgFinanceGoals.getBusType() == BusinessGoalTypeEnum.INCOME.getCode()) {
+                } else if (orgFinanceGoals.getGoalType() == BusinessGoalTypeEnum.INCOME.getCode()) {
                     incomeGoalsList.add(orgFinanceGoalsResponse);
                 }
             } else {
@@ -275,7 +332,7 @@ public class FinanceController extends BaseController {
 
                         flowGoalsList.add(orgFinanceGoalsResponse);
                         fIndex++;
-                    } else if (orgFinanceGoals.getBusType() == BusinessGoalTypeEnum.INCOME.getCode()) {
+                    } else if (orgFinanceGoals.getGoalType() == BusinessGoalTypeEnum.INCOME.getCode()) {
                         checkGoals.put(checkKey, iIndex);
 
                         incomeGoalsList.add(orgFinanceGoalsResponse);
@@ -283,6 +340,25 @@ public class FinanceController extends BaseController {
                     }
                 }
             }
+        }
+
+        Collections.sort(flowGoalsList, new Comparator<OrgFinanceGoalsResponse> () {
+            public int compare(OrgFinanceGoalsResponse arg0, OrgFinanceGoalsResponse arg1) {
+                return arg0.getMonth().compareTo(arg1.getMonth());
+            }
+        });
+        Collections.sort(incomeGoalsList, new Comparator<OrgFinanceGoalsResponse> () {
+            public int compare(OrgFinanceGoalsResponse arg0, OrgFinanceGoalsResponse arg1) {
+                return arg0.getMonth().compareTo(arg1.getMonth());
+            }
+        });
+
+        if (flowGoalsList.size() == 12) {
+            flowGoalsList = formatOrgFinanceGoalsResponseList(flowGoalsList);
+        }
+
+        if (incomeGoalsList.size() == 12) {
+            incomeGoalsList = formatOrgFinanceGoalsResponseList(incomeGoalsList);
         }
         modelAndView.addObject("flowGoalsList", flowGoalsList);
         modelAndView.addObject("incomeGoalsList", incomeGoalsList);
@@ -333,58 +409,56 @@ public class FinanceController extends BaseController {
             map.put("monthStart", monthStart);
             map.put("monthEnd", monthEnd);
 
-            if (orgFinanceGoals != null) {
-                List<Map> weekDateList = new ArrayList<>();
+            List<Map> weekDateList = new ArrayList<>();
 
-                map.put("minValue", orgFinanceGoals.getMinValue());
-                map.put("maxValue", orgFinanceGoals.getMaxValue());
+            map.put("minValue", orgFinanceGoals.getMinValue());
+            map.put("maxValue", orgFinanceGoals.getMaxValue());
 
-                int dayMinValue = orgFinanceGoals.getMinValue() / monthDay;
-                int dayMaxValue = orgFinanceGoals.getMaxValue() / monthDay;
+            int dayMinValue = orgFinanceGoals.getMinValue() / monthDay;
+            int dayMaxValue = orgFinanceGoals.getMaxValue() / monthDay;
 
-                map.put("dayMinValue", dayMinValue);
-                map.put("dayMaxValue", dayMaxValue);
+            map.put("dayMinValue", dayMinValue);
+            map.put("dayMaxValue", dayMaxValue);
 
-                String nextDate = monthStart;
-                int wIndex = 1;
-                while (true) {
-                    Map map1 = new HashMap();
+            String nextDate = monthStart;
+            int wIndex = 1;
+            while (true) {
+                Map map1 = new HashMap();
 
-                    List<String> weekDate = DateUtil.getWeekDate(nextDate);
-                    if (wIndex == 1) {
-                        for (int i = 0; i < weekDate.size(); i++) {
-                            if (weekDate.get(i).compareTo(monthStart) == 0) {
-                                weekDate = weekDate.subList(i, weekDate.size());
-                                break;
-                            }
+                List<String> weekDate = DateUtil.getWeekDate(nextDate);
+                if (wIndex == 1) {
+                    for (int i = 0; i < weekDate.size(); i++) {
+                        if (weekDate.get(i).compareTo(monthStart) == 0) {
+                            weekDate = weekDate.subList(i, weekDate.size());
+                            break;
                         }
                     }
-
-                    if (weekDate.get(weekDate.size() - 1).compareTo(monthEnd) > 0) {
-                        for (int i = 0; i < weekDate.size(); i++) {
-                            if (weekDate.get(i).compareTo(monthEnd) == 0) {
-                                weekDate = weekDate.subList(0, i + 1);
-                                break;
-                            }
-                        }
-                    }
-
-                    map1.put("index", wIndex);
-                    map1.put("weekDate", weekDate);
-                    map1.put("weekMinValue", weekDate.size() * dayMinValue);
-                    map1.put("weekMaxValue", weekDate.size() * dayMaxValue);
-                    weekDateList.add(map1);
-
-                    if (weekDate.get(weekDate.size() - 1).compareTo(monthEnd) >= 0) {
-                        break;
-                    }
-
-                    nextDate = DateUtil.getAddDay(nextDate, 7);
-                    wIndex++;
                 }
 
-                map.put("weekDateList", weekDateList);
+                if (weekDate.get(weekDate.size() - 1).compareTo(monthEnd) > 0) {
+                    for (int i = 0; i < weekDate.size(); i++) {
+                        if (weekDate.get(i).compareTo(monthEnd) == 0) {
+                            weekDate = weekDate.subList(0, i + 1);
+                            break;
+                        }
+                    }
+                }
+
+                map1.put("index", wIndex);
+                map1.put("weekDate", weekDate);
+                map1.put("weekMinValue", weekDate.size() * dayMinValue);
+                map1.put("weekMaxValue", weekDate.size() * dayMaxValue);
+                weekDateList.add(map1);
+
+                if (weekDate.get(weekDate.size() - 1).compareTo(monthEnd) >= 0) {
+                    break;
+                }
+
+                nextDate = DateUtil.getAddDay(nextDate, 7);
+                wIndex++;
             }
+
+            map.put("weekDateList", weekDateList);
 
             return new ResponseBean(map);
         } catch (MessageException e) {
@@ -456,6 +530,26 @@ public class FinanceController extends BaseController {
             }
 
             return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    @Desc("获取目标")
+    @ResponseBody
+    @RequestMapping(value = "/getGoals", method = RequestMethod.GET)
+    public ResponseBean getFinanceGoals(OrgFinanceLogRequest orgFinanceLogRequest) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+
+            OrgFinanceGoals orgFinanceGoals = orgFinanceGoalsService.getOrgFinanceGoals(orgFinanceLogRequest.getGoalId());
+            map.put("orgFinanceGoals", orgFinanceGoals);
+
+            return new ResponseBean(map);
         } catch (MessageException e) {
             e.printStackTrace();
             return new ResponseBean(e.getMessage());

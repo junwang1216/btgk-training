@@ -204,4 +204,66 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
             window.location.assign("/admin/finance/settings?" + conditions);
         }
     });
+
+    // 编辑添加
+    $(".add-finance-flow, .edit-finance-flow, .add-finance-income, .edit-finance-income").on("click", function () {
+
+        var id = $(this).attr("data-id") || "";
+        var isFlow = false;
+
+        if ($(this).hasClass("add-finance-flow") || $(this).hasClass("edit-finance-flow")) {
+            isFlow = true;
+
+            $("#flow_edit").find('[name="id"]').val("");
+            $("#flow_edit").find('[name="venueId"]').val(0);
+            $("#flow_edit").find('[name="userId"]').val(0);
+            $("#flow_edit").find('[name="month"]').val(0);
+            $("#flow_edit").find('[name="minValue"]').val("");
+            $("#flow_edit").find('[name="maxValue"]').val("");
+        }
+        if ($(this).hasClass("add-finance-income") || $(this).hasClass("edit-finance-income")) {
+            isFlow = false;
+
+            $("#income_edit").find('[name="id"]').val("");
+            $("#income_edit").find('[name="venueId"]').val(0);
+            $("#income_edit").find('[name="userId"]').val(0);
+            $("#income_edit").find('[name="month"]').val(0);
+            $("#income_edit").find('[name="minValue"]').val("");
+            $("#income_edit").find('[name="maxValue"]').val("");
+        }
+
+        if (id) {
+            $.getJSON('/admin/finance/getGoals', {goalId: id}, function (res) {
+                var data = res.data;
+
+                if (res.code == 1) {
+                    if (isFlow) {
+                        $("#flow_edit").find('[name="id"]').val(data.orgFinanceGoals.id);
+                        $("#flow_edit").find('[name="venueId"]').val(data.orgFinanceGoals.venueId);
+                        $("#flow_edit").find('[name="userId"]').val(data.orgFinanceGoals.userId);
+                        $("#flow_edit").find('[name="year"]').val(data.orgFinanceGoals.year);
+                        $("#flow_edit").find('[name="month"]').val(data.orgFinanceGoals.month);
+                        $("#flow_edit").find('[name="minValue"]').val(data.orgFinanceGoals.minValue);
+                        $("#flow_edit").find('[name="maxValue"]').val(data.orgFinanceGoals.maxValue);
+                    } else {
+                        $("#income_edit").find('[name="id"]').val(data.orgFinanceGoals.id);
+                        $("#income_edit").find('[name="venueId"]').val(data.orgFinanceGoals.venueId);
+                        $("#income_edit").find('[name="userId"]').val(data.orgFinanceGoals.userId);
+                        $("#income_edit").find('[name="year"]').val(data.orgFinanceGoals.year);
+                        $("#income_edit").find('[name="month"]').val(data.orgFinanceGoals.month);
+                        $("#income_edit").find('[name="minValue"]').val(data.orgFinanceGoals.minValue);
+                        $("#income_edit").find('[name="maxValue"]').val(data.orgFinanceGoals.maxValue);
+                    }
+                } else {
+                    jqueryAlert({
+                        'icon'      : '/Content/images/icon-error.png',
+                        'content'   : "查询目标失败，请稍后重试",
+                        'closeTime' : 2000,
+                        'modal'        : true,
+                        'isModalClose' : true
+                    });
+                }
+            });
+        }
+    });
 });

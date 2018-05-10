@@ -174,7 +174,7 @@
                             <div class="col-md-6">
                                 <select class="form-control" name="year">
                                     <c:forEach var="year" items="${yearList}">
-                                        <option value="year" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
+                                        <option value="${year}" <c:if test="${year == conditions.year}">selected</c:if> >${year}年</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -307,52 +307,90 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach var="flow" items="${flowGoalsList}" varStatus="loop">
-                                            <tr>
-                                                <td>
-                                                    <c:if test="${flow.id > 0}">
-                                                        <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
-                                                            data-id="${flow.id}">
-                                                            <i class="fa fa-user"></i> ${flow.userName}
-                                                        </a>
-                                                    </c:if>
-                                                    <c:if test="${flow.id <= 0}">
-                                                        <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
-                                                            data-venue="${flow.venueId}" data-busType="${flow.busType}"
-                                                            data-goalType="${flow.goalType}" data-year="${flow.year}" data-month="${flow.month}">
-                                                            <i class="fa fa-home"></i> ${venueName}
-                                                        </a>
-                                                    </c:if>
-                                                </td>
-                                                <td>${flow.month}月份</td>
-                                                <td>${flow.minValue}元</td>
-                                                <td>${flow.maxValue}元</td>
-                                                <td>
-                                                    <a href="javascript:;" class="btn btn-sm btn-link"
-                                                       data-target="#flow_edit" data-toggle="modal">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <c:if test="${flowGoalsList.size() == 12 && loop.index % 3 == 2}">
-                                                <tr class="bg-faded">
-                                                    <td><i class="fa fa-database"></i> 季度目标</td>
-                                                    <td>01季度</td>
-                                                    <td>300,000元</td>
-                                                    <td>600,000元</td>
-                                                    <td></td>
+                                        <c:if test="${flowGoalsList.size() < 12}">
+                                            <c:forEach var="flow" items="${flowGoalsList}" varStatus="loop">
+                                                <tr>
+                                                    <td>
+                                                        <c:if test="${flow.id > 0}">
+                                                            <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                               data-id="${flow.id}">
+                                                                <i class="fa fa-user"></i> ${flow.userName}
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${flow.id <= 0}">
+                                                            <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                               data-venue="${flow.venueId}" data-busType="${flow.busType}"
+                                                               data-goalType="${flow.goalType}" data-year="${flow.year}" data-month="${flow.month}">
+                                                                <i class="fa fa-home"></i> ${venueName}
+                                                            </a>
+                                                        </c:if>
+                                                    </td>
+                                                    <td>${flow.month}月份</td>
+                                                    <td>${flow.minValue}元</td>
+                                                    <td>${flow.maxValue}元</td>
+                                                    <td>
+                                                        <c:if test="${flow.id > 0}">
+                                                            <a href="javascript:;" class="btn btn-sm btn-link edit-finance-flow" data-id="${flow.id}"
+                                                               data-target="#flow_edit" data-toggle="modal">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                        </c:if>
+                                                    </td>
                                                 </tr>
-                                            </c:if>
-                                            <c:if test="${flowGoalsList.size() == 12 && loop.last}">
-                                                <tr class="bg-faded">
-                                                    <td><i class="fa fa-database"></i> 整年目标</td>
-                                                    <td>2018年</td>
-                                                    <td>1,200,000元</td>
-                                                    <td>2,400,000元</td>
-                                                    <td></td>
-                                                </tr>
-                                            </c:if>
-                                        </c:forEach>
+                                            </c:forEach>
+                                        </c:if>
+                                        <c:if test="${flowGoalsList.size() == 17}">
+                                            <c:forEach var="flow" items="${flowGoalsList}" varStatus="loop">
+                                                <c:if test="${loop.index != 3 && loop.index != 7 && loop.index != 11 && loop.index != 15 && loop.index != 16}">
+                                                    <tr>
+                                                        <td>
+                                                            <c:if test="${flow.id > 0}">
+                                                                <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                                   data-id="${flow.id}">
+                                                                    <i class="fa fa-user"></i> ${flow.userName}
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${flow.id <= 0}">
+                                                                <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                                   data-venue="${flow.venueId}" data-busType="${flow.busType}"
+                                                                   data-goalType="${flow.goalType}" data-year="${flow.year}" data-month="${flow.month}">
+                                                                    <i class="fa fa-home"></i> ${venueName}
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
+                                                        <td>${flow.month}月份</td>
+                                                        <td>${flow.minValue}元</td>
+                                                        <td>${flow.maxValue}元</td>
+                                                        <td>
+                                                            <c:if test="${flow.id > 0}">
+                                                                <a href="javascript:;" class="btn btn-sm btn-link edit-finance-flow" data-id="${flow.id}"
+                                                                   data-target="#flow_edit" data-toggle="modal">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                                <c:if test="${loop.index == 3 || loop.index == 7 || loop.index == 11 || loop.index == 15}">
+                                                    <tr class="bg-faded">
+                                                        <td><i class="fa fa-database"></i> 季度目标</td>
+                                                        <td>${flow.userName}</td>
+                                                        <td>${flow.minValue}元</td>
+                                                        <td>${flow.maxValue}元</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </c:if>
+                                                <c:if test="${loop.index == 16}">
+                                                    <tr class="bg-faded">
+                                                        <td><i class="fa fa-database"></i> 整年目标</td>
+                                                        <td>${flow.userName}</td>
+                                                        <td>${flow.minValue}元</td>
+                                                        <td>${flow.maxValue}元</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:if>
                                         </tbody>
                                     </table>
                                 </div>
@@ -396,7 +434,7 @@
                                     <select class="form-control" name="userId">
                                         <option value="0">整个基地</option>
                                         <c:forEach var="user" items="${orgFinanceUsersList}">
-                                            <option value="${user.id}" <c:if test="${user.id == conditions.userId}">selected</c:if> >"${user.realName}</option>
+                                            <option value="${user.id}" <c:if test="${user.id == conditions.userId}">selected</c:if> >${user.realName}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -442,46 +480,94 @@
                                             <th>目标月份</th>
                                             <th>最低目标</th>
                                             <th>挑战目标</th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach var="income" items="${incomeGoalsList}" varStatus="loop">
-                                            <tr>
-                                                <td>
-                                                    <a href="javascript:;" data-target="#month_detail" data-toggle="modal">
-                                                        <i class="fa fa-user"></i> 用户${income.userId}
-                                                    </a>
-                                                </td>
-                                                <td>${income.month}月份</td>
-                                                <td>${income.minValue}元</td>
-                                                <td>${income.maxValue}元</td>
-                                                <td>
-                                                    <a href="javascript:;" class="btn btn-sm btn-link" data-id="${income.id}">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            <c:if test="${loop.index % 3 == 2}">
-                                                <tr class="bg-faded">
+                                        <c:if test="${incomeGoalsList.size() < 12}">
+                                            <c:forEach var="income" items="${incomeGoalsList}" varStatus="loop">
+                                                <tr>
                                                     <td>
-                                                        <i class="fa fa-database"></i> 季度目标
+                                                        <c:if test="${income.id > 0}">
+                                                            <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                               data-id="${income.id}">
+                                                                <i class="fa fa-user"></i> ${income.userName}
+                                                            </a>
+                                                        </c:if>
+                                                        <c:if test="${income.id <= 0}">
+                                                            <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                               data-venue="${income.venueId}" data-busType="${income.busType}"
+                                                               data-goalType="${income.goalType}" data-year="${income.year}" data-month="${income.month}">
+                                                                <i class="fa fa-home"></i> ${venueName}
+                                                            </a>
+                                                        </c:if>
                                                     </td>
-                                                    <td>01季度</td>
-                                                    <td>300,000元</td>
-                                                    <td>600,000元</td>
-                                                    <td></td>
+                                                    <td>${income.month}月份</td>
+                                                    <td>${income.minValue}元</td>
+                                                    <td>${income.maxValue}元</td>
+                                                    <td>
+                                                        <c:if test="${income.id > 0}">
+                                                            <a href="javascript:;" class="btn btn-sm btn-link edit-finance-income" data-id="${income.id}"
+                                                               data-target="#income_edit" data-toggle="modal">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                        </c:if>
+                                                    </td>
                                                 </tr>
-                                            </c:if>
-                                            <c:if test="${loop.last}">
-                                                <tr class="bg-faded">
-                                                    <td><i class="fa fa-database"></i> 整年目标</td>
-                                                    <td>2018年</td>
-                                                    <td>1,200,000元</td>
-                                                    <td>2,400,000元</td>
-                                                    <td></td>
-                                                </tr>
-                                            </c:if>
-                                        </c:forEach>
+                                            </c:forEach>
+                                        </c:if>
+                                        <c:if test="${incomeGoalsList.size() == 17}">
+                                            <c:forEach var="income" items="${incomeGoalsList}" varStatus="loop">
+                                                <c:if test="${loop.index != 3 && loop.index != 7 && loop.index != 11 && loop.index != 15 && loop.index != 16}">
+                                                    <tr>
+                                                        <td>
+                                                            <c:if test="${income.id > 0}">
+                                                                <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                                   data-id="${income.id}">
+                                                                    <i class="fa fa-user"></i> ${income.userName}
+                                                                </a>
+                                                            </c:if>
+                                                            <c:if test="${income.id <= 0}">
+                                                                <a href="javascript:;" class="flow-user" data-target="#month_detail" data-toggle="modal"
+                                                                   data-venue="${income.venueId}" data-busType="${income.busType}"
+                                                                   data-goalType="${income.goalType}" data-year="${income.year}" data-month="${income.month}">
+                                                                    <i class="fa fa-home"></i> ${venueName}
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
+                                                        <td>${income.month}月份</td>
+                                                        <td>${income.minValue}元</td>
+                                                        <td>${income.maxValue}元</td>
+                                                        <td>
+                                                            <c:if test="${income.id > 0}">
+                                                                <a href="javascript:;" class="btn btn-sm btn-link edit-finance-income" data-id="${income.id}"
+                                                                   data-target="#income_edit" data-toggle="modal">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </a>
+                                                            </c:if>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                                <c:if test="${loop.index == 3 || loop.index == 7 || loop.index == 11 || loop.index == 15}">
+                                                    <tr class="bg-faded">
+                                                        <td><i class="fa fa-database"></i> 季度目标</td>
+                                                        <td>${income.userName}</td>
+                                                        <td>${income.minValue}元</td>
+                                                        <td>${income.maxValue}元</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </c:if>
+                                                <c:if test="${loop.index == 16}">
+                                                    <tr class="bg-faded">
+                                                        <td><i class="fa fa-database"></i> 整年目标</td>
+                                                        <td>${income.userName}</td>
+                                                        <td>${income.minValue}元</td>
+                                                        <td>${income.maxValue}元</td>
+                                                        <td></td>
+                                                    </tr>
+                                                </c:if>
+                                            </c:forEach>
+                                        </c:if>
                                         </tbody>
                                     </table>
                                 </div>
