@@ -18,7 +18,7 @@ public enum BusinessTypeEnum {
                 return busi;
             }
         }
-        return null;
+        return BusinessTypeEnum.TRAINING_YOUNG;
     }
 
     public int getCode() {

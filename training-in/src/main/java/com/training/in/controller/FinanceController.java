@@ -12,6 +12,7 @@ import com.training.core.common.util.*;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
 import com.training.in.request.OrgFinanceLogRequest;
+import com.training.in.response.OrgFinanceDataResponse;
 import com.training.in.response.OrgFinanceGoalsResponse;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Controller;
@@ -621,6 +622,33 @@ public class FinanceController extends BaseController {
         }
     }
 
+    private OrgFinanceDataResponse formatOrgFinanceData(OrgFinanceData orgFinanceData) {
+        OrgFinanceDataResponse orgFinanceDataResponse = new OrgFinanceDataResponse();
+
+        orgFinanceDataResponse.setBusinessNo(orgFinanceData.getBusinessNo());
+        orgFinanceDataResponse.setBusinessType(orgFinanceData.getBusinessType());
+        orgFinanceDataResponse.setBusinessTitle(BusinessTypeEnum.forValue(orgFinanceData.getBusinessType()).getDesc());
+        orgFinanceDataResponse.setBusinessDate(orgFinanceData.getBusinessDate());
+        orgFinanceDataResponse.setVenueId(orgFinanceData.getVenueId());
+        orgFinanceDataResponse.setVenueName(orgFinanceVenuesService.getOrgFinanceVenues(orgFinanceData.getVenueId()).getVenueName());
+        orgFinanceDataResponse.setUserId(orgFinanceData.getUserId());
+        orgFinanceDataResponse.setRealName(orgFinanceUsersService.getOrgFinanceUsers(orgFinanceData.getUserId()).getRealName());
+        orgFinanceDataResponse.setChannelType(orgFinanceData.getChannelType());
+        orgFinanceDataResponse.setChannelName(BusinessChannelTypeEnum.forValue(orgFinanceData.getChannelType()).getDesc());
+        orgFinanceDataResponse.setPipelineValue(orgFinanceData.getPipelineValue());
+        orgFinanceDataResponse.setIncomeValue(orgFinanceData.getIncomeValue());
+        orgFinanceDataResponse.setRegisterCount(orgFinanceData.getRegisterCount());
+        orgFinanceDataResponse.setClassCount(orgFinanceData.getClassCount());
+        orgFinanceDataResponse.setAccessCount(orgFinanceData.getAccessCount());
+        orgFinanceDataResponse.setBusinessCount(orgFinanceData.getBusinessCount());
+        orgFinanceDataResponse.setHotTotalCount(orgFinanceData.getHotTotalCount());
+        orgFinanceDataResponse.setHotCount(orgFinanceData.getHotCount());
+        orgFinanceDataResponse.setNullTotalCount(orgFinanceData.getNullTotalCount());
+        orgFinanceDataResponse.setNullCount(orgFinanceData.getNullCount());
+
+        return orgFinanceDataResponse;
+    }
+
     @Desc("运用财务编辑提交")
     @ResponseBody
     @RequestMapping(value = "/getFinance", method = RequestMethod.GET)
@@ -628,7 +656,7 @@ public class FinanceController extends BaseController {
         try {
             Map map = new HashMap();
 
-            map.put("orgFinanceData", orgFinanceDataService.getOrgFinanceData(businessNo));
+            map.put("orgFinanceData", formatOrgFinanceData(orgFinanceDataService.getOrgFinanceData(businessNo)));
 
             return new ResponseBean(map);
         } catch (MessageException e) {
@@ -645,6 +673,40 @@ public class FinanceController extends BaseController {
     public ModelAndView renderFinanceLog(OrgFinanceLogRequest orgFinanceLogRequest) {
 
         ModelAndView modelAndView = new ModelAndView("Finance/Log");
+
+        if (orgFinanceLogRequest.getBusType() == 0) {
+            orgFinanceLogRequest.setBusType(BusinessTypeEnum.TRAINING_YOUNG.getCode());
+        }
+
+        modelAndView.addObject("BusinessTypeEnumList", EnumUtils.getEnumList(BusinessTypeEnum.class));
+        modelAndView.addObject("BusinessTypeEnum", EnumUtils.getEnumMap(BusinessTypeEnum.class));
+
+        modelAndView.addObject("conditions", orgFinanceLogRequest);
+
+        List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
+        modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
+
+        int total = orgFinanceDataService.queryOrgFinanceDataCount(orgFinanceLogRequest.getBusType(),
+        orgFinanceLogRequest.getVenueId(), 0, null, null);
+        int start = orgFinanceLogRequest.getPage() < 1 ? 0 : orgFinanceLogRequest.getPage() - 1;
+        int pageSize = 10;
+        List<OrgFinanceData> orgFinanceDataList = orgFinanceDataService.queryOrgFinanceDataList(orgFinanceLogRequest.getBusType(),
+                orgFinanceLogRequest.getVenueId(), 0, null, null,
+                start * pageSize, pageSize);
+
+        List<OrgFinanceDataResponse> orgFinanceDataResponseList = new ArrayList<>();
+        for (OrgFinanceData orgFinanceData : orgFinanceDataList) {
+            orgFinanceDataResponseList.add(formatOrgFinanceData(orgFinanceData));
+        }
+        modelAndView.addObject("orgFinanceDataList", orgFinanceDataResponseList);
+
+        Page page = new Page(pageSize, total);
+        page.setPage(orgFinanceLogRequest.getPage());
+
+        modelAndView.addObject("total", total);
+        modelAndView.addObject("pageURL", "/admin/finance/log?busType=" + orgFinanceLogRequest.getBusType() +
+                "&venueId=" + orgFinanceLogRequest.getVenueId() + "&userId=" + orgFinanceLogRequest.getUserId());
+        modelAndView.addObject("page", page);
 
         return setModelAndView(modelAndView);
     }

@@ -86,17 +86,17 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 $(".business-list tbody").append(
                     '<tr><td>' + data.orgFinanceData.businessNo +'</td>' +
                     '<td>' + data.orgFinanceData.businessDate +'</td>' +
-                    '<td>' + data.orgFinanceData.businessType +'</td>' +
-                    '<td>' + data.orgFinanceData.venueId +'</td>' +
-                    '<td>' + data.orgFinanceData.userId +'</td>' +
-                    '<td>' + data.orgFinanceData.channelType +'</td>' +
+                    '<td>' + data.orgFinanceData.businessTitle +'</td>' +
+                    '<td>' + data.orgFinanceData.venueName +'</td>' +
+                    '<td>' + data.orgFinanceData.realName +'</td>' +
+                    '<td>' + data.orgFinanceData.channelName +'</td>' +
                     '<td>' + data.orgFinanceData.pipelineValue +'</td>' +
                     '<td>' + data.orgFinanceData.incomeValue +'</td>' +
                     '<td>' + data.orgFinanceData.registerCount +'</td>' +
                     '<td>' + data.orgFinanceData.classCount +'</td>' +
                     '<td>' + data.orgFinanceData.accessCount +'</td>' +
                     '<td>' + data.orgFinanceData.businessCount +'</td>' +
-                    '</tr>'
+                    '<td><a href="javascript:;" class="btn btn-danger btn-sm" title="删除" data-business="' + data.orgFinanceData.businessNo + '"><i class="fa fa-trash"></i> 删除</a></td></tr>'
                 );
             } else {
                 jqueryAlert({

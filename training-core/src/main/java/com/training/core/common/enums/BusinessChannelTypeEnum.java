@@ -20,7 +20,7 @@ public enum BusinessChannelTypeEnum {
                 return busi;
             }
         }
-        return null;
+        return BusinessChannelTypeEnum.CHANNEL_COMPANY;
     }
 
     public int getCode() {

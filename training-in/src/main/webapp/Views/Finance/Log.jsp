@@ -37,36 +37,21 @@
                             <form id="business_form" method="post" class="form-horizontal" novalidate onsubmit="return false;">
                                 <div class="form-group row">
                                     <div class="col-md-2">
-                                        <select class="form-control" name="businessType">
-                                            <option value="0">全部业务类型</option>
+                                        <select class="form-control" name="busType">
                                             <c:forEach var="business" items="${BusinessTypeEnumList}">
-                                                <option value="${business.code}">${business.desc}</option>
+                                                <option value="${business.code}" <c:if test="${business.code == conditions.busType}">selected</c:if> >${business.desc}</option>
                                             </c:forEach>
                                         </select>
                                     </div>
                                     <div class="col-md-2">
-                                        <select class="form-control" name="baseType">
+                                        <select class="form-control" name="venueId">
                                             <option value="0">全部基地</option>
                                             <c:forEach var="venue" items="${orgFinanceVenuesList}">
-                                                <option value="${venue.id}">${venue.venueName}</option>
+                                                <option value="${venue.id}" <c:if test="${venue.id == conditions.venueId}">selected</c:if> >${venue.venueName}</option>
                                             </c:forEach>
                                         </select>
                                     </div>
-                                    <div class="col-md-2">
-                                        <select class="form-control" name="channelType">
-                                            <option value="0">全部渠道</option>
-                                            <c:forEach var="business" items="${BusinessChannelTypeEnumList}">
-                                                <option value="${business.code}">${business.desc}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control" placeholder="业务员姓名" name="realName">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control datepicker" placeholder="业务日期" name="businessDate">
-                                    </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-8">
                                         <button type="button" class="btn btn-primary search-business">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>
@@ -79,63 +64,100 @@
                         </div>
                         <div class="card-footer text-right"></div>
                         <div class="card-block">
-                            <table class="table table-striped table-sm user-list">
-                                <thead>
-                                <tr>
-                                    <th>编号</th>
-                                    <th>业务日期</th>
-                                    <th>所属基地</th>
-                                    <th>业务类型</th>
-                                    <th>姓名</th>
-                                    <th>来源渠道</th>
-                                    <th>流水情况</th>
-                                    <th>确认收入</th>
-                                    <th>在册人数</th>
-                                    <th>到课人数</th>
-                                    <th>体验数</th>
-                                    <th>成交数</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <c:forEach var="business" items="${orgFinanceList}" varStatus="loop">
-                                    <tr data-id="${business.businessNo}">
-                                        <td>${loop.index + 1}</td>
-                                        <td>${business.businessDate}</td>
-                                        <td>
-                                            <c:forEach var="base" items="${orgFinanceVenuesList}">
-                                                <c:if test="${base.id == business.baseType}">${base.venueName}</c:if>
-                                            </c:forEach>
-                                        </td>
-                                        <td>
-                                            <c:forEach var="busi" items="${orgFinanceBusinessList}">
-                                                <c:if test="${busi.enumValue == business.businessType}">${busi.enumNote}</c:if>
-                                            </c:forEach>
-                                        </td>
-                                        <td>${business.realName}</td>
-                                        <td>
-                                            <c:forEach var="channel" items="${orgFinanceChannelList}">
-                                                <c:if test="${channel.enumValue == business.channelType}">${channel.enumNote}</c:if>
-                                            </c:forEach>
-                                        </td>
-                                        <td><fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
-                                        <td><fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" /></td>
-                                        <td>${business.registerCount}人</td>
-                                        <td>${business.classCount}人</td>
-                                        <td>${business.accessCount}人</td>
-                                        <td>${business.businessCount}人</td>
-                                        <td>
-                                            <a href="/admin/data/operation/finance/edit?businessNo=${business.businessNo}" class="btn btn-primary btn-sm" title="编辑">
-                                                <i class="fa fa-pencil"></i> 修改
-                                            </a>
-                                            <a href="/admin/data/operation/finance/edit" class="btn btn-danger btn-sm" title="编辑">
-                                                <i class="fa fa-trash"></i> 删除
-                                            </a>
-                                        </td>
+                            <c:if test="${conditions.busType == BusinessTypeEnum.TRAINING_YOUNG.code}">
+                                <table class="table table-striped table-sm user-list">
+                                    <thead>
+                                    <tr>
+                                        <th>业务编号</th>
+                                        <th>业务日期</th>
+                                        <th>所属基地</th>
+                                        <th>业务类型</th>
+                                        <th>姓名</th>
+                                        <th>来源渠道</th>
+                                        <th>流水情况</th>
+                                        <th>确认收入</th>
+                                        <th>在册人数</th>
+                                        <th>到课人数</th>
+                                        <th>体验数</th>
+                                        <th>成交数</th>
+                                        <th></th>
                                     </tr>
-                                </c:forEach>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="business" items="${orgFinanceDataList}" varStatus="loop">
+                                        <tr data-id="${business.businessNo}">
+                                            <td>${business.businessNo}</td>
+                                            <td>${business.businessDate}</td>
+                                            <td>${business.venueName}</td>
+                                            <td>${business.businessTitle}</td>
+                                            <td>${business.realName}</td>
+                                            <td>${business.channelName}</td>
+                                            <td><fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
+                                            <td><fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" /></td>
+                                            <td>${business.registerCount}人</td>
+                                            <td>${business.classCount}人</td>
+                                            <td>${business.accessCount}人</td>
+                                            <td>${business.businessCount}人</td>
+                                            <td>
+                                                <a href="/admin/finance/edit?businessNo=${business.businessNo}" class="btn btn-primary btn-sm" title="编辑">
+                                                    <i class="fa fa-pencil"></i> 修改
+                                                </a>
+                                                <a href="javascript:;" class="btn btn-danger btn-sm" title="编辑">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </c:if>
+                            <c:if test="${conditions.busType == BusinessTypeEnum.VENUE_LEASE.code}">
+                                <table class="table table-striped table-sm user-list">
+                                    <thead>
+                                    <tr>
+                                        <th>业务编号</th>
+                                        <th>业务日期</th>
+                                        <th>所属基地</th>
+                                        <th>业务类型</th>
+                                        <th>姓名</th>
+                                        <th>来源渠道</th>
+                                        <th>流水情况</th>
+                                        <th>确认收入</th>
+                                        <th>闲时段占用</th>
+                                        <th>闲时段总数</th>
+                                        <th>忙时段占用</th>
+                                        <th>忙时段总数</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="business" items="${orgFinanceDataList}" varStatus="loop">
+                                        <tr data-id="${business.businessNo}">
+                                            <td>${business.businessNo}</td>
+                                            <td>${business.businessDate}</td>
+                                            <td>${business.venueName}</td>
+                                            <td>${business.businessTitle}</td>
+                                            <td>${business.realName}</td>
+                                            <td>${business.channelName}</td>
+                                            <td><fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
+                                            <td><fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" /></td>
+                                            <td>${business.nullCount}时</td>
+                                            <td>${business.nullTotalCount}时</td>
+                                            <td>${business.hotCount}时</td>
+                                            <td>${business.hotTotalCount}时</td>
+                                            <td>
+                                                <a href="/admin/finance/edit?businessNo=${business.businessNo}" class="btn btn-primary btn-sm" title="编辑">
+                                                    <i class="fa fa-pencil"></i> 修改
+                                                </a>
+                                                <a href="javascript:;" class="btn btn-danger btn-sm" title="编辑">
+                                                    <i class="fa fa-trash"></i> 删除
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+                            </c:if>
                             <div>
                                 <%@ include file="../Shared/Pagination.jsp" %>
                             </div>

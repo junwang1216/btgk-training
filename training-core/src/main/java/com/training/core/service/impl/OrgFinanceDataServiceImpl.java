@@ -30,12 +30,21 @@ public class OrgFinanceDataServiceImpl implements OrgFinanceDataService {
     }
 
     @Override
-    public List<OrgFinanceData> queryOrgFinanceDataList(Integer businessType, Integer venueId, Integer userId, String startTime, String endTime, Integer start, Integer pageSize) {
+    public List<OrgFinanceData> queryOrgFinanceDataList(Integer businessType, Integer venueId, Integer userId,
+                                                        String startTime, String endTime, Integer start, Integer pageSize) {
+        businessType = businessType > 0 ? businessType : null;
+        venueId = venueId > 0 ? venueId : null;
+        userId = userId > 0 ? userId : null;
+
         return orgFinanceDataMapper.queryAll(businessType, venueId, userId, startTime, endTime, start, pageSize);
     }
 
     @Override
     public int queryOrgFinanceDataCount(Integer businessType, Integer venueId, Integer userId, String startTime, String endTime) {
+        businessType = businessType > 0 ? businessType : null;
+        venueId = venueId > 0 ? venueId : null;
+        userId = userId > 0 ? userId : null;
+
         return orgFinanceDataMapper.queryAllCount(businessType, venueId, userId, startTime, endTime);
     }
 
