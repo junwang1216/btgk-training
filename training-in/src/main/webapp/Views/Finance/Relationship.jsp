@@ -61,6 +61,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger delete-relationship-user">
+                        <i class="fa fa-trash-o"></i> 离 职
+                    </button>
+
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
                         <i class="fa fa-close"></i> 取 消
                     </button>
@@ -89,6 +93,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger delete-relationship-venue">
+                        <i class="fa fa-trash-o"></i> 闭 馆
+                    </button>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
                         <i class="fa fa-close"></i> 取 消
                     </button>

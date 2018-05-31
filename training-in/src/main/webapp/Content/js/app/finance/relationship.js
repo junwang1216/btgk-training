@@ -103,6 +103,19 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         });
     });
 
+    // 闭馆
+    $(".delete-relationship-venue").on("click", function (e) {
+        e.preventDefault();
+
+        jqueryAlert({
+            'icon'      : '/Content/images/icon-ok.png',
+            'content'   : "TODO 场馆闭馆未做",
+            'closeTime' : 2000,
+            'modal'        : true,
+            'isModalClose' : true
+        });
+    });
+
     // 用户弹窗
     $(".user-relationship").on("click", function (e) {
         e.preventDefault();
@@ -154,6 +167,19 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                     'isModalClose' : true
                 });
             }
+        });
+    });
+
+    // 离职用户
+    $(".delete-relationship-user").on("click", function (e) {
+        e.preventDefault();
+
+        jqueryAlert({
+            'icon'      : '/Content/images/icon-ok.png',
+            'content'   : "TODO 用户离职未做",
+            'closeTime' : 2000,
+            'modal'        : true,
+            'isModalClose' : true
         });
     });
 });

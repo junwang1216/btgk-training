@@ -199,7 +199,7 @@
                         </a>
                     </li>
                     <li class="nav-item <c:if test="${param.subMenu == 'summary'}">open</c:if>">
-                        <a class="nav-link <c:if test="${param.subMenu == 'summary'}">active</c:if>" href="/admin/finance/data">
+                        <a class="nav-link <c:if test="${param.subMenu == 'summary'}">active</c:if>" href="/admin/finance/summary">
                             <i class="icon-arrow-right"></i> 数据汇总
                         </a>
                     </li>

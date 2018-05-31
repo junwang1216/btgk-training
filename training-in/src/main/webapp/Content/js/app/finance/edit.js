@@ -64,6 +64,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     }
     setDatePicker();
 
+    // 业务类型
     $('[name="businessType"]').on("change", function (e) {
         e.preventDefault();
 
@@ -71,10 +72,16 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
 
         if (val == 1) {
             $(".block-training").show();
-            $(".block-venue").hide();
+            $(".block-venue").hide().find("input").val("");
+
+            $(".business-list").show();
+            $(".venue-list").hide();
         } else {
-            $(".block-training").hide();
+            $(".block-training").hide().find("input").val("");
             $(".block-venue").show();
+
+            $(".business-list").hide();
+            $(".venue-list").show();
         }
     });
     $('[name="businessType"]').trigger("change");
@@ -90,12 +97,12 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                     '<td>' + data.orgFinanceData.venueName +'</td>' +
                     '<td>' + data.orgFinanceData.realName +'</td>' +
                     '<td>' + data.orgFinanceData.channelName +'</td>' +
-                    '<td>' + data.orgFinanceData.pipelineValue +'</td>' +
-                    '<td>' + data.orgFinanceData.incomeValue +'</td>' +
-                    '<td>' + data.orgFinanceData.registerCount +'</td>' +
-                    '<td>' + data.orgFinanceData.classCount +'</td>' +
-                    '<td>' + data.orgFinanceData.accessCount +'</td>' +
-                    '<td>' + data.orgFinanceData.businessCount +'</td>' +
+                    '<td>' + (data.orgFinanceData.pipelineValue || "--") +'</td>' +
+                    '<td>' + (data.orgFinanceData.incomeValue || "--") +'</td>' +
+                    '<td>' + (data.orgFinanceData.registerCount || "--") +'</td>' +
+                    '<td>' + (data.orgFinanceData.classCount || "--") +'</td>' +
+                    '<td>' + (data.orgFinanceData.accessCount || "--") +'</td>' +
+                    '<td>' + (data.orgFinanceData.businessCount || "--") +'</td>' +
                     '<td><a href="javascript:;" class="btn btn-danger btn-sm" title="删除" data-business="' + data.orgFinanceData.businessNo + '"><i class="fa fa-trash"></i> 删除</a></td></tr>'
                 );
             } else {
@@ -111,10 +118,12 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     }
 
     // 基地变化，联动用户变化
+    var isFirstLoad = true;
     $("[name='venueId']").on("change", function (e) {
         e.preventDefault();
 
         var venueId = $(this).val();
+        var $this = $(this);
 
         $.getJSON('/admin/finance/getEmployeeByVenue', {venueId: venueId}, function (res) {
             var data = res.data;
@@ -129,6 +138,11 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                     );
                 });
                 $("[name='userId']").html(html.join(""));
+
+                if (isFirstLoad && $("[name='userId']").attr("data-default")) {
+                    isFirstLoad = false;
+                    $("[name='userId']").val($("[name='userId']").attr("data-default"));
+                }
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',
@@ -181,7 +195,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                     appendList(res.data.businessNo);
                 } else {
                     window.setTimeout(function () {
-                        window.location.href = '/admin/finance/log';
+                        window.location.href = '/admin/finance/log?busType=' + $("#business_form").find('[name="channelType"]').val();
                     }, 1500);
                 }
             } else {

@@ -92,12 +92,12 @@
                                             <td>${business.businessTitle}</td>
                                             <td>${business.realName}</td>
                                             <td>${business.channelName}</td>
-                                            <td><fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
-                                            <td><fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" /></td>
-                                            <td>${business.registerCount}人</td>
-                                            <td>${business.classCount}人</td>
-                                            <td>${business.accessCount}人</td>
-                                            <td>${business.businessCount}人</td>
+                                            <td>${business.pipelineValue != null ? business.pipelineValue : 0}元</td>
+                                            <td>${business.incomeValue != null ? business.incomeValue : 0}元</td>
+                                            <td>${business.registerCount != null ? business.registerCount : 0}人</td>
+                                            <td>${business.classCount != null ? business.classCount : 0}人</td>
+                                            <td>${business.accessCount != null ? business.accessCount : 0}人</td>
+                                            <td>${business.businessCount != null ? business.businessCount : 0}人</td>
                                             <td>
                                                 <a href="/admin/finance/edit?businessNo=${business.businessNo}" class="btn btn-primary btn-sm" title="编辑">
                                                     <i class="fa fa-pencil"></i> 修改

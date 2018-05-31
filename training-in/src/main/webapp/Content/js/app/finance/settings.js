@@ -215,7 +215,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
             isFlow = true;
 
             $("#flow_edit").find('[name="id"]').val("");
-            $("#flow_edit").find('[name="venueId"]').val(0);
+            //$("#flow_edit").find('[name="venueId"]').val(0);
             $("#flow_edit").find('[name="userId"]').val(0);
             $("#flow_edit").find('[name="month"]').val(0);
             $("#flow_edit").find('[name="minValue"]').val("");
@@ -225,7 +225,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
             isFlow = false;
 
             $("#income_edit").find('[name="id"]').val("");
-            $("#income_edit").find('[name="venueId"]').val(0);
+            //$("#income_edit").find('[name="venueId"]').val(0);
             $("#income_edit").find('[name="userId"]').val(0);
             $("#income_edit").find('[name="month"]').val(0);
             $("#income_edit").find('[name="minValue"]').val("");

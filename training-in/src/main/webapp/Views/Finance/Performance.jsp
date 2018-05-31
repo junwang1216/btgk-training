@@ -21,13 +21,19 @@
                             <small>Performance</small>
 
                             <div class="card-actions">
-                                <a href="/admin/data/operation/finance/edit" class="btn-settings" title="详情编辑"><i class="icon-note"></i></a>
-                                <a href="/admin/data/operation/finance/log" class="btn-list" title="详情日志"><i class="icon-list"></i></a>
-                                <a href="/admin/data/operation/finance/settings" class="btn-settings" title="指标设置"><i class="icon-settings"></i></a>
-                                <a href="/admin/data/operation/finance" class="btn-list" title="数据统计"><i class="icon-grid"></i></a>
-                                <a href="/admin/data/operation/finance/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
-                                    <i class="icon-cloud-download"></i>
+                                <a href="#" class="btn-options-vertical dropdown-toggle" title="切换类型" data-toggle="dropdown">
+                                    <i class="icon-options-vertical"></i>
                                 </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <c:forEach var="type" items="${BusinessTypeEnumList}">
+                                        <c:if test="${type.code == conditions.busType}">
+                                            <a class="dropdown-item active" href="javascript:;">${type.desc}</a>
+                                        </c:if>
+                                        <c:if test="${type.code != conditions.busType}">
+                                            <a class="dropdown-item" href="javascript:;">${type.desc}</a>
+                                        </c:if>
+                                    </c:forEach>
+                                </div>
                             </div>
                         </div>
                         <div class="card-block">
@@ -80,9 +86,32 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer"></div>
+                        <div class="card-footer">所有基地</div>
                         <div class="card-block">
                             <div class="row">
+                                <!-- 所有基地 -->
+                                <div class="col-md-6">
+                                    <p>基地业绩汇总排名</p>
+                                    <div id="finance_performance_chart5" class="chart"  style="width: 100%; height:500px;"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>基地业绩汇总占比</p>
+                                    <div id="finance_performance_chart6" class="chart"  style="width: 100%; height:500px;"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>每个人业绩排名</p>
+                                    <div id="finance_performance_chart7" class="chart"  style="width: 100%; height:500px;"></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>每个人业绩占比</p>
+                                    <div id="finance_performance_chart8" class="chart"  style="width: 100%; height:500px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">某个基地</div>
+                        <div class="card-block">
+                            <div class="row">
+                                <!-- 某个基地 -->
                                 <div class="col-md-6">
                                     <p>基地业绩汇总</p>
                                     <div id="finance_performance_chart4" class="chart"  style="width: 100%; height:500px;"></div>

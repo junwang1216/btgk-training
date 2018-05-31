@@ -32,7 +32,7 @@
                         </div>
                         <div class="card-block">
                             <form id="business_form" method="post" class="form-horizontal row" novalidate onsubmit="return false;">
-                                <input type="hidden" name="businessNo" value="${orgFinance.businessNo}">
+                                <input type="hidden" name="businessNo" value="${orgFinanceData.businessNo}">
                                 <div class="offset-2 col-md-4">
                                     <div class="form-group row">
                                         <label class="col-md-3 form-control-label">
@@ -40,7 +40,7 @@
                                         </label>
                                         <div class="col-md-9">
                                             <input type="text" class="form-control datepicker" name="businessDate" placeholder="请输入业务日期"
-                                                   value="${orgFinance.businessDate}"
+                                                   value="${orgFinanceData.businessDate}"
                                                    data-val="true" data-val-required="业务日期不能为空">
                                             <div data-valmsg-for="businessDate" data-valmsg-replace="true"></div>
                                         </div>
@@ -52,7 +52,7 @@
                                         <div class="col-md-9">
                                             <select class="form-control" name="businessType" data-val="true" data-val-required="请选择业务类型">
                                                 <c:forEach var="business" items="${BusinessTypeEnumList}">
-                                                    <option value="${business.code}" <c:if test="${orgFinance.businessType == business.code}">selected</c:if> >${business.desc}</option>
+                                                    <option value="${business.code}" <c:if test="${orgFinanceData.businessType == business.code}">selected</c:if> >${business.desc}</option>
                                                 </c:forEach>
                                             </select>
                                             <div data-valmsg-for="businessType" data-valmsg-replace="true"></div>
@@ -65,10 +65,10 @@
                                         <div class="col-md-9">
                                             <select class="form-control" name="venueId" data-val="true" data-val-required="请选择所属基地">
                                                 <c:forEach var="business" items="${orgFinanceVenuesList}">
-                                                    <option value="${business.id}" <c:if test="${orgFinance.baseType == business.id}">selected</c:if> >${business.venueName}</option>
+                                                    <option value="${business.id}" <c:if test="${orgFinanceData.venueId == business.id}">selected</c:if> >${business.venueName}</option>
                                                 </c:forEach>
                                             </select>
-                                            <div data-valmsg-for="baseType" data-valmsg-replace="true"></div>
+                                            <div data-valmsg-for="venueId" data-valmsg-replace="true"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -76,10 +76,10 @@
                                             <span class="text-danger">*</span> 业务员
                                         </label>
                                         <div class="col-md-9">
-                                            <select class="form-control" name="userId" data-val="true" data-val-required="请选择业务员">
+                                            <select class="form-control" name="userId" data-val="true" data-val-required="请选择业务员" data-default="${orgFinanceData.userId}">
                                                 <option value="0">请选择</option>
                                             </select>
-                                            <div data-valmsg-for="realName" data-valmsg-replace="true"></div>
+                                            <div data-valmsg-for="userId" data-valmsg-replace="true"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
                                         <div class="col-md-9">
                                             <select class="form-control" name="channelType" data-val="true" data-val-required="请选择来源渠道">
                                                 <c:forEach var="business" items="${BusinessChannelTypeEnumList}">
-                                                    <option value="${business.code}" <c:if test="${orgFinance.channelType == business.code}">selected</c:if> >${business.desc}</option>
+                                                    <option value="${business.code}" <c:if test="${orgFinanceData.channelType == business.code}">selected</c:if> >${business.desc}</option>
                                                 </c:forEach>
                                             </select>
                                             <div data-valmsg-for="channelType" data-valmsg-replace="true"></div>
@@ -103,8 +103,7 @@
                                         </label>
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" placeholder="完成值" name="pipelineValue"
-                                                   value="${orgFinance.pipelineValue}"
-                                                   data-val="true" data-val-required="完成值不能为空"
+                                                   value="${orgFinanceData.pipelineValue}"
                                                    data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="完成值格式不正确">
                                             <div data-valmsg-for="pipelineValue" data-valmsg-replace="true"></div>
                                         </div>
@@ -115,28 +114,25 @@
                                         </label>
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" placeholder="完成值" name="incomeValue"
-                                                   value="${orgFinance.incomeValue}"
-                                                   data-val="true" data-val-required="完成值不能为空"
+                                                   value="${orgFinanceData.incomeValue}"
                                                    data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="完成值格式不正确">
                                             <div data-valmsg-for="incomeValue" data-valmsg-replace="true"></div>
                                         </div>
                                     </div>
-                                    <div class="block-training">
+                                    <div class="block-training" style="display: none;">
                                         <div class="form-group row">
                                             <label class="col-md-3 form-control-label">
                                                 <span class="text-danger">*</span> 培训人数
                                             </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" placeholder="在册人数" name="registerCount"
-                                                       value="${orgFinance.registerCount}"
-                                                       data-val="true" data-val-required="在册人数不能为空"
+                                                       value="${orgFinanceData.registerCount}"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="在册人数格式不正确">
                                                 <div data-valmsg-for="trainingCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="到课人数" name="classCount"
-                                                       value="${orgFinance.classCount}"
-                                                       data-val="true" data-val-required="到课人数不能为空"
+                                                       value="${orgFinanceData.classCount}"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="到课人数格式不正确">
                                                 <div data-valmsg-for="classCount" data-valmsg-replace="true"></div>
                                             </div>
@@ -147,35 +143,33 @@
                                             </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" placeholder="体验数" name="accessCount"
-                                                       value="${orgFinance.accessCount}"
-                                                       data-val="true" data-val-required="体验数不能为空"
+                                                       value="${orgFinanceData.accessCount}"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="体验数格式不正确">
                                                 <div data-valmsg-for="accessCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="成交数" name="businessCount"
-                                                       value="${orgFinance.businessCount}"
-                                                       data-val="true" data-val-required="成交数不能为空"
+                                                       value="${orgFinanceData.businessCount}"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="成交数格式不正确">
                                                 <div data-valmsg-for="businessCount" data-valmsg-replace="true"></div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="block-venue">
+                                    <div class="block-venue" style="display: none;">
                                         <div class="form-group row">
                                             <label class="col-md-3 form-control-label">
                                                 <span class="text-danger">*</span> 闲时段数
                                             </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" placeholder="总数" name="nullTotalCount"
-                                                       value="${orgFinance.nullTotalCount}"
+                                                       value="${orgFinanceData.nullTotalCount}"
                                                        data-val="true" data-val-required="总数不能为空"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
                                                 <div data-valmsg-for="nullTotalCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="占用数" name="nullCount"
-                                                       value="${orgFinance.nullCount}"
+                                                       value="${orgFinanceData.nullCount}"
                                                        data-val="true" data-val-required="占用数不能为空"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确">
                                                 <div data-valmsg-for="nullCount" data-valmsg-replace="true"></div>
@@ -187,14 +181,14 @@
                                             </label>
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" placeholder="总数" name="hotTotalCount"
-                                                       value="${orgFinance.hotTotalCount}"
+                                                       value="${orgFinanceData.hotTotalCount}"
                                                        data-val="true" data-val-required="总数不能为空"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
                                                 <div data-valmsg-for="hotTotalCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="占用数" name="hotCount"
-                                                       value="${orgFinance.hotCount}"
+                                                       value="${orgFinanceData.hotCount}"
                                                        data-val="true" data-val-required="占用数不能为空"
                                                        data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确">
                                                 <div data-valmsg-for="hotCount" data-valmsg-replace="true"></div>
@@ -209,9 +203,9 @@
                                 <i class="fa fa-check"></i> 保 存
                             </button>
                         </div>
-                        <c:if test="${orgFinance.businessNo == null}">
+                        <c:if test="${orgFinanceData.businessNo == null}">
                             <div class="card-block">
-                                <table class="table table-striped table-sm business-list">
+                                <table class="table table-striped table-sm business-list" style="display: none;">
                                     <thead>
                                     <tr>
                                         <th>业务编号</th>
@@ -233,7 +227,7 @@
                                 </table>
                             </div>
                             <div class="card-block">
-                                <table class="table table-striped table-sm venue-list">
+                                <table class="table table-striped table-sm venue-list" style="display: none;">
                                     <thead>
                                     <tr>
                                         <th>业务编号</th>

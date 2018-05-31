@@ -302,4 +302,170 @@ require(['jquery', 'echart', 'bootstrap', 'pace', 'base', 'override'], function 
             }
         ]
     });
+
+    var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart5'));
+    performanceChart5.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            //formatter: "{b} <br/>{a0} : {c0}元 <br/>{a1} : {c1}元",
+            formatter: function (params) {
+                return params[0].name + "<br>" +
+                    params[0].seriesName + ": " + params[0].value + "元<br>" +
+                    params[1].seriesName + ": " + params[1].value + "元<br>" +
+                    "合计: " + (params[0].value + params[1].value) + "元<br>";
+            }
+        },
+        legend: {
+            data: ['流水', '确认收入']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        yAxis: {
+            type: 'category',
+            data: ['方庄基地', '天秀基地', '京西基地', '万柳基地']
+        },
+        series: [
+            {
+                name: '流水',
+                type: 'bar',
+                data: [18203, 23489, 29034, 104970]
+            },
+            {
+                name: '确认收入',
+                type: 'bar',
+                data: [19325, 23438, 31000, 121594]
+            }
+        ]
+    });
+
+    var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart6'));
+    performanceChart6.setOption({
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            left: 'center',
+            data: ['方庄基地', '天秀基地', '京西基地', '万柳基地']
+        },
+        series : [
+            {
+                name: '基地',
+                type: 'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[
+                    {value : 335, name: '方庄基地'},
+                    {value : 310, name: '天秀基地'},
+                    {value : 234, name: '万柳基地'},
+                    {value : 135, name: '京西基地'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    });
+
+    var performanceChart7 = echarts.init(document.getElementById('finance_performance_chart7'));
+    performanceChart7.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            //formatter: "{b} <br/>{a0} : {c0}元 <br/>{a1} : {c1}元",
+            formatter: function (params) {
+                return params[0].name + "<br>" +
+                    params[0].seriesName + ": " + params[0].value + "元<br>" +
+                    params[1].seriesName + ": " + params[1].value + "元<br>" +
+                    "合计: " + (params[0].value + params[1].value) + "元<br>";
+            }
+        },
+        legend: {
+            data: ['流水', '确认收入']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        yAxis: {
+            type: 'category',
+            data: ['张三1', '李四2', '王五3', '刘伟2', '张三2', '李四1', '王五2', '刘伟1', '张三3', '李四3', '王五1', '刘伟3']
+        },
+        series: [
+            {
+                name: '流水',
+                type: 'bar',
+                data: [234, 290, 182, 234, 290, 234, 290, 104, 234, 290, 234, 290]
+            },
+            {
+                name: '确认收入',
+                type: 'bar',
+                data: [234, 104, 234, 290, 234, 290, 182, 290, 290, 234, 290, 234]
+            }
+        ]
+    });
+
+    var performanceChart8 = echarts.init(document.getElementById('finance_performance_chart8'));
+    performanceChart8.setOption({
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            left: 'center',
+            data: ['张三1', '李四2', '王五3', '刘伟2', '张三2', '李四1', '王五2', '刘伟1', '张三3', '李四3', '王五1', '刘伟3']
+        },
+        series : [
+            {
+                name: '姓名',
+                type: 'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data: [
+                    {value : 335, name: '张三1'},
+                    {value : 310, name: '李四2'},
+                    {value : 234, name: '王五3'},
+                    {value : 135, name: '刘伟2'},
+                    {value : 335, name: '张三2'},
+                    {value : 310, name: '李四1'},
+                    {value : 234, name: '王五2'},
+                    {value : 135, name: '刘伟1'},
+                    {value : 335, name: '张三3'},
+                    {value : 310, name: '李四3'},
+                    {value : 234, name: '王五1'},
+                    {value : 135, name: '刘伟3'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    });
 });
