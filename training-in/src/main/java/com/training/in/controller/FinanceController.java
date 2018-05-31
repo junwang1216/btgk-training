@@ -836,6 +836,7 @@ public class FinanceController extends BaseController {
         }
 
         modelAndView.addObject("typeTime", orgFinanceLogRequest.getTypeTime());
+        modelAndView.addObject("busType", orgFinanceLogRequest.getBusType());
 
         modelAndView.addObject("BusinessChannelTypeEnumList", EnumUtils.getEnumList(BusinessChannelTypeEnum.class));
         modelAndView.addObject("BusinessChannelTypeEnum", EnumUtils.getEnumMap(BusinessChannelTypeEnum.class));

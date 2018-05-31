@@ -34,9 +34,14 @@
                             <small>Operation Finance</small>
 
                             <div class="card-actions">
-                                <a href="/admin/data/operation/finance/edit" class="btn-settings" title="青训"><i class="icon-refresh"></i></a>
-                                <a href="/admin/data/operation/finance/edit" class="btn-settings" title="场租"><i class="icon-refresh"></i></a>
-                                <a href="/admin/data/operation/finance/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
+                                <c:forEach var="bus" items="${BusinessTypeEnumList}">
+                                    <c:if test="${bus.code != busType}">
+                                        <a href="/admin/finance/summary?busType=${bus.code}" class="btn-settings" title="${bus.desc}">
+                                            <i class="icon-refresh"></i>
+                                        </a>
+                                    </c:if>
+                                </c:forEach>
+                                <a href="/admin/finance/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
                                     <i class="icon-cloud-download"></i>
                                 </a>
                             </div>
@@ -93,235 +98,252 @@
                         </div>
                         <div class="card-footer"></div>
                         <div class="card-block">
-                            <div class="table-overflow" style="overflow: auto">
-                                <table class="table table-responsive-sm table-bordered" style="width: 130rem;">
-                                    <thead>
-                                    <tr>
-                                        <th rowspan="2">所在基地</th>
-                                        <th rowspan="2">姓名</th>
-                                        <th colspan="3" class="text-center">流水情况（元）</th>
-                                        <th colspan="3" class="text-center">确认收入情况（元）</th>
-                                        <th colspan="3" class="text-center">青训人数（人）</th>
-                                        <%--<th colspan="3" class="text-center">个人渠道（人）</th>--%>
-                                        <%--<th colspan="3" class="text-center">转介绍渠道（人）</th>--%>
-                                        <%--<th rowspan="2">非公司渠转化率</th>--%>
-                                        <%--<th colspan="3" class="text-center">公司渠道（人）</th>--%>
-                                        <th colspan="3" class="text-center">青训成交（人）</th>
-                                    </tr>
-                                    <tr>
-                                        <th>完成情况</th>
-                                        <th>最低目标</th>
-                                        <th>挑战目标</th>
-
-                                        <th>完成情况</th>
-                                        <th>最低目标</th>
-                                        <th>挑战目标</th>
-
-                                        <th>在册人数</th>
-                                        <th>到课人数</th>
-                                        <th>到课率</th>
-
-                                        <th>体验数</th>
-                                        <th>成交数</th>
-                                        <th>转化率</th>
-
-                                        <%--<th>体验数</th>--%>
-                                        <%--<th>成交数</th>--%>
-                                        <%--<th>转化率</th>--%>
-
-                                        <%--<th>体验数</th>--%>
-                                        <%--<th>成交数</th>--%>
-                                        <%--<th>转化率</th>--%>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach var="business" items="${orgFinanceDataResponseList}" varStatus="loop">
-                                        <tr data-id="${business.businessNo}">
-                                            <td>${business.venueName}</td>
-                                            <td>
-                                                <a data-toggle="collapse" href="#collapse${loop.index}" aria-expanded="false" aria-controls="collapse${loop.index}">${business.realName}</a>
-                                            </td>
-
-                                            <td>
-                                                <fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" />
-                                            </td>
-                                            <td>
-                                                <fmt:formatNumber value="${business.pipelineTarget}" type="currency" maxFractionDigits="0" />
-                                                (<fmt:formatNumber value="${business.pipelineTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
-                                            </td>
-                                            <td>
-                                                <fmt:formatNumber value="${business.pipelineChallenge}" type="currency" maxFractionDigits="0" />
-                                                (<fmt:formatNumber value="${business.pipelineChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
-                                            </td>
-
-                                            <td>
-                                                <fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" />
-                                            </td>
-                                            <td>
-                                                <fmt:formatNumber value="${business.incomeTarget}" type="currency" maxFractionDigits="0" />
-                                                (<fmt:formatNumber value="${business.incomeTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
-                                            </td>
-                                            <td>
-                                                <fmt:formatNumber value="${business.incomeChallenge}" type="currency" maxFractionDigits="0" />
-                                                (<fmt:formatNumber value="${business.incomeChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
-                                            </td>
-
-                                            <td>${business.registerCount}人</td>
-                                            <td>${business.classCount}人</td>
-                                            <td><fmt:formatNumber value="${business.classCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
-
-                                            <%--<td>${business.accessCount2}人</td>--%>
-                                            <%--<td>${business.businessCount2}人</td>--%>
-                                            <%--<td><fmt:formatNumber value="${business.businessCount2Percent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
-
-                                            <%--<td>${business.accessCount3}人</td>--%>
-                                            <%--<td>${business.businessCount3}人</td>--%>
-                                            <%--<td><fmt:formatNumber value="${business.businessCount3Percent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
-
-                                            <%--<td><fmt:formatNumber value="${business.businessCountPerson}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
-
-                                            <%--<td>${business.accessCount1}人</td>--%>
-                                            <%--<td>${business.businessCount1}人</td>--%>
-                                            <%--<td><fmt:formatNumber value="${business.businessCount1Percent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
-
-                                            <td>${business.accessCount}人</td>
-                                            <td>${business.businessCount}人</td>
-                                            <td><fmt:formatNumber value="${business.businessCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                            <c:if test="${busType == BusinessTypeEnum.TRAINING_YOUNG.code}">
+                                <div class="table-overflow" style="overflow: auto">
+                                    <table class="table table-responsive-sm table-bordered" style="width: 130rem;">
+                                        <thead>
+                                        <tr>
+                                            <th rowspan="2">所在基地</th>
+                                            <th rowspan="2">姓名</th>
+                                            <th colspan="3" class="text-center">流水情况（元）</th>
+                                            <th colspan="3" class="text-center">确认收入情况（元）</th>
+                                            <th colspan="3" class="text-center">青训人数（人）</th>
+                                                <%--<th colspan="3" class="text-center">个人渠道（人）</th>--%>
+                                                <%--<th colspan="3" class="text-center">转介绍渠道（人）</th>--%>
+                                                <%--<th rowspan="2">非公司渠转化率</th>--%>
+                                                <%--<th colspan="3" class="text-center">公司渠道（人）</th>--%>
+                                            <th colspan="3" class="text-center">青训成交（人）</th>
                                         </tr>
-                                        <tr class="collapse" id="collapse${loop.index}">
-                                            <td colspan="21">
-                                                <table class="table table-responsive-sm table-bordered table-children">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>费用来源</th>
-                                                        <th>流水情况</th>
-                                                        <th>确认收入</th>
-                                                        <th>在册人数</th>
-                                                        <th>到课人数</th>
-                                                        <th>到课率</th>
-                                                        <th>体验数</th>
-                                                        <th>成交数</th>
-                                                        <th>转化率</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <c:forEach var="businessChannel" items="${business.orgFinanceDataResponseChannelList}">
+                                        <tr>
+                                            <th>完成情况</th>
+                                            <th>最低目标</th>
+                                            <th>挑战目标</th>
+
+                                            <th>完成情况</th>
+                                            <th>最低目标</th>
+                                            <th>挑战目标</th>
+
+                                            <th>在册人数</th>
+                                            <th>到课人数</th>
+                                            <th>到课率</th>
+
+                                            <th>体验数</th>
+                                            <th>成交数</th>
+                                            <th>转化率</th>
+
+                                                <%--<th>体验数</th>--%>
+                                                <%--<th>成交数</th>--%>
+                                                <%--<th>转化率</th>--%>
+
+                                                <%--<th>体验数</th>--%>
+                                                <%--<th>成交数</th>--%>
+                                                <%--<th>转化率</th>--%>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:forEach var="business" items="${orgFinanceDataResponseList}" varStatus="loop">
+                                            <tr data-id="${business.businessNo}">
+                                                <td>${business.venueName}</td>
+                                                <td>
+                                                    <a data-toggle="collapse" href="#collapse${loop.index}" aria-expanded="false" aria-controls="collapse${loop.index}">${business.realName}</a>
+                                                </td>
+
+                                                <td>
+                                                    <fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" />
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.pipelineTarget}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.pipelineTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.pipelineChallenge}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.pipelineChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
+
+                                                <td>
+                                                    <fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" />
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.incomeTarget}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.incomeTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.incomeChallenge}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.incomeChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
+
+                                                <td>${business.registerCount}人</td>
+                                                <td>${business.classCount}人</td>
+                                                <td><fmt:formatNumber value="${business.classCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+
+                                                    <%--<td>${business.accessCount2}人</td>--%>
+                                                    <%--<td>${business.businessCount2}人</td>--%>
+                                                    <%--<td><fmt:formatNumber value="${business.businessCount2Percent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
+
+                                                    <%--<td>${business.accessCount3}人</td>--%>
+                                                    <%--<td>${business.businessCount3}人</td>--%>
+                                                    <%--<td><fmt:formatNumber value="${business.businessCount3Percent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
+
+                                                    <%--<td><fmt:formatNumber value="${business.businessCountPerson}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
+
+                                                    <%--<td>${business.accessCount1}人</td>--%>
+                                                    <%--<td>${business.businessCount1}人</td>--%>
+                                                    <%--<td><fmt:formatNumber value="${business.businessCount1Percent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
+
+                                                <td>${business.accessCount}人</td>
+                                                <td>${business.businessCount}人</td>
+                                                <td><fmt:formatNumber value="${business.businessCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                                            </tr>
+                                            <tr class="collapse" id="collapse${loop.index}">
+                                                <td colspan="21">
+                                                    <table class="table table-responsive-sm table-bordered table-children">
+                                                        <thead>
                                                         <tr>
-                                                            <td>${businessChannel.channelName}</td>
-                                                            <td><fmt:formatNumber value="${businessChannel.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
-                                                            <td><fmt:formatNumber value="${businessChannel.incomeValue}" type="currency" maxFractionDigits="0" /></td>
-                                                            <td>${businessChannel.registerCount}人</td>
-                                                            <td>${businessChannel.classCount}人</td>
-                                                            <td><fmt:formatNumber value="${businessChannel.classCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
-                                                            <td>${businessChannel.accessCount}人</td>
-                                                            <td>${businessChannel.businessCount}人</td>
-                                                            <td><fmt:formatNumber value="${businessChannel.businessCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                                                            <th>费用来源</th>
+                                                            <th>流水情况</th>
+                                                            <th>确认收入</th>
+                                                            <th>在册人数</th>
+                                                            <th>到课人数</th>
+                                                            <th>到课率</th>
+                                                            <th>体验数</th>
+                                                            <th>成交数</th>
+                                                            <th>转化率</th>
                                                         </tr>
-                                                    </c:forEach>
-                                                    </tbody>
-                                                </table>
-                                            </td>
+                                                        </thead>
+                                                        <tbody>
+                                                        <c:forEach var="businessChannel" items="${business.orgFinanceDataResponseChannelList}">
+                                                            <tr>
+                                                                <td>${businessChannel.channelName}</td>
+                                                                <td><fmt:formatNumber value="${businessChannel.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
+                                                                <td><fmt:formatNumber value="${businessChannel.incomeValue}" type="currency" maxFractionDigits="0" /></td>
+                                                                <td>${businessChannel.registerCount}人</td>
+                                                                <td>${businessChannel.classCount}人</td>
+                                                                <td><fmt:formatNumber value="${businessChannel.classCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                                                                <td>${businessChannel.accessCount}人</td>
+                                                                <td>${businessChannel.businessCount}人</td>
+                                                                <td><fmt:formatNumber value="${businessChannel.businessCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${busType == BusinessTypeEnum.VENUE_LEASE.code}">
+                                <div class="table-overflow" style="overflow: auto">
+                                    <table class="table table-responsive-sm table-bordered" style="width: 130rem;">
+                                        <thead>
+                                        <tr>
+                                            <th rowspan="2">所在基地</th>
+                                            <th rowspan="2">姓名</th>
+                                            <th colspan="3" class="text-center">流水情况（元）</th>
+                                            <th colspan="3" class="text-center">确认收入情况（元）</th>
+                                            <th colspan="3" class="text-center">闲时段（场次）</th>
+                                            <th colspan="3" class="text-center">忙时段（场次）</th>
                                         </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <tr>
+                                            <th>完成情况</th>
+                                            <th>最低目标</th>
+                                            <th>挑战目标</th>
 
-                            <%--<div class="table-overflow" style="overflow: auto">--%>
-                                <%--<table class="table table-responsive-sm table-bordered" style="width: 130rem;">--%>
-                                    <%--<thead>--%>
-                                    <%--<tr>--%>
-                                        <%--<th rowspan="2">所在基地</th>--%>
-                                        <%--<th rowspan="2">姓名</th>--%>
-                                        <%--<th colspan="3" class="text-center">流水情况（元）</th>--%>
-                                        <%--<th colspan="3" class="text-center">确认收入情况（元）</th>--%>
-                                        <%--<th colspan="3" class="text-center">闲时段（场次）</th>--%>
-                                        <%--<th colspan="3" class="text-center">忙时段（场次）</th>--%>
-                                    <%--</tr>--%>
-                                    <%--<tr>--%>
-                                        <%--<th>完成情况</th>--%>
-                                        <%--<th>最低目标</th>--%>
-                                        <%--<th>挑战目标</th>--%>
+                                            <th>完成情况</th>
+                                            <th>最低目标</th>
+                                            <th>挑战目标</th>
 
-                                        <%--<th>完成情况</th>--%>
-                                        <%--<th>最低目标</th>--%>
-                                        <%--<th>挑战目标</th>--%>
+                                            <th>占用数</th>
+                                            <th>总数</th>
+                                            <th>使用率</th>
 
-                                        <%--<th>占用数</th>--%>
-                                        <%--<th>总数</th>--%>
-                                        <%--<th>使用率</th>--%>
+                                            <th>占用数</th>
+                                            <th>总数</th>
+                                            <th>使用率</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:forEach var="business" items="${orgFinanceDataResponseList}" varStatus="loop">
+                                            <tr data-id="${business.businessNo}">
+                                                <td>${business.venueName}</td>
+                                                <td>
+                                                    <a data-toggle="collapse" href="#collapse${loop.index}" aria-expanded="false" aria-controls="collapse${loop.index}">${business.realName}</a>
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" />
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.pipelineTarget}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.pipelineTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.pipelineChallenge}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.pipelineChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
 
-                                        <%--<th>占用数</th>--%>
-                                        <%--<th>总数</th>--%>
-                                        <%--<th>使用率</th>--%>
-                                    <%--</tr>--%>
-                                    <%--</thead>--%>
-                                    <%--<tbody>--%>
-                                    <%--<c:forEach var="business" items="${orgFinanceList}" varStatus="loop">--%>
-                                        <%--<tr data-id="${business.businessNo}">--%>
-                                            <%--<td>--%>
-                                                <%--<c:forEach var="base" items="${orgFinanceBaseList}">--%>
-                                                    <%--<c:if test="${base.enumValue == business.baseType}">${base.enumNote}</c:if>--%>
-                                                <%--</c:forEach>--%>
-                                            <%--</td>--%>
-                                            <%--<td>--%>
-                                                <%--<a data-toggle="collapse" href="#collapse${loop.index}" aria-expanded="false" aria-controls="collapse${loop.index}">${business.realName}</a>--%>
-                                            <%--</td>--%>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" />
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.incomeTarget}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.incomeTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${business.incomeChallenge}" type="currency" maxFractionDigits="0" />
+                                                    (<fmt:formatNumber value="${business.incomeChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)
+                                                </td>
 
-                                            <%--<td>--%>
-                                                <%--<fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" />--%>
-                                            <%--</td>--%>
-                                            <%--<td>--%>
-                                                <%--<fmt:formatNumber value="${business.pipelineTarget}" type="currency" maxFractionDigits="0" />--%>
-                                                <%--(<fmt:formatNumber value="${business.pipelineTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)--%>
-                                            <%--</td>--%>
-                                            <%--<td>--%>
-                                                <%--<fmt:formatNumber value="${business.pipelineChallenge}" type="currency" maxFractionDigits="0" />--%>
-                                                <%--(<fmt:formatNumber value="${business.pipelineChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)--%>
-                                            <%--</td>--%>
+                                                <td>${business.nullCount}场次</td>
+                                                <td>${business.nullTotalCount}场次</td>
+                                                <td><fmt:formatNumber value="${business.nullCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
 
-                                            <%--<td>--%>
-                                                <%--<fmt:formatNumber value="${business.incomeValue}" type="currency" maxFractionDigits="0" />--%>
-                                            <%--</td>--%>
-                                            <%--<td>--%>
-                                                <%--<fmt:formatNumber value="${business.incomeTarget}" type="currency" maxFractionDigits="0" />--%>
-                                                <%--(<fmt:formatNumber value="${business.incomeTargetPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)--%>
-                                            <%--</td>--%>
-                                            <%--<td>--%>
-                                                <%--<fmt:formatNumber value="${business.incomeChallenge}" type="currency" maxFractionDigits="0" />--%>
-                                                <%--(<fmt:formatNumber value="${business.incomeChallengePercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" />)--%>
-                                            <%--</td>--%>
+                                                <td>${business.hotCount}场次</td>
+                                                <td>${business.hotTotalCount}场次</td>
+                                                <td><fmt:formatNumber value="${business.hotCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                                            </tr>
+                                            <tr class="collapse" id="collapse${loop.index}">
+                                                <td colspan="21">
+                                                    <table class="table table-responsive-sm table-bordered table-children">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>费用来源</th>
+                                                            <th>流水情况</th>
+                                                            <th>确认收入</th>
+                                                            <th>闲时占用</th>
+                                                            <th>闲时总数</th>
+                                                            <th>闲时率</th>
+                                                            <th>忙时占用</th>
+                                                            <th>忙时总数</th>
+                                                            <th>忙时率</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <c:forEach var="businessChannel" items="${business.orgFinanceDataResponseChannelList}">
+                                                            <tr>
+                                                                <td>${businessChannel.channelName}</td>
+                                                                <td><fmt:formatNumber value="${businessChannel.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
+                                                                <td><fmt:formatNumber value="${businessChannel.incomeValue}" type="currency" maxFractionDigits="0" /></td>
 
-                                            <%--<td>${business.nullCount}场次</td>--%>
-                                            <%--<td>${business.nullTotalCount}场次</td>--%>
-                                            <%--<td><fmt:formatNumber value="${business.nullCount / business.nullTotalCount}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
+                                                                <td>${business.nullCount}场次</td>
+                                                                <td>${business.nullTotalCount}场次</td>
+                                                                <td><fmt:formatNumber value="${business.nullCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
 
-                                            <%--<td>${business.hotCount}场次</td>--%>
-                                            <%--<td>${business.hotTotalCount}场次</td>--%>
-                                            <%--<td><fmt:formatNumber value="${business.hotCount / business.hotTotalCount}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>--%>
-                                        <%--</tr>--%>
-                                        <%--<tr class="collapse" id="collapse${loop.index}">--%>
-                                            <%--<td colspan="21">--%>
-                                                <%--<table class="table table-responsive-sm table-bordered table-children">--%>
-                                                    <%--<thead>--%>
-                                                    <%--<tr>--%>
-                                                        <%--<th>费用来源</th>--%>
-                                                        <%--<th>流水情况</th>--%>
-                                                        <%--<th>确认收入</th>--%>
-                                                        <%--<th>闲时占用</th>--%>
-                                                        <%--<th>闲时总数</th>--%>
-                                                        <%--<th>忙时占用</th>--%>
-                                                        <%--<th>忙时总数</th>--%>
-                                                    <%--</tr>--%>
-                                                    <%--</thead>--%>
-                                                    <%--<tbody></tbody>--%>
-                                                <%--</table>--%>
-                                            <%--</td>--%>
-                                        <%--</tr>--%>
-                                    <%--</c:forEach>--%>
-                                    <%--</tbody>--%>
-                                <%--</table>--%>
-                            <%--</div>--%>
+                                                                <td>${business.hotCount}场次</td>
+                                                                <td>${business.hotTotalCount}场次</td>
+                                                                <td><fmt:formatNumber value="${business.hotCountPercent}" type="percent" maxFractionDigits="2" minFractionDigits="2" /></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </div>
