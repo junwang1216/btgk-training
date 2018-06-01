@@ -47,6 +47,7 @@
                             </div>
                         </div>
                         <div class="card-block">
+                            <input type="hidden" id="current_bus_type" value="${busType}">
                             <div class="btn-toolbar" role="toolbar">
                                 <div class="btn-group" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary <c:if test="${typeTime == 'prev_day'}">active</c:if> ">

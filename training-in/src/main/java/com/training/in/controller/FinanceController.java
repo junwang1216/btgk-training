@@ -585,6 +585,8 @@ public class FinanceController extends BaseController {
         List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
         modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
 
+        modelAndView.addObject("todayDate", DateUtil.getNowDate());
+
         return setModelAndView(modelAndView);
     }
 
