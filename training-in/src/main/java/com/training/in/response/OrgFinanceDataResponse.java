@@ -93,9 +93,9 @@ public class OrgFinanceDataResponse {
     }
 
     // 流水
-    private Integer pipelineValue;
-    private Integer pipelineTarget;
-    private Integer pipelineChallenge;
+    private Integer pipelineValue = 0;
+    private Integer pipelineTarget = 0;
+    private Integer pipelineChallenge = 0;
 
     public Integer getPipelineValue() {
         return pipelineValue;
@@ -133,9 +133,9 @@ public class OrgFinanceDataResponse {
     }
 
     // 确认收入
-    private Integer incomeValue;
-    private Integer incomeTarget;
-    private Integer incomeChallenge;
+    private Integer incomeValue = 0;
+    private Integer incomeTarget = 0;
+    private Integer incomeChallenge = 0;
 
     public Integer getIncomeValue() {
         return incomeValue;
@@ -173,8 +173,8 @@ public class OrgFinanceDataResponse {
     }
 
     // 培训人数
-    private Integer registerCount;
-    private Integer classCount;
+    private Integer registerCount = 0;
+    private Integer classCount = 0;
 
     public Integer getRegisterCount() {
         return registerCount;
@@ -198,8 +198,8 @@ public class OrgFinanceDataResponse {
     }
 
     // 体验人数
-    private Integer accessCount;
-    private Integer businessCount;
+    private Integer accessCount = 0;
+    private Integer businessCount = 0;
 
     public Integer getAccessCount() {
         return accessCount;
@@ -223,10 +223,10 @@ public class OrgFinanceDataResponse {
     }
 
     // 空/忙时段
-    private Integer nullCount;
-    private Integer nullTotalCount;
-    private Integer hotCount;
-    private Integer hotTotalCount;
+    private Integer nullCount = 0;
+    private Integer nullTotalCount = 0;
+    private Integer hotCount = 0;
+    private Integer hotTotalCount = 0;
 
     public Integer getNullCount() {
         return nullCount;

@@ -102,9 +102,8 @@
                                             <span class="text-danger">*</span> 流水情况
                                         </label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" placeholder="完成值" name="pipelineValue"
-                                                   value="${orgFinanceData.pipelineValue}"
-                                                   data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="完成值格式不正确">
+                                            <input type="text" class="form-control" placeholder="流水情况" name="pipelineValue" value="${orgFinanceData.pipelineValue}"
+                                                   data-val-regex-pattern="^[1-9][0-9]*$" data-val-regex="流水情况格式不正确">
                                             <div data-valmsg-for="pipelineValue" data-valmsg-replace="true"></div>
                                         </div>
                                     </div>
@@ -113,9 +112,8 @@
                                             <span class="text-danger">*</span> 确认收入
                                         </label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" placeholder="完成值" name="incomeValue"
-                                                   value="${orgFinanceData.incomeValue}"
-                                                   data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="完成值格式不正确">
+                                            <input type="text" class="form-control" placeholder="确认收入" name="incomeValue" value="${orgFinanceData.incomeValue}"
+                                                   data-val-regex-pattern="^[1-9][0-9]*$" data-val-regex="确认收入格式不正确">
                                             <div data-valmsg-for="incomeValue" data-valmsg-replace="true"></div>
                                         </div>
                                     </div>
@@ -127,13 +125,14 @@
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" placeholder="在册人数" name="registerCount"
                                                        value="${orgFinanceData.registerCount}"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="在册人数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="在册人数格式不正确">
                                                 <div data-valmsg-for="trainingCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="到课人数" name="classCount"
                                                        value="${orgFinanceData.classCount}"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="到课人数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="到课人数格式不正确"
+                                                       data-val-reqgroup-element="registerCount" data-val-reqgroup="注册和到课人数必须同时有值">
                                                 <div data-valmsg-for="classCount" data-valmsg-replace="true"></div>
                                             </div>
                                         </div>
@@ -144,13 +143,14 @@
                                             <div class="col-md-4">
                                                 <input type="text" class="form-control" placeholder="体验数" name="accessCount"
                                                        value="${orgFinanceData.accessCount}"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="体验数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="体验数格式不正确">
                                                 <div data-valmsg-for="accessCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="成交数" name="businessCount"
                                                        value="${orgFinanceData.businessCount}"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="成交数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="成交数格式不正确"
+                                                       data-val-reqgroup-element="accessCount" data-val-reqgroup="体验和成交数必须同时有值">
                                                 <div data-valmsg-for="businessCount" data-valmsg-replace="true"></div>
                                             </div>
                                         </div>
@@ -164,14 +164,15 @@
                                                 <input type="text" class="form-control" placeholder="总数" name="nullTotalCount"
                                                        value="${orgFinanceData.nullTotalCount}"
                                                        data-val="true" data-val-required="总数不能为空"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
                                                 <div data-valmsg-for="nullTotalCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="占用数" name="nullCount"
                                                        value="${orgFinanceData.nullCount}"
                                                        data-val="true" data-val-required="占用数不能为空"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确"
+                                                       data-val-reqgroup-element="nullTotalCount" data-val-reqgroup="总数和占用数必须同时有值">
                                                 <div data-valmsg-for="nullCount" data-valmsg-replace="true"></div>
                                             </div>
                                         </div>
@@ -183,14 +184,15 @@
                                                 <input type="text" class="form-control" placeholder="总数" name="hotTotalCount"
                                                        value="${orgFinanceData.hotTotalCount}"
                                                        data-val="true" data-val-required="总数不能为空"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
                                                 <div data-valmsg-for="hotTotalCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="占用数" name="hotCount"
                                                        value="${orgFinanceData.hotCount}"
                                                        data-val="true" data-val-required="占用数不能为空"
-                                                       data-val-regex-pattern="^(0)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确">
+                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确"
+                                                       data-val-reqgroup-element="hotTotalCount" data-val-reqgroup="总数和占用数必须同时有值">
                                                 <div data-valmsg-for="hotCount" data-valmsg-replace="true"></div>
                                             </div>
                                         </div>

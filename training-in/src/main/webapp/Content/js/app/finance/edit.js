@@ -45,6 +45,22 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
 
     // 表单校验配置
     $(document).ready(function () {
+        /**
+         * <input type="text" value="" name="cus" id="cus" data-val="true" data-val-reqgroup="注册人数和到课人数必须同时输入" data-val-reqgroup-element="123"/>
+         * <span data-valmsg-for="cus" data-valmsg-replace="true"></span>
+         */
+        $.validator.addMethod('reqgroup', function (value, element, params) {
+            return (value == "" && document.getElementsByName(params["element"])[0].value == "") ||
+                (value != "" && document.getElementsByName(params["element"])[0].value != "");
+        });
+
+        $.validator.unobtrusive.adapters.add("reqgroup", ["element"], function (options) {
+            options.rules["reqgroup"] = {
+                element: options.params.element
+            };
+            options.messages["reqgroup"] = options.message;
+        });
+
         $('#business_form').validate({
             ignore: ":hidden"
         });
@@ -63,6 +79,17 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         });
     }
     setDatePicker();
+
+    if ($('input[name="businessDate"]').val() == "") {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        month = (month < 10 ? "0" : "") + month;
+        var day = date.getDate();
+        day = (day < 10 ? "0" : "") + day;
+
+        $('input[name="businessDate"]').val(year + "-" + month + "-" + day);
+    }
 
     // 业务类型
     $('[name="businessType"]').on("change", function (e) {
@@ -166,6 +193,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         if ($form.attr("submitting") == "submitting" || !$form.valid()) {
             return false;
         }
+
         $form.attr("submitting", "submitting");
 
         $.post('/admin/finance/saveFinance', conditions, function (res) {
@@ -181,16 +209,16 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 });
 
                 if ($("#business_form").find('[name="businessNo"]').val() == "") {
-                    $("#business_form").find('[name="pipelineValue"]').val("");
-                    $("#business_form").find('[name="incomeValue"]').val("");
-                    $("#business_form").find('[name="registerCount"]').val("");
-                    $("#business_form").find('[name="classCount"]').val("");
-                    $("#business_form").find('[name="accessCount"]').val("");
-                    $("#business_form").find('[name="businessCount"]').val("");
-                    $("#business_form").find('[name="nullTotalCount"]').val("");
-                    $("#business_form").find('[name="nullCount"]').val("");
-                    $("#business_form").find('[name="hotTotalCount"]').val("");
-                    $("#business_form").find('[name="hotCount"]').val("");
+                    $("#business_form").find('[name="pipelineValue"]').val("0");
+                    $("#business_form").find('[name="incomeValue"]').val("0");
+                    $("#business_form").find('[name="registerCount"]').val("0");
+                    $("#business_form").find('[name="classCount"]').val("0");
+                    $("#business_form").find('[name="accessCount"]').val("0");
+                    $("#business_form").find('[name="businessCount"]').val("0");
+                    $("#business_form").find('[name="nullTotalCount"]').val("0");
+                    $("#business_form").find('[name="nullCount"]').val("0");
+                    $("#business_form").find('[name="hotTotalCount"]').val("0");
+                    $("#business_form").find('[name="hotCount"]').val("0");
 
                     appendList(res.data.businessNo);
                 } else {

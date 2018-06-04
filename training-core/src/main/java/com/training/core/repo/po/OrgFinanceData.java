@@ -44,52 +44,52 @@ public class OrgFinanceData implements Serializable {
     /**
      * 流水完成值
      */
-    private Integer pipelineValue;
+    private Integer pipelineValue = 0;
 
     /**
      * 确认收入完成值
      */
-    private Integer incomeValue;
+    private Integer incomeValue = 0;
 
     /**
      * 在册人数
      */
-    private Integer registerCount;
+    private Integer registerCount = 0;
 
     /**
      * 到课人数
      */
-    private Integer classCount;
+    private Integer classCount = 0;
 
     /**
      * 体验数
      */
-    private Integer accessCount;
+    private Integer accessCount = 0;
 
     /**
      * 成交数
      */
-    private Integer businessCount;
+    private Integer businessCount = 0;
 
     /**
      * 闲时段占用数
      */
-    private Integer nullCount;
+    private Integer nullCount = 0;
 
     /**
      * 闲时段总数
      */
-    private Integer nullTotalCount;
+    private Integer nullTotalCount = 0;
 
     /**
      * 忙时段总数
      */
-    private Integer hotTotalCount;
+    private Integer hotTotalCount = 0;
 
     /**
      * 忙时段占用数
      */
-    private Integer hotCount;
+    private Integer hotCount = 0;
 
     /**
      * 创建时间

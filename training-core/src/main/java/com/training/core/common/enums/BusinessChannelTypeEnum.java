@@ -1,5 +1,8 @@
 package com.training.core.common.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum BusinessChannelTypeEnum {
     CHANNEL_COMPANY(1, "公司"),
     CHANNEL_PERSON(2, "个人"),
@@ -21,6 +24,18 @@ public enum BusinessChannelTypeEnum {
             }
         }
         return BusinessChannelTypeEnum.CHANNEL_COMPANY;
+    }
+
+    public static List<String> getEnumList () {
+
+        List<String> businessChannelTypeEnumList = new ArrayList<>();
+
+        businessChannelTypeEnumList.add(BusinessChannelTypeEnum.CHANNEL_COMPANY.getDesc());
+        businessChannelTypeEnumList.add(BusinessChannelTypeEnum.CHANNEL_PERSON.getDesc());
+        businessChannelTypeEnumList.add(BusinessChannelTypeEnum.CHANNEL_FRIEND.getDesc());
+        businessChannelTypeEnumList.add(BusinessChannelTypeEnum.CHANNEL_MEMBER.getDesc());
+
+        return businessChannelTypeEnumList;
     }
 
     public int getCode() {
