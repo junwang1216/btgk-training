@@ -98,14 +98,14 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         var val = $(this).val();
 
         if (val == 1) {
-            $(".block-training").show();
-            $(".block-venue").hide().find("input").val("");
+            $(".block-training").show().find("input").val("0");
+            $(".block-venue").hide().find("input").val("0");
 
             $(".business-list").show();
             $(".venue-list").hide();
         } else {
-            $(".block-training").hide().find("input").val("");
-            $(".block-venue").show();
+            $(".block-training").hide().find("input").val("0");
+            $(".block-venue").show().find("input").val("0");
 
             $(".business-list").hide();
             $(".venue-list").show();
@@ -117,21 +117,40 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         $.getJSON('/admin/finance/getFinance', {businessNo: businessNo}, function (res) {
             var data = res.data;
             if (res.code == 1 && data.orgFinanceData) {
-                $(".business-list tbody").append(
-                    '<tr><td>' + data.orgFinanceData.businessNo +'</td>' +
-                    '<td>' + data.orgFinanceData.businessDate +'</td>' +
-                    '<td>' + data.orgFinanceData.businessTitle +'</td>' +
-                    '<td>' + data.orgFinanceData.venueName +'</td>' +
-                    '<td>' + data.orgFinanceData.realName +'</td>' +
-                    '<td>' + data.orgFinanceData.channelName +'</td>' +
-                    '<td>' + (data.orgFinanceData.pipelineValue || "--") +'</td>' +
-                    '<td>' + (data.orgFinanceData.incomeValue || "--") +'</td>' +
-                    '<td>' + (data.orgFinanceData.registerCount || "--") +'</td>' +
-                    '<td>' + (data.orgFinanceData.classCount || "--") +'</td>' +
-                    '<td>' + (data.orgFinanceData.accessCount || "--") +'</td>' +
-                    '<td>' + (data.orgFinanceData.businessCount || "--") +'</td>' +
-                    '<td><a href="javascript:;" class="btn btn-danger btn-sm" title="删除" data-business="' + data.orgFinanceData.businessNo + '"><i class="fa fa-trash"></i> 删除</a></td></tr>'
-                );
+                if ($('[name="businessType"]').val() == 1) {
+                    $(".business-list tbody").append(
+                        '<tr><td>' + data.orgFinanceData.businessNo +'</td>' +
+                        '<td>' + data.orgFinanceData.businessDate +'</td>' +
+                        '<td>' + data.orgFinanceData.businessTitle +'</td>' +
+                        '<td>' + data.orgFinanceData.venueName +'</td>' +
+                        '<td>' + data.orgFinanceData.realName +'</td>' +
+                        '<td>' + data.orgFinanceData.channelName +'</td>' +
+                        '<td>' + (data.orgFinanceData.pipelineValue || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.incomeValue || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.registerCount || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.classCount || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.accessCount || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.businessCount || "--") +'</td>' +
+                        '<td><a href="javascript:;" class="btn btn-danger btn-sm" title="删除" data-business="' + data.orgFinanceData.businessNo + '"><i class="fa fa-trash"></i> 删除</a></td></tr>'
+                    );
+                }
+                else {
+                    $(".venue-list tbody").append(
+                        '<tr><td>' + data.orgFinanceData.businessNo +'</td>' +
+                        '<td>' + data.orgFinanceData.businessDate +'</td>' +
+                        '<td>' + data.orgFinanceData.businessTitle +'</td>' +
+                        '<td>' + data.orgFinanceData.venueName +'</td>' +
+                        '<td>' + data.orgFinanceData.realName +'</td>' +
+                        '<td>' + data.orgFinanceData.channelName +'</td>' +
+                        '<td>' + (data.orgFinanceData.pipelineValue || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.incomeValue || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.nullCount || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.nullTotalCount || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.hotCount || "--") +'</td>' +
+                        '<td>' + (data.orgFinanceData.hotTotalCount || "--") +'</td>' +
+                        '<td><a href="javascript:;" class="btn btn-danger btn-sm" title="删除" data-business="' + data.orgFinanceData.businessNo + '"><i class="fa fa-trash"></i> 删除</a></td></tr>'
+                    );
+                }
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',

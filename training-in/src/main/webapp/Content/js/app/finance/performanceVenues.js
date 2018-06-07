@@ -61,7 +61,9 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         },
         setXAxis: function () {
             return {
-                type: 'value'
+                type: 'value',
+                silent: false,
+                axisLine: {onZero: true}
             };
         },
         setYAxis: function (data) {
@@ -75,6 +77,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         }
     };
 
+    // 流水
     function renderPipelineValueCharts(venueNames, channelNames, venueChannelData, venueData) {
         var cnIndex, vnIndex, vcdIndex, vdIndex;
 
@@ -132,7 +135,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
 
         var performanceChart1 = echarts.init(document.getElementById('finance_performance_chart1'), "walden");
         var performanceChart1Option = {
-            title  : chartsOption.setTitle("流水情况排名（元）"),
+            title  : chartsOption.setTitle("流水情况（元）"),
             legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
@@ -266,6 +269,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         });
     }
 
+    // 确认收入
     function renderIncomeValueCharts(venueNames, channelNames, venueChannelData, venueData) {
         var cnIndex, vnIndex, vdIndex, vcdIndex;
 
@@ -323,7 +327,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
 
         var performanceChart2 = echarts.init(document.getElementById('finance_performance_chart2'), "walden");
         var performanceChart2Option = {
-            title  : chartsOption.setTitle("确认收入情况排名（元）"),
+            title  : chartsOption.setTitle("确认收入情况（元）"),
             legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
@@ -457,17 +461,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         });
     }
 
+    // 注册人数
     function renderRegisterCountCharts(venueNames, venueData) {
         var vnIndex, vdIndex;
 
-        var classCounts = [], classNoCounts = [];
+        var classCounts = [], classNoCounts = [], registerCounts = [];
         for (vnIndex = 0; vnIndex < venueNames.length; vnIndex++) {
             classCounts.push(0);
             classNoCounts.push(0);
+            registerCounts.push(0);
             for (vdIndex = 0; vdIndex < venueData.length; vdIndex++) {
                 if (venueData[vdIndex].venueName == venueNames[vnIndex]) {
                     classCounts[vnIndex] += (venueData[vdIndex].classCount);
-                    classNoCounts[vnIndex] += (venueData[vdIndex].accessCount - venueData[vdIndex].classCount);
+                    classNoCounts[vnIndex] += -(venueData[vdIndex].registerCount - venueData[vdIndex].classCount);
+                    registerCounts[vnIndex] += (venueData[vdIndex].registerCount);
                     break;
                 }
             }
@@ -477,6 +484,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         // console.log(venueNames);
         // console.log(classCounts);
         // console.log(classNoCounts);
+        // console.log(registerCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < registerCounts.length; i++) {
+            var percent;
+            if (registerCounts[i] > 0) {
+                percent = ((classCounts[i] / registerCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [venueNames, classCounts, classNoCounts]);
 
         var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart5'), "walden");
         var performanceChart5Option = {
@@ -510,7 +531,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '人</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '人</li>' +
-                        '<li><label>' + '到课率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '到课率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -520,17 +541,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart5.setOption(performanceChart5Option);
     }
 
+    // 访问人数
     function renderAccessCountCharts(venueNames, venueData) {
         var vnIndex, vdIndex;
 
-        var businessCounts = [], businessNoCounts = [];
+        var businessCounts = [], businessNoCounts = [], accessCounts = [];
         for (vnIndex = 0; vnIndex < venueNames.length; vnIndex++) {
             businessCounts.push(0);
             businessNoCounts.push(0);
+            accessCounts.push(0);
             for (vdIndex = 0; vdIndex < venueData.length; vdIndex++) {
                 if (venueData[vdIndex].venueName == venueNames[vnIndex]) {
                     businessCounts[vnIndex] += (venueData[vdIndex].businessCount);
-                    businessNoCounts[vnIndex] += (venueData[vdIndex].accessCount - venueData[vdIndex].businessCount);
+                    businessNoCounts[vnIndex] += -(venueData[vdIndex].accessCount - venueData[vdIndex].businessCount);
+                    accessCounts[vnIndex] += (venueNames[vdIndex].accessCount);
                     break;
                 }
             }
@@ -540,6 +564,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         // console.log(venueNames);
         // console.log(businessCounts);
         // console.log(businessNoCounts);
+        // console.log(accessCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < accessCounts.length; i++) {
+            var percent;
+            if (accessCounts[i] > 0) {
+                percent = ((businessCounts[i] / accessCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [venueNames, businessCounts, businessNoCounts]);
 
         var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart6'), "walden");
         var performanceChart6Option = {
@@ -573,7 +611,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '人</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '人</li>' +
-                        '<li><label>' + '成交率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '成交率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -583,17 +621,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart6.setOption(performanceChart6Option);
     }
 
+    // 闲时段占用
     function renderNullCountCharts(venueNames, venueData) {
         var vnIndex, vdIndex;
 
-        var nullCounts = [], nullNoCounts = [];
+        var nullCounts = [], nullNoCounts = [], nullTotalCounts = [];
         for (vnIndex = 0; vnIndex < venueNames.length; vnIndex++) {
             nullCounts.push(0);
             nullNoCounts.push(0);
+            nullTotalCounts.push(0);
             for (vdIndex = 0; vdIndex < venueData.length; vdIndex++) {
                 if (venueData[vdIndex].venueName == venueNames[vnIndex]) {
                     nullCounts[vnIndex] += (venueData[vdIndex].nullCount);
-                    nullNoCounts[vnIndex] += (venueData[vdIndex].nullTotalCount - venueData[vdIndex].nullCount);
+                    nullNoCounts[vnIndex] += -(venueData[vdIndex].nullTotalCount - venueData[vdIndex].nullCount);
+                    nullTotalCounts[vnIndex] += (venueData[vdIndex].nullTotalCount);
                     break;
                 }
             }
@@ -603,6 +644,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         // console.log(venueNames);
         // console.log(nullCounts);
         // console.log(nullNoCounts);
+        // console.log(nullTotalCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < nullTotalCounts.length; i++) {
+            var percent;
+            if (nullTotalCounts[i] > 0) {
+                percent = ((nullCounts[i] / nullTotalCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [venueNames, nullCounts, nullNoCounts]);
 
         var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart5'), "walden");
         var performanceChart5Option = {
@@ -636,7 +691,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '时</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '时</li>' +
-                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -646,17 +701,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart5.setOption(performanceChart5Option);
     }
 
+    // 忙时段占用
     function renderHotCountCharts(venueNames, venueData) {
         var vnIndex, vdIndex;
 
-        var hotCounts = [], hotNoCounts = [];
+        var hotCounts = [], hotNoCounts = [], hotTotalCounts = [];
         for (vnIndex = 0; vnIndex < venueNames.length; vnIndex++) {
             hotCounts.push(0);
             hotNoCounts.push(0);
+            hotTotalCounts.push(0);
             for (vdIndex = 0; vdIndex < venueData.length; vdIndex++) {
                 if (venueData[vdIndex].venueName == venueNames[vnIndex]) {
                     hotCounts[vnIndex] += (venueData[vdIndex].hotCount);
-                    hotNoCounts[vnIndex] += (venueData[vdIndex].hotTotalCount - venueData[vdIndex].hotCount);
+                    hotNoCounts[vnIndex] += -(venueData[vdIndex].hotTotalCount - venueData[vdIndex].hotCount);
+                    hotTotalCounts[vnIndex] += (venueData[vdIndex].hotTotalCount);
                     break;
                 }
             }
@@ -666,6 +724,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         // console.log(venueNames);
         // console.log(hotCounts);
         // console.log(hotNoCounts);
+        // console.log(hotTotalCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < hotTotalCounts.length; i++) {
+            var percent;
+            if (hotTotalCounts[i] > 0) {
+                percent = ((hotCounts[i] / hotTotalCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [venueNames, hotCounts, hotNoCounts]);
 
         var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart6'), "walden");
         var performanceChart6Option = {
@@ -699,7 +771,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '时</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '时</li>' +
-                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -713,7 +785,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         var typeTime = $("[name='total_students_type']:checked").val();
         var busType = $("[name='total_bus_type']:checked").val();
 
+        var loadingTips = jqueryAlert({
+            'icon'      : '/Content/images/icon-loading.gif',
+            'content'   : "正在加载数据...",
+            'closeTime' : 2000,
+            'modal'        : true,
+            'isModalClose' : true
+        });
+
         $.getJSON('/admin/finance/getFinancePerformanceForVenues', {typeTime : typeTime, busType : busType}, function (res) {
+            loadingTips.close();
+
             var data = res.data;
 
             if (res.code == 1) {
@@ -763,7 +845,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         e.preventDefault();
 
         window.location.href = "/admin/finance/performance?typeTime=" +  $("[name='total_students_type']:checked").val() +
-            "&busType=" + $("#current_bus_type").val() + "&venueId=-1";
+            "&busType=" + $("[name='total_bus_type']:checked").val() + "&venueId=-1";
     });
 
     $("[name='total_bus_type']").on("change", function (e) {

@@ -51,20 +51,22 @@
                                     <span class="input-group-addon">
                                         <i class="icon-user"></i>
                                     </span>
-                                    <input type="text" class="form-control" placeholder="用户名" name="userName" value="superadmin">
+                                    <%--superadmin--%>
+                                    <input type="text" class="form-control" placeholder="用户名" name="userName" value="" autocomplete="off">
                                 </div>
                                 <div class="input-group mb-4">
                                     <span class="input-group-addon">
                                         <i class="icon-lock"></i>
                                     </span>
-                                    <input type="password" class="form-control" placeholder="密码" name="password" value="123456">
+                                    <%--123456--%>
+                                    <input type="password" class="form-control" placeholder="密码" name="password" value="" autocomplete="off">
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
                                         <a href="javascript:;" class="btn btn-primary px-4 to-login">登 录</a>
                                     </div>
                                     <div class="col-6 text-right">
-                                        <a href="/admin/dashboard/index" class="btn btn-link px-0">忘记密码?</a>
+                                        <%--<a href="/admin/dashboard/index" class="btn btn-link px-0">忘记密码?</a>--%>
                                     </div>
                                 </div>
                             </form>
@@ -75,7 +77,8 @@
                             <div style="width: 60%; margin: 0 auto">
                                 <img src="/Content/images/logo.png?v=${static_resource_version}" style="width: 100%;">
                                 <p class="text-muted mt-2">您还没有账户吗？</p>
-                                <a href="/admin/passport/register" class="btn btn-primary active">立即注册!</a>
+                                <%--<a href="/admin/passport/register" class="btn btn-primary active">立即注册!</a>--%>
+                                <p class="text-muted mt-2">请联系管理员，为您分配账号。</p>
                             </div>
                         </div>
                     </div>

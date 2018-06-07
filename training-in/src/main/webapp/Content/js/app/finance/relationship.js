@@ -161,7 +161,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "保存员工失败, 请稍后重试",
+                    'content'   : res.message || "保存员工失败, 请稍后重试",
                     'closeTime' : 2000,
                     'modal'        : true,
                     'isModalClose' : true
@@ -174,12 +174,38 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     $(".delete-relationship-user").on("click", function (e) {
         e.preventDefault();
 
-        jqueryAlert({
-            'icon'      : '/Content/images/icon-ok.png',
-            'content'   : "TODO 用户离职未做",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
+        var $form = $("#relationship_user_form");
+        var conditions = $form.serialize();
+
+        if ($form.attr("submitting") == "submitting" || !$form.valid()) {
+            return false;
+        }
+        $form.attr("submitting", "submitting");
+
+        $.post('/admin/finance/leaveEmployeeStatus', conditions, function (res) {
+            $form.attr("submitting", "");
+
+            if (res.code == 1) {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-ok.png',
+                    'content'   : "离职员工成功",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                jqueryAlert({
+                    'icon'      : '/Content/images/icon-error.png',
+                    'content'   : res.message || "离职员工失败, 请稍后重试",
+                    'closeTime' : 2000,
+                    'modal'        : true,
+                    'isModalClose' : true
+                });
+            }
         });
     });
 });

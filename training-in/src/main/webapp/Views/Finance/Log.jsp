@@ -123,10 +123,10 @@
                                         <th>来源渠道</th>
                                         <th>流水情况</th>
                                         <th>确认收入</th>
-                                        <th>闲时段占用</th>
-                                        <th>闲时段总数</th>
-                                        <th>忙时段占用</th>
-                                        <th>忙时段总数</th>
+                                        <th>闲时占用</th>
+                                        <th>闲时总数</th>
+                                        <th>忙时占用</th>
+                                        <th>忙时总数</th>
                                         <th></th>
                                     </tr>
                                     </thead>
@@ -174,5 +174,5 @@
 
 <c:import url="../Shared/GeneralLayout.jsp">
     <c:param name="menu" value="finance"/>
-    <c:param name="subMenu" value="log"/>
+    <c:param name="subMenu" value="record"/>
 </c:import>

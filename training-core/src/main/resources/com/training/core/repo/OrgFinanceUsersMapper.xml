@@ -28,9 +28,7 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into org_finance_users (realName, password, mobile, 
-      venueId, status, createTime, 
-      updateTime)
+    insert into org_finance_users (realName, password, mobile, venueId, status, createTime, updateTime)
     values (#{realName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{venueId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=VARCHAR})
@@ -43,15 +41,35 @@
       updateTime = #{updateTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updateStatus" parameterType="com.training.core.repo.po.OrgFinanceUsers">
+    update org_finance_users
+    set status = #{status,jdbcType=INTEGER},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
   <select id="queryAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from org_finance_users
+    where status = 1
     order by updateTime desc
     limit #{start}, #{pageSize}
   </select>
   <select id="queryAllCount" resultType="java.lang.Integer">
     select count(*)
     from org_finance_users
+    where status = 1
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="com.training.core.repo.po.OrgFinanceUsers">
+    select
+    <include refid="Base_Column_List" />
+    from org_finance_users
+    where status = 1
+    <if test="mobile != null">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="realName != null">
+      and realName = #{realName,jdbcType=VARCHAR}
+    </if>
   </select>
 </mapper>

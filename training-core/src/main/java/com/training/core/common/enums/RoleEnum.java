@@ -10,6 +10,8 @@ public enum RoleEnum {
     ROLE_OPERATOR(98, "操作员"),
     ROLE_ADMIN(99, "管理员"),
     ROLE_SUPER_ADMIN(999, "超级管理员"),
+    ROLE_SUPER_FINANCE_ADMIN(9999, "财务超级管理员"),
+    ROLE_SUPER_FINANCE_INPUT(9998, "财务数据输入者"),
     ;
     int code;
     String desc;

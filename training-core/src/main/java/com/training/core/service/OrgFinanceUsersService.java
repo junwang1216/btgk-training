@@ -16,4 +16,8 @@ public interface OrgFinanceUsersService {
 
     OrgFinanceUsers getOrgFinanceUsers(Integer userId);
 
+    List<OrgFinanceUsers> getOrgFinanceUsersList(OrgFinanceUsers orgFinanceUsers);
+
+    int setOrgFinanceUsersStatus(OrgFinanceUsers orgFinanceUsers);
+
 }

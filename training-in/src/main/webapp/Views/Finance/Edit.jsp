@@ -164,14 +164,14 @@
                                                 <input type="text" class="form-control" placeholder="总数" name="nullTotalCount"
                                                        value="${orgFinanceData.nullTotalCount}"
                                                        data-val="true" data-val-required="总数不能为空"
-                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
+                                                       data-val-regex-pattern="^((\s*)|([1-9][0-9]*))$" data-val-regex="总数格式不正确">
                                                 <div data-valmsg-for="nullTotalCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="占用数" name="nullCount"
                                                        value="${orgFinanceData.nullCount}"
                                                        data-val="true" data-val-required="占用数不能为空"
-                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确"
+                                                       data-val-regex-pattern="^((\s*)|([1-9][0-9]*))$" data-val-regex="占用数格式不正确"
                                                        data-val-reqgroup-element="nullTotalCount" data-val-reqgroup="总数和占用数必须同时有值">
                                                 <div data-valmsg-for="nullCount" data-valmsg-replace="true"></div>
                                             </div>
@@ -184,14 +184,14 @@
                                                 <input type="text" class="form-control" placeholder="总数" name="hotTotalCount"
                                                        value="${orgFinanceData.hotTotalCount}"
                                                        data-val="true" data-val-required="总数不能为空"
-                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="总数格式不正确">
+                                                       data-val-regex-pattern="^((\s*)|([1-9][0-9]*))$" data-val-regex="总数格式不正确">
                                                 <div data-valmsg-for="hotTotalCount" data-valmsg-replace="true"></div>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" class="form-control" placeholder="占用数" name="hotCount"
                                                        value="${orgFinanceData.hotCount}"
                                                        data-val="true" data-val-required="占用数不能为空"
-                                                       data-val-regex-pattern="^(\s*)|([1-9][0-9]*)$" data-val-regex="占用数格式不正确"
+                                                       data-val-regex-pattern="^((\s*)|([1-9][0-9]*))$" data-val-regex="占用数格式不正确"
                                                        data-val-reqgroup-element="hotTotalCount" data-val-reqgroup="总数和占用数必须同时有值">
                                                 <div data-valmsg-for="hotCount" data-valmsg-replace="true"></div>
                                             </div>
@@ -240,10 +240,10 @@
                                         <th>来源渠道</th>
                                         <th>流水情况</th>
                                         <th>确认收入</th>
-                                        <th>闲时段占用</th>
-                                        <th>闲时段总数</th>
-                                        <th>忙时段占用</th>
-                                        <th>忙时段总数</th>
+                                        <th>闲时占用</th>
+                                        <th>闲时总数</th>
+                                        <th>忙时占用</th>
+                                        <th>忙时总数</th>
                                         <th></th>
                                     </tr>
                                     </thead>

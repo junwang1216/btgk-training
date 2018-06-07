@@ -3,13 +3,11 @@ package com.training.in.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.enums.ClassStatusEnum;
+import com.training.core.common.enums.RoleEnum;
 import com.training.core.common.enums.StatusEnum;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.DateUtil;
-import com.training.core.repo.po.OrgClass;
-import com.training.core.repo.po.OrgClassStudents;
-import com.training.core.repo.po.OrgOrders;
-import com.training.core.repo.po.OrgStudents;
+import com.training.core.repo.po.*;
 import com.training.core.service.OrgClassService;
 import com.training.core.service.OrgClassStudentsService;
 import com.training.core.service.OrgOrdersService;
@@ -53,9 +51,14 @@ public class DashboardController extends BaseController {
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public ModelAndView renderDashboardIndex() {
 
-        ModelAndView modelAndView = new ModelAndView("Dashboard/Index");
-
-        return setModelAndView(modelAndView);
+        OrgOperator orgOperator = getLoginUser();
+        if (orgOperator.getRoleId() <= RoleEnum.ROLE_SUPER_ADMIN.getCode()) {
+            ModelAndView modelAndView = new ModelAndView("Dashboard/Index");
+            return setModelAndView(modelAndView);
+        }
+        else {
+            return setModelAndView(new ModelAndView("redirect:/admin/finance/log"));
+        }
     }
 
     @Desc("统计班级数量")

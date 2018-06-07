@@ -137,6 +137,24 @@ define(["jquery"], function ($) {
     });*/
 
     /** 公共函数 **/
+    $.sortFloatArrays = function (baseArray, otherArrays) {
+        for (var j = 0; j < baseArray.length - 1; j++) {
+            for (var i = 0; i < baseArray.length - 1 - j; i++) {
+                if (parseFloat(baseArray[i]) > parseFloat(baseArray[i + 1])) {
+                    var temp = baseArray[i];
+                    baseArray[i] = baseArray[i + 1];
+                    baseArray[i + 1] = temp;
+
+                    for (var k = 0; k < otherArrays.length; k++) {
+                        temp = otherArrays[k][i];
+                        otherArrays[k][i] = otherArrays[k][i + 1];
+                        otherArrays[k][i + 1] = temp;
+                    }
+                }
+            }
+        }
+    };
+    
     /*
      * 金额格式化
      * 参数说明：

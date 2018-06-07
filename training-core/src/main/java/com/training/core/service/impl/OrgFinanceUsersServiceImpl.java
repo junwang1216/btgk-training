@@ -38,4 +38,14 @@ public class OrgFinanceUsersServiceImpl implements OrgFinanceUsersService {
     public OrgFinanceUsers getOrgFinanceUsers(Integer userId) {
         return orgFinanceUsersMapper.selectByPrimaryKey(userId);
     }
+
+    @Override
+    public List<OrgFinanceUsers> getOrgFinanceUsersList(OrgFinanceUsers orgFinanceVenues) {
+        return orgFinanceUsersMapper.selectAll(orgFinanceVenues);
+    }
+
+    @Override
+    public int setOrgFinanceUsersStatus(OrgFinanceUsers orgFinanceVenues) {
+        return orgFinanceUsersMapper.updateStatus(orgFinanceVenues);
+    }
 }

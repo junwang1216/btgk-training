@@ -28,7 +28,7 @@
                             </label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" id="relationship_user_name" name="realName" placeholder="请输入姓名"
-                                       data-val="true" data-val-required="姓名不能为空"
+                                       data-val="true" data-val-required="姓名不能为空" autocomplete="off"
                                        data-val-length-max="20" data-val-length-min="2" data-val-length="姓名必须包含 2~20 个字符">
                                 <div data-valmsg-for="userName" data-valmsg-replace="true"></div>
                             </div>
@@ -39,8 +39,8 @@
                             </label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" id="relationship_user_mobile" name="mobile" placeholder="请输入手机号码"
-                                       data-val="true" data-val-required="手机号码不能为空"
-                                       data-val-regex-pattern="^(13[0-9]|15[012356789]|166|17[0-9]|18[02356789]|14[57]|19[89])[0-9]{8}$" data-val-regex="手机号码格式不正确">
+                                       data-val="true" data-val-required="手机号码不能为空" autocomplete="off"
+                                       data-val-regex-pattern="^(13[0-9]|15[012356789]|166|17[0-9]|18[012356789]|14[57]|19[89])[0-9]{8}$" data-val-regex="手机号码格式不正确">
                                 <div data-valmsg-for="userMobile" data-valmsg-replace="true"></div>
                             </div>
                         </div>
@@ -64,7 +64,6 @@
                     <button type="button" class="btn btn-sm btn-danger delete-relationship-user">
                         <i class="fa fa-trash-o"></i> 离 职
                     </button>
-
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
                         <i class="fa fa-close"></i> 取 消
                     </button>
@@ -85,7 +84,7 @@
                         <div class="form-group row">
                             <div class="col-md-12">
                                 <input type="text" class="form-control" id="relationship_venue_name" name="venueName" placeholder="请输入基地名称"
-                                       data-val="true" data-val-required="基地名称不能为空"
+                                       data-val="true" data-val-required="基地名称不能为空" autocomplete="off"
                                        data-val-length-max="20" data-val-length-min="2" data-val-length="基地名称必须包含 2~20 个字符">
                                 <div data-valmsg-for="venueName" data-valmsg-replace="true"></div>
                             </div>
@@ -93,9 +92,9 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-danger delete-relationship-venue">
-                        <i class="fa fa-trash-o"></i> 闭 馆
-                    </button>
+                    <%--<button type="button" class="btn btn-sm btn-danger delete-relationship-venue">--%>
+                        <%--<i class="fa fa-trash-o"></i> 闭 馆--%>
+                    <%--</button>--%>
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">
                         <i class="fa fa-close"></i> 取 消
                     </button>
@@ -128,7 +127,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-10">
-                                        <button type="button" class="btn btn-primary">
+                                        <button type="button" class="btn btn-primary relationship-search">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>
                                         <a href="javascript:;" class="btn btn-primary pull-right user-relationship mr-1" title="添加用户"

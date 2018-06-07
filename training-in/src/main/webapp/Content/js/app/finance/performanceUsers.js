@@ -62,7 +62,9 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         },
         setXAxis: function () {
             return {
-                type: 'value'
+                type: 'value',
+                silent: false,
+                axisLine: {onZero: true}
             };
         },
         setYAxis: function (data) {
@@ -76,6 +78,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         }
     };
 
+    // 流水
     function renderPipelineValueCharts(realNames, channelNames, userChannelData, userData) {
         var cnIndex, rnIndex, ucdIndex, udIndex;
 
@@ -119,17 +122,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
             }
         }
 
-        console.log("===== 流水情况 =====");
-        console.log(realNames);
-        console.log(channelNames);
-        console.log(pipelineValues);
-        console.log(userPipelineTargets);
-        console.log(userPipelineChallenges);
-        console.log(channelPipelineValues);
+        // console.log("===== 流水情况 =====");
+        // console.log(realNames);
+        // console.log(channelNames);
+        // console.log(pipelineValues);
+        // console.log(userPipelineTargets);
+        // console.log(userPipelineChallenges);
+        // console.log(channelPipelineValues);
 
         var performanceChart1 = echarts.init(document.getElementById('finance_performance_chart1'), "walden");
         var performanceChart1Option = {
-            title  : chartsOption.setTitle("流水情况排名（元）"),
+            title  : chartsOption.setTitle("流水情况（元）"),
             legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
@@ -215,6 +218,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart4.setOption(performanceChart4Option);
     }
 
+    // 确认收入
     function renderIncomeValueCharts(realNames, channelNames, userChannelData, userData) {
         var cnIndex, rnIndex, ucdIndex, udIndex;
 
@@ -258,17 +262,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
             }
         }
 
-        console.log("===== 确认收入情况 =====");
-        console.log(realNames);
-        console.log(channelNames);
-        console.log(incomeValues);
-        console.log(userIncomeTargets);
-        console.log(userIncomeChallenges);
-        console.log(channelIncomeValues);
+        // console.log("===== 确认收入情况 =====");
+        // console.log(realNames);
+        // console.log(channelNames);
+        // console.log(incomeValues);
+        // console.log(userIncomeTargets);
+        // console.log(userIncomeChallenges);
+        // console.log(channelIncomeValues);
 
         var performanceChart2 = echarts.init(document.getElementById('finance_performance_chart2'), "walden");
         var performanceChart2Option = {
-            title  : chartsOption.setTitle("确认收入情况排名（元）"),
+            title  : chartsOption.setTitle("确认收入情况（元）"),
             legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
@@ -354,30 +358,47 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart3.setOption(performanceChart3Option);
     }
 
+    // 注册人数
     function renderRegisterCountCharts(realNames, userData) {
         var rnIndex, udIndex;
 
-        var classCounts = [], classNoCounts = [];
+        var classCounts = [], classNoCounts = [], registerCounts = [];
         for (rnIndex = 0; rnIndex < realNames.length; rnIndex++) {
             classCounts.push(0);
             classNoCounts.push(0);
+            registerCounts.push(0);
             for (udIndex = 0; udIndex < userData.length; udIndex++) {
                 if (userData[udIndex].realName == realNames[rnIndex]) {
                     classCounts[rnIndex] += (userData[udIndex].classCount);
-                    classNoCounts[rnIndex] += (userData[udIndex].accessCount - userData[udIndex].classCount);
+                    classNoCounts[rnIndex] += -((userData[udIndex].registerCount - userData[udIndex].classCount));
+                    registerCounts[rnIndex] += (userData[udIndex].registerCount);
                     break;
                 }
             }
         }
 
-        console.log("===== 在册人数情况 =====");
-        console.log(realNames);
-        console.log(classCounts);
-        console.log(classNoCounts);
+        // console.log("===== 在册人数情况 =====");
+        // console.log(realNames);
+        // console.log(classCounts);
+        // console.log(classNoCounts);
+        // console.log(registerCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < registerCounts.length; i++) {
+            var percent;
+            if (registerCounts[i] > 0) {
+                percent = ((classCounts[i] / registerCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [realNames, classCounts, classNoCounts]);
 
         var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart5'), "walden");
         var performanceChart5Option = {
-            title  : chartsOption.setTitle("到课率排名（百分比）"),
+            title  : chartsOption.setTitle("到课率排比（人）"),
             legend : chartsOption.setLegend(["到课", "未到课"]),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
@@ -407,7 +428,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '人</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '人</li>' +
-                        '<li><label>' + '到课率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '到课率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -417,26 +438,43 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart5.setOption(performanceChart5Option);
     }
 
+    // 访问人数
     function renderAccessCountCharts(realNames, userData) {
         var rnIndex, udIndex;
 
-        var businessCounts = [], businessNoCounts = [];
+        var businessCounts = [], businessNoCounts = [], accessCounts = [];
         for (rnIndex = 0; rnIndex < realNames.length; rnIndex++) {
             businessCounts.push(0);
-            businessNoCounts.push(0);
+            businessNoCounts.push(0);accessCounts.push(0);
+
             for (udIndex = 0; udIndex < userData.length; udIndex++) {
                 if (userData[udIndex].realName == realNames[rnIndex]) {
                     businessCounts[rnIndex] += (userData[udIndex].businessCount);
-                    businessNoCounts[rnIndex] += (userData[udIndex].accessCount - userData[udIndex].businessCount);
+                    businessNoCounts[rnIndex] += -(userData[udIndex].accessCount - userData[udIndex].businessCount);
+                    accessCounts[rnIndex] += (userData[udIndex].accessCount);
                     break;
                 }
             }
         }
 
-        console.log("===== 访问人数情况 =====");
-        console.log(realNames);
-        console.log(businessCounts);
-        console.log(businessNoCounts);
+        // console.log("===== 访问人数情况 =====");
+        // console.log(realNames);
+        // console.log(businessCounts);
+        // console.log(businessNoCounts);
+        // console.log(accessCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < accessCounts.length; i++) {
+            var percent;
+            if (accessCounts[i] > 0) {
+                percent = ((businessCounts[i] / accessCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [realNames, businessCounts, businessNoCounts]);
 
         var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart6'), "walden");
         var performanceChart6Option = {
@@ -470,7 +508,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '人</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '人</li>' +
-                        '<li><label>' + '成交率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '成交率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -480,26 +518,43 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart6.setOption(performanceChart6Option);
     }
 
+    // 闲时段占用
     function renderNullCountCharts(realNames, userData) {
         var rnIndex, udIndex;
 
-        var nullCounts = [], nullNoCounts = [];
+        var nullCounts = [], nullNoCounts = [], nullTotalCounts = [];
         for (rnIndex = 0; rnIndex < realNames.length; rnIndex++) {
             nullCounts.push(0);
             nullNoCounts.push(0);
+            nullTotalCounts.push(0);
             for (udIndex = 0; udIndex < userData.length; udIndex++) {
                 if (userData[udIndex].realName == realNames[rnIndex]) {
                     nullCounts[rnIndex] += (userData[udIndex].nullCount);
-                    nullNoCounts[rnIndex] += (userData[udIndex].nullTotalCount - userData[udIndex].nullCount);
+                    nullNoCounts[rnIndex] += -(userData[udIndex].nullTotalCount - userData[udIndex].nullCount);
+                    nullTotalCounts[rnIndex] += (userData[udIndex].nullTotalCount);
                     break;
                 }
             }
         }
 
-        console.log("===== 空闲场地情况 =====");
-        console.log(realNames);
-        console.log(nullCounts);
-        console.log(nullNoCounts);
+        // console.log("===== 空闲场地情况 =====");
+        // console.log(realNames);
+        // console.log(nullCounts);
+        // console.log(nullNoCounts);
+        // console.log(nullTotalCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < nullTotalCounts.length; i++) {
+            var percent;
+            if (nullTotalCounts[i] > 0) {
+                percent = ((nullCounts[i] / nullTotalCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [realNames, nullCounts, nullNoCounts]);
 
         var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart5'), "walden");
         var performanceChart5Option = {
@@ -533,7 +588,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '时</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '时</li>' +
-                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -543,26 +598,43 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         performanceChart5.setOption(performanceChart5Option);
     }
 
+    // 忙时段占用
     function renderHotCountCharts(realNames, userData) {
         var rnIndex, udIndex;
 
-        var hotCounts = [], hotNoCounts = [];
+        var hotCounts = [], hotNoCounts = [], hotTotalCounts = [];
         for (rnIndex = 0; rnIndex < realNames.length; rnIndex++) {
             hotCounts.push(0);
             hotNoCounts.push(0);
+            hotTotalCounts.push(0);
             for (udIndex = 0; udIndex < userData.length; udIndex++) {
                 if (userData[udIndex].realName == realNames[rnIndex]) {
                     hotCounts[rnIndex] += (userData[udIndex].hotCount);
-                    hotNoCounts[rnIndex] += (userData[udIndex].hotTotalCount - userData[udIndex].hotCount);
+                    hotNoCounts[rnIndex] += -(userData[udIndex].hotTotalCount - userData[udIndex].hotCount);
+                    hotTotalCounts[rnIndex] += (userData[udIndex].hotTotalCount);
                     break;
                 }
             }
         }
 
-        console.log("===== 访问人数情况 =====");
-        console.log(realNames);
-        console.log(hotCounts);
-        console.log(hotNoCounts);
+        // console.log("===== 访问人数情况 =====");
+        // console.log(realNames);
+        // console.log(hotCounts);
+        // console.log(hotNoCounts);
+        // console.log(hotTotalCounts);
+
+        var percentCounts = [];
+        for (var i = 0; i < hotTotalCounts.length; i++) {
+            var percent;
+            if (hotTotalCounts[i] > 0) {
+                percent = ((hotCounts[i] / hotTotalCounts[i]) * 100).toFixed(2);
+            } else {
+                percent = "0.00";
+            }
+            percentCounts.push(percent);
+        }
+
+        $.sortFloatArrays(percentCounts, [realNames, hotCounts, hotNoCounts]);
 
         var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart6'), "walden");
         var performanceChart6Option = {
@@ -596,7 +668,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     showFormatter += '<ul class="charts-content">' +
                         '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '时</li>' +
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '时</li>' +
-                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value + items[1].value)), 0, ".", ",") + '%</li>' +
+                        '<li><label>' + '占用率</label>: ' + $.moneyFormat(((items[0].value * 100) / (items[0].value - items[1].value)), 0, ".", ",") + '%</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -611,7 +683,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         var busType = $("[name='total_bus_type']:checked").val();
         var venueId = $("#current_venue_id").val();
 
+        var loadingTips = jqueryAlert({
+            'icon'      : '/Content/images/icon-loading.gif',
+            'content'   : "正在加载数据...",
+            'closeTime' : 2000,
+            'modal'        : true,
+            'isModalClose' : true
+        });
+
         $.getJSON('/admin/finance/getFinancePerformanceForUsers', {typeTime : typeTime, busType : busType, venueId: venueId}, function (res) {
+            loadingTips.close();
+
             var data = res.data;
 
             if (res.code == 1) {

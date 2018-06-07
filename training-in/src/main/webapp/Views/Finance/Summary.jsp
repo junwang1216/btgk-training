@@ -34,21 +34,13 @@
                             <small>Operation Finance</small>
 
                             <div class="card-actions">
-                                <c:forEach var="bus" items="${BusinessTypeEnumList}">
-                                    <c:if test="${bus.code != busType}">
-                                        <a href="/admin/finance/summary?busType=${bus.code}" class="btn-settings" title="${bus.desc}">
-                                            <i class="icon-refresh"></i>
-                                        </a>
-                                    </c:if>
-                                </c:forEach>
-                                <a href="/admin/finance/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
+                                <a href="/admin/finance/summary/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
                                     <i class="icon-cloud-download"></i>
                                 </a>
                             </div>
                         </div>
                         <div class="card-block">
-                            <input type="hidden" id="current_bus_type" value="${busType}">
-                            <div class="btn-toolbar" role="toolbar">
+                            <div class="btn-toolbar justify-content-between" role="toolbar">
                                 <div class="btn-group" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary <c:if test="${typeTime == 'prev_day'}">active</c:if> ">
                                         <input type="radio" name="total_students_type" id="total_students_type1" value="prev_day"
@@ -93,6 +85,16 @@
                                     <label class="btn btn-outline-secondary <c:if test="${typeTime == 'year'}">active</c:if> ">
                                         <input type="radio" name="total_students_type" id="total_students_type8" value="year"
                                                <c:if test="${typeTime == 'year'}">checked</c:if> >今 年
+                                    </label>
+                                </div>
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary <c:if test="${busType == 1}">active</c:if> ">
+                                        <input type="radio" name="total_bus_type" id="total_bus_type1" value="1"
+                                               <c:if test="${busType == 1}">checked</c:if> >青少年培训
+                                    </label>
+                                    <label class="btn btn-outline-secondary <c:if test="${busType == 2}">active</c:if> ">
+                                        <input type="radio" name="total_bus_type" id="total_bus_type2" value="2"
+                                               <c:if test="${busType == 2}">checked</c:if> >场地租赁
                                     </label>
                                 </div>
                             </div>

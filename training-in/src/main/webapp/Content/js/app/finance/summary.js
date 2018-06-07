@@ -53,6 +53,12 @@ require(['jquery', 'override', 'bootstrap', 'base'], function ($) {
         e.preventDefault();
 
         window.location.href = "/admin/finance/summary?typeTime=" +  $("[name='total_students_type']:checked").val() +
-            "&busType=" + $("#current_bus_type").val();
+            "&busType=" + $("[name='total_bus_type']:checked").val();
+    });
+
+    $("[name='total_bus_type']").on("change", function (e) {
+        e.preventDefault();
+
+        window.location.href = "/admin/finance/summary?busType=" + $("[name='total_bus_type']:checked").val();
     });
 });

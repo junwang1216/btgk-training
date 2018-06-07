@@ -8,6 +8,8 @@ public enum LogTypeEnum {
     LOG_TYPE_STUDENTS_SETTINGS(5, "学员管理"),
 
     LOG_TYPE_EXCEPTION(99, "日志类型错误"),
+
+    LOG_TYPE_FINANCE_REPORTS(999, "财务报表"),
     ;
     int code;
     String desc;

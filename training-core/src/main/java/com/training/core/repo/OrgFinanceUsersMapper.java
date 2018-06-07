@@ -17,4 +17,8 @@ public interface OrgFinanceUsersMapper {
     OrgFinanceUsers selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKey(OrgFinanceUsers record);
+
+    List<OrgFinanceUsers> selectAll(OrgFinanceUsers record);
+
+    int updateStatus(OrgFinanceUsers record);
 }

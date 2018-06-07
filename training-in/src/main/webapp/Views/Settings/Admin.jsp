@@ -76,7 +76,7 @@
                             <div class="col-md-9">
                                 <input type="text" class="form-control" id="admin_mobile" name="mobile" placeholder="请输入手机号码"
                                        data-val="true" data-val-required="手机号码不能为空"
-                                       data-val-regex-pattern="^(13[0-9]|15[012356789]|166|17[0-9]|18[02356789]|14[57]|19[89])[0-9]{8}$" data-val-regex="手机号码格式不正确">
+                                       data-val-regex-pattern="^(13[0-9]|15[012356789]|166|17[0-9]|18[012356789]|14[57]|19[89])[0-9]{8}$" data-val-regex="手机号码格式不正确">
                                 <div data-valmsg-for="mobile" data-valmsg-replace="true"></div>
                             </div>
                         </div>
@@ -107,8 +107,15 @@
                                 <select class="form-control" id="admin_roleId" name="roleId"
                                         data-val="true" data-val-required="请选择所属角色">
                                     <c:forEach var="role" items="${RoleTypeEnum}">
-                                        <c:if test="${role.code >= RoleTypeStart.code && role.code < Admin.roleId}">
-                                            <option value="${role.code}">${role.desc}</option>
+                                        <c:if test="${Admin.roleId > 999}">
+                                            <c:if test="${role.code > 999}">
+                                                <option value="${role.code}">${role.desc}</option>
+                                            </c:if>
+                                        </c:if>
+                                        <c:if test="${Admin.roleId <= 999}">
+                                            <c:if test="${role.code >= RoleTypeStart.code && role.code < Admin.roleId}">
+                                                <option value="${role.code}">${role.desc}</option>
+                                            </c:if>
                                         </c:if>
                                     </c:forEach>
                                 </select>
