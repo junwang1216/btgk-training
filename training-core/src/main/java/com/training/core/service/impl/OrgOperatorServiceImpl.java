@@ -44,6 +44,11 @@ public class OrgOperatorServiceImpl implements OrgOperatorService {
     public int saveOrgOperator(OrgOperator orgOperator) {
         return orgOperatorMapper.updateByPrimaryKey(orgOperator);
     }
+
+    @Override
+    public int modifyPassword(OrgOperator orgOperator) {
+        return orgOperatorMapper.modifyPwd(orgOperator);
+    }
 }
 
 

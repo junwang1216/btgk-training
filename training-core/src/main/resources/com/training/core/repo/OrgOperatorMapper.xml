@@ -79,4 +79,10 @@
       and roleId  &lt;= #{roleId,jdbcType=INTEGER}
     </if>
   </select>
+  <update id="modifyPwd" parameterType="com.training.core.repo.po.OrgOperator">
+    update org_operator
+    set password = #{password,jdbcType=VARCHAR},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

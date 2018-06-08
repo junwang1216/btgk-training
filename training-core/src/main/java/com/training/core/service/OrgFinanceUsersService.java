@@ -20,4 +20,7 @@ public interface OrgFinanceUsersService {
 
     int setOrgFinanceUsersStatus(OrgFinanceUsers orgFinanceUsers);
 
+    OrgFinanceUsers innerLogin(OrgFinanceUsers orgFinanceUsers);
+
+    int modifyPassword(OrgFinanceUsers orgFinanceUsers);
 }

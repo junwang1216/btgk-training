@@ -72,4 +72,16 @@
       and realName = #{realName,jdbcType=VARCHAR}
     </if>
   </select>
+  <select id="innerLogin" parameterType="com.training.core.repo.po.OrgFinanceUsers" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_finance_users
+    where mobile = #{mobile,jdbcType=VARCHAR} AND password = #{password,jdbcType=VARCHAR} AND status = 1
+  </select>
+  <update id="modifyPwd" parameterType="com.training.core.repo.po.OrgFinanceUsers">
+    update org_finance_users
+    set password = #{password,jdbcType=VARCHAR},
+    updateTime = #{updateTime,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

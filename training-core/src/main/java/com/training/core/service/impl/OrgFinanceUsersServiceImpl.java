@@ -40,12 +40,22 @@ public class OrgFinanceUsersServiceImpl implements OrgFinanceUsersService {
     }
 
     @Override
-    public List<OrgFinanceUsers> getOrgFinanceUsersList(OrgFinanceUsers orgFinanceVenues) {
-        return orgFinanceUsersMapper.selectAll(orgFinanceVenues);
+    public List<OrgFinanceUsers> getOrgFinanceUsersList(OrgFinanceUsers orgFinanceUsers) {
+        return orgFinanceUsersMapper.selectAll(orgFinanceUsers);
     }
 
     @Override
-    public int setOrgFinanceUsersStatus(OrgFinanceUsers orgFinanceVenues) {
-        return orgFinanceUsersMapper.updateStatus(orgFinanceVenues);
+    public int setOrgFinanceUsersStatus(OrgFinanceUsers orgFinanceUsers) {
+        return orgFinanceUsersMapper.updateStatus(orgFinanceUsers);
+    }
+
+    @Override
+    public OrgFinanceUsers innerLogin(OrgFinanceUsers orgFinanceUsers) {
+        return orgFinanceUsersMapper.innerLogin(orgFinanceUsers);
+    }
+
+    @Override
+    public int modifyPassword(OrgFinanceUsers orgFinanceUsers) {
+        return orgFinanceUsersMapper.modifyPwd(orgFinanceUsers);
     }
 }

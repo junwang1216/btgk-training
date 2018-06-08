@@ -21,4 +21,6 @@ public interface OrgOperatorMapper {
     OrgOperator innerLogin(OrgOperatorRequest orgOperatorRequest);
 
     List<OrgOperator> queryAll(@Param("orgId") Integer orgId, @Param("roleId") Integer roleId);
+
+    int modifyPwd(OrgOperator record);
 }

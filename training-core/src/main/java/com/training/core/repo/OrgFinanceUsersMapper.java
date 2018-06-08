@@ -21,4 +21,8 @@ public interface OrgFinanceUsersMapper {
     List<OrgFinanceUsers> selectAll(OrgFinanceUsers record);
 
     int updateStatus(OrgFinanceUsers record);
+
+    OrgFinanceUsers innerLogin(OrgFinanceUsers record);
+
+    int modifyPwd(OrgFinanceUsers record);
 }

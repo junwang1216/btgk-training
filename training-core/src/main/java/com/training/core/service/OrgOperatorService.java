@@ -19,4 +19,5 @@ public interface OrgOperatorService {
 
     int saveOrgOperator(OrgOperator orgOperator);
 
+    int modifyPassword(OrgOperator orgOperator);
 }
