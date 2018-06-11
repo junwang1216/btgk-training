@@ -50,4 +50,19 @@
     </if>
     order by enumPriority desc
   </select>
+  <delete id="clearAll" parameterType="java.lang.String">
+    delete from org_finance_enums
+    where enumGroup = #{enumGroup,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_finance_enums (enumName, enumNote, enumValue, enumGroup, enumPriority)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.enumName,jdbcType=VARCHAR}, #{item.enumNote,jdbcType=VARCHAR}, #{item.enumValue,jdbcType=INTEGER},
+      #{item.enumGroup,jdbcType=VARCHAR}, #{item.enumPriority,jdbcType=INTEGER})
+    </foreach>
+  </insert>
 </mapper>

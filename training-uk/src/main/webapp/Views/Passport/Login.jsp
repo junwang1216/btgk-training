@@ -52,14 +52,14 @@
                                         <i class="icon-user"></i>
                                     </span>
                                     <%--superadmin--%>
-                                    <input type="text" class="form-control" placeholder="用户名" name="userName" value="" autocomplete="off">
+                                    <input type="text" class="form-control" placeholder="用户名" name="userName" value="ukadmin" autocomplete="off">
                                 </div>
                                 <div class="input-group mb-4">
                                     <span class="input-group-addon">
                                         <i class="icon-lock"></i>
                                     </span>
                                     <%--123456--%>
-                                    <input type="password" class="form-control" placeholder="密码" name="password" value="" autocomplete="off">
+                                    <input type="password" class="form-control" placeholder="密码" name="password" value="12345678" autocomplete="off">
                                 </div>
                                 <div class="row">
                                     <div class="col-6">

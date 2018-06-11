@@ -49,9 +49,6 @@ public class DataController extends BaseController {
     @Resource
     private OrgFinanceEnumsService orgFinanceEnumsService;
 
-    @Resource
-    private OrgFinanceService orgFinanceService;
-
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", super.getRequest().getSession().getAttribute(IPlatformConstant.LOGIN_USER));
     }

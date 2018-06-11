@@ -15,4 +15,8 @@ public interface OrgFinanceEnumsMapper {
     int updateByPrimaryKey(OrgFinanceEnums record);
 
     List<OrgFinanceEnums> queryAll(@Param("enumGroup") String enumGroup);
+
+    int clearAll(@Param("enumGroup") String enumGroup);
+
+    int insertBatch(List<OrgFinanceEnums> list);
 }

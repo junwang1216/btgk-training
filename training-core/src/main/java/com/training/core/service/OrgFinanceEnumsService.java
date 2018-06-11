@@ -8,4 +8,8 @@ public interface OrgFinanceEnumsService {
 
     List<OrgFinanceEnums> queryOrgFinanceEnumsList(String enumGroup);
 
+    int addOrgFinanceEnumsBatch(List<OrgFinanceEnums> orgFinanceEnumsList);
+
+    int clearOrgFinanceEnums(String enumGroup);
+
 }

@@ -39,6 +39,11 @@
                                 <i class="icon-arrow-right"></i> 目标设置
                             </a>
                         </li>
+                        <li class="nav-item <c:if test="${param.subMenu == 'params'}">open</c:if>">
+                            <a class="nav-link <c:if test="${param.subMenu == 'params'}">active</c:if>" href="/admin/finance/params/settings">
+                                <i class="icon-arrow-right"></i> 参数设置
+                            </a>
+                        </li>
                         <li class="nav-item <c:if test="${param.subMenu == 'performance'}">open</c:if>">
                             <a class="nav-link <c:if test="${param.subMenu == 'performance'}">active</c:if>" href="/admin/finance/performance?venueId=-1">
                                 <i class="icon-arrow-right"></i> 业绩排名

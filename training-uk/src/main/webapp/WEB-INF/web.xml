@@ -117,12 +117,4 @@
   <session-config>
     <session-timeout>120</session-timeout>
   </session-config>
-    <servlet>
-        <servlet-name>imageUrl</servlet-name>
-        <servlet-class>com.training.in.controller.ImageAction</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>imageUrl</servlet-name>
-        <url-pattern>/image</url-pattern>
-    </servlet-mapping>
 </web-app>

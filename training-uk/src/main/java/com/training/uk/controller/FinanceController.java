@@ -10,11 +10,13 @@ import com.training.core.common.util.*;
 import com.training.core.repo.po.*;
 import com.training.core.service.*;
 import com.training.uk.request.OrgFinanceLogRequest;
+import com.training.uk.request.OrgFinanceParamSettingsRequest;
 import com.training.uk.response.OrgFinanceDataResponse;
 import com.training.uk.response.OrgFinanceGoalsResponse;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -46,6 +48,9 @@ public class FinanceController extends BaseController {
 
     @Resource
     private OrgFinanceDataService orgFinanceDataService;
+
+    @Resource
+    private OrgFinanceEnumsService orgFinanceEnumsService;
 
     private ModelAndView setModelAndView(ModelAndView modelAndView) {
         return modelAndView.addObject("Admin", getLoginUser());
@@ -232,6 +237,49 @@ public class FinanceController extends BaseController {
             result = orgFinanceUsersService.setOrgFinanceUsersStatus(orgFinanceUsers);
 
             log(LogTypeEnum.LOG_TYPE_FINANCE_REPORTS, getLoginUser().getOrgId(), "离职员工[" + orgFinanceUsers.getRealName() + "]状态");
+
+            return new ResponseBean(result > 0);
+        } catch (MessageException e) {
+            e.printStackTrace();
+            return new ResponseBean(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseBean(false);
+        }
+    }
+
+    /*** 参数设置 start ***/
+
+    @Desc("查询收支参数")
+    @RequestMapping(value = "/params/settings", method = RequestMethod.GET)
+    public ModelAndView renderDataSettings() {
+
+        ModelAndView modelAndView = new ModelAndView("Finance/ParamSettings");
+
+        String orgFinanceChannelGroup = "GROUP_CHANNEL";
+        List<OrgFinanceEnums> orgFinanceChannelEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList(orgFinanceChannelGroup);
+        modelAndView.addObject("orgFinanceChannelEnumsList", orgFinanceChannelEnumsList);
+        modelAndView.addObject("orgFinanceChannelGroup", orgFinanceChannelGroup);
+
+        String orgFinanceClassGroup = "GROUP_CINCOME";
+        List<OrgFinanceEnums> orgFinanceClassEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList(orgFinanceClassGroup);
+        modelAndView.addObject("orgFinanceClassEnumsList", orgFinanceClassEnumsList);
+        modelAndView.addObject("orgFinanceClassGroup", orgFinanceClassGroup);
+
+        return setModelAndView(modelAndView);
+    }
+
+    @Desc("保存参数设置")
+    @ResponseBody
+    @RequestMapping(value = "/saveParamsSettings", method = RequestMethod.POST)
+    public ResponseBean saveParamsSettings(@RequestBody OrgFinanceParamSettingsRequest orgFinanceParamSettingsRequest) {
+        try {
+
+            orgFinanceEnumsService.clearOrgFinanceEnums(orgFinanceParamSettingsRequest.getParamType());
+
+            int result;
+
+            result = orgFinanceEnumsService.addOrgFinanceEnumsBatch(orgFinanceParamSettingsRequest.getOrgFinanceEnumsList());
 
             return new ResponseBean(result > 0);
         } catch (MessageException e) {

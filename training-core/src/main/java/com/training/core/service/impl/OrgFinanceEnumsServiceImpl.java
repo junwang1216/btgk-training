@@ -19,6 +19,16 @@ public class OrgFinanceEnumsServiceImpl implements OrgFinanceEnumsService {
         return orgFinanceEnumsMapper.queryAll(enumGroup);
     }
 
+    @Override
+    public int addOrgFinanceEnumsBatch(List<OrgFinanceEnums> orgFinanceEnumsList) {
+        return orgFinanceEnumsMapper.insertBatch(orgFinanceEnumsList);
+    }
+
+    @Override
+    public int clearOrgFinanceEnums(String enumGroup) {
+        return orgFinanceEnumsMapper.clearAll(enumGroup);
+    }
+
 }
 
 
