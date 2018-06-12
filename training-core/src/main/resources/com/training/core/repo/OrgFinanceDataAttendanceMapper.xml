@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.training.core.repo.OrgFinanceDataAttendanceMapper">
+  <resultMap id="BaseResultMap" type="com.training.core.repo.po.OrgFinanceDataAttendance">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="businessNo" jdbcType="VARCHAR" property="businessNo" />
+    <result column="businessDate" jdbcType="VARCHAR" property="businessDate" />
+    <result column="businessType" jdbcType="INTEGER" property="businessType" />
+    <result column="venueId" jdbcType="INTEGER" property="venueId" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="incomeType" jdbcType="VARCHAR" property="incomeType" />
+    <result column="registerCount" jdbcType="INTEGER" property="registerCount" />
+    <result column="classCount" jdbcType="INTEGER" property="classCount" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+    <result column="updateTime" jdbcType="VARCHAR" property="updateTime" />
+    <result column="operatorId" jdbcType="INTEGER" property="operatorId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, businessNo, businessDate, businessType, venueId, userId, incomeType, registerCount, 
+    classCount, createTime, updateTime, operatorId
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from org_finance_data_attendance
+    where businessNo = #{businessNo,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from org_finance_data_attendance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.training.core.repo.po.OrgFinanceDataAttendance">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into org_finance_data_attendance (businessNo, businessDate, businessType, 
+      venueId, userId, incomeType, 
+      registerCount, classCount, createTime, 
+      updateTime, operatorId)
+    values (#{businessNo,jdbcType=VARCHAR}, #{businessDate,jdbcType=VARCHAR}, #{businessType,jdbcType=INTEGER}, 
+      #{venueId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{incomeType,jdbcType=VARCHAR}, 
+      #{registerCount,jdbcType=INTEGER}, #{classCount,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=VARCHAR}, #{operatorId,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.training.core.repo.po.OrgFinanceDataAttendance">
+    update org_finance_data_attendance
+    set businessDate = #{businessDate,jdbcType=VARCHAR},
+      businessType = #{businessType,jdbcType=INTEGER},
+      venueId = #{venueId,jdbcType=INTEGER},
+      userId = #{userId,jdbcType=INTEGER},
+      incomeType = #{incomeType,jdbcType=VARCHAR},
+      registerCount = #{registerCount,jdbcType=INTEGER},
+      classCount = #{classCount,jdbcType=INTEGER},
+      updateTime = #{updateTime,jdbcType=VARCHAR},
+      operatorId = #{operatorId,jdbcType=INTEGER}
+    where businessNo = #{businessNo,jdbcType=VARCHAR}
+  </update>
+  <select id="queryAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from org_finance_data_attendance
+    where 1 = 1
+    <if test="startTime != null">
+      and businessDate &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and businessDate &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
+    <if test="businessType != null">
+      and businessType = #{businessType,jdbcType=INTEGER}
+    </if>
+    <if test="venueId != null">
+      and venueId = #{venueId,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null">
+      and userId = #{userId,jdbcType=INTEGER}
+    </if>
+    order by updateTime desc
+    limit #{start}, #{pageSize}
+  </select>
+  <select id="queryAllCount" resultType="java.lang.Integer">
+    select count(*)
+    from org_finance_data_attendance
+    where 1 = 1
+    <if test="startTime != null">
+      and businessDate &gt;= #{startTime,jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null">
+      and businessDate &lt;= #{endTime,jdbcType=VARCHAR}
+    </if>
+    <if test="businessType != null">
+      and businessType = #{businessType,jdbcType=INTEGER}
+    </if>
+    <if test="venueId != null">
+      and venueId = #{venueId,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null">
+      and userId = #{userId,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>

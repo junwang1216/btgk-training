@@ -64,6 +64,60 @@
                         </div>
                         <div class="card-footer text-right"></div>
                         <div class="card-block">
+                            <table class="table table-striped table-sm user-list">
+                                <thead>
+                                <tr>
+                                    <th>业务编号</th>
+                                    <th>业务日期</th>
+                                    <th>所属基地</th>
+                                    <th>业务类型</th>
+                                    <th>姓名</th>
+                                    <th>渠道来源</th>
+                                    <th>流水情况</th>
+                                    <th>体验数</th>
+                                    <th>成交数</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <table class="table table-striped table-sm user-list">
+                                <thead>
+                                <tr>
+                                    <th>业务编号</th>
+                                    <th>业务日期</th>
+                                    <th>所属基地</th>
+                                    <th>业务类型</th>
+                                    <th>姓名</th>
+                                    <th>收入类型</th>
+                                    <th>确认收入</th>
+                                    <th>客单价</th>
+                                    <th>在册数</th>
+                                    <th>到课数</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <table class="table table-striped table-sm user-list">
+                                <thead>
+                                <tr>
+                                    <th>业务编号</th>
+                                    <th>业务日期</th>
+                                    <th>所属基地</th>
+                                    <th>业务类型</th>
+                                    <th>姓名</th>
+                                    <th>闲时总数</th>
+                                    <th>闲时数</th>
+                                    <th>忙时总数</th>
+                                    <th>忙时数</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+
+
                             <c:if test="${conditions.busType == BusinessTypeEnum.TRAINING_YOUNG.code}">
                                 <table class="table table-striped table-sm user-list">
                                     <thead>
