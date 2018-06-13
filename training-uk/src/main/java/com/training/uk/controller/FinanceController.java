@@ -999,48 +999,6 @@ public class FinanceController extends BaseController {
         }
     }
 
-    @Desc("流水数据提交")
-    @ResponseBody
-    @RequestMapping(value = "/saveOrgFinanceDataFlow", method = RequestMethod.POST)
-    public ResponseBean saveOrgFinanceDataFlow(OrgFinanceDataFlow orgFinanceDataFlow) {
-        try {
-
-            Map map = new HashMap();
-            int result;
-            String businessNo;
-
-            orgFinanceDataFlow.setOperatorId(getLoginUser().getId());
-            orgFinanceDataFlow.setBusinessType(BusinessTypeEnum.TRAINING_YOUNG.getCode());
-
-            if (orgFinanceDataFlow.getBusinessNo() != null && !orgFinanceDataFlow.getBusinessNo().equals("")) {
-                orgFinanceDataFlow.setUpdateTime(DateUtil.getNowDate());
-                businessNo = orgFinanceDataFlow.getBusinessNo();
-
-                result = orgFinanceDataFlowService.saveOrgFinanceDataFlow(orgFinanceDataFlow);
-            }
-            else {
-                businessNo = StrUtil.getUUID();
-
-                orgFinanceDataFlow.setBusinessNo(businessNo);
-                orgFinanceDataFlow.setCreateTime(DateUtil.getNowDate());
-                orgFinanceDataFlow.setUpdateTime(DateUtil.getNowDate());
-                result = orgFinanceDataFlowService.addOrgFinanceDataFlow(orgFinanceDataFlow);
-            }
-
-            if (result > 0) {
-                map.put("businessNo", businessNo);
-            }
-
-            return new ResponseBean(map);
-        } catch (MessageException e) {
-            e.printStackTrace();
-            return new ResponseBean(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseBean(false);
-        }
-    }
-
     @Desc("体验成交数据查询")
     @ResponseBody
     @RequestMapping(value = "/getOrgFinanceDataBusiness", method = RequestMethod.GET)
@@ -1097,48 +1055,6 @@ public class FinanceController extends BaseController {
         }
     }
 
-    @Desc("体验成交数据提交")
-    @ResponseBody
-    @RequestMapping(value = "/saveOrgFinanceDataBusiness", method = RequestMethod.POST)
-    public ResponseBean saveOrgFinanceDataBusiness(OrgFinanceDataBusiness orgFinanceDataBusiness) {
-        try {
-
-            Map map = new HashMap();
-            int result;
-            String businessNo;
-
-            orgFinanceDataBusiness.setOperatorId(getLoginUser().getId());
-            orgFinanceDataBusiness.setBusinessType(BusinessTypeEnum.TRAINING_YOUNG.getCode());
-
-            if (orgFinanceDataBusiness.getBusinessNo() != null && !orgFinanceDataBusiness.getBusinessNo().equals("")) {
-                orgFinanceDataBusiness.setUpdateTime(DateUtil.getNowDate());
-                businessNo = orgFinanceDataBusiness.getBusinessNo();
-
-                result = orgFinanceDataBusinessService.saveOrgFinanceDataBusiness(orgFinanceDataBusiness);
-            }
-            else {
-                businessNo = StrUtil.getUUID();
-
-                orgFinanceDataBusiness.setBusinessNo(businessNo);
-                orgFinanceDataBusiness.setCreateTime(DateUtil.getNowDate());
-                orgFinanceDataBusiness.setUpdateTime(DateUtil.getNowDate());
-                result = orgFinanceDataBusinessService.addOrgFinanceDataBusiness(orgFinanceDataBusiness);
-            }
-
-            if (result > 0) {
-                map.put("businessNo", businessNo);
-            }
-
-            return new ResponseBean(map);
-        } catch (MessageException e) {
-            e.printStackTrace();
-            return new ResponseBean(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseBean(false);
-        }
-    }
-
     @Desc("收入数据查询")
     @ResponseBody
     @RequestMapping(value = "/getOrgFinanceDataIncome", method = RequestMethod.GET)
@@ -1186,48 +1102,6 @@ public class FinanceController extends BaseController {
             int result = orgFinanceDataIncomeService.deleteOrgFinanceDataIncome(orgFinanceDataIncome.getBusinessNo());
 
             return new ResponseBean(result > 0);
-        } catch (MessageException e) {
-            e.printStackTrace();
-            return new ResponseBean(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseBean(false);
-        }
-    }
-
-    @Desc("收入数据提交")
-    @ResponseBody
-    @RequestMapping(value = "/saveOrgFinanceDataIncome", method = RequestMethod.POST)
-    public ResponseBean saveOrgFinanceDataIncome(OrgFinanceDataIncome orgFinanceDataIncome) {
-        try {
-
-            Map map = new HashMap();
-            int result;
-            String businessNo;
-
-            orgFinanceDataIncome.setOperatorId(getLoginUser().getId());
-            orgFinanceDataIncome.setBusinessType(BusinessTypeEnum.TRAINING_YOUNG.getCode());
-
-            if (orgFinanceDataIncome.getBusinessNo() != null && !orgFinanceDataIncome.getBusinessNo().equals("")) {
-                orgFinanceDataIncome.setUpdateTime(DateUtil.getNowDate());
-                businessNo = orgFinanceDataIncome.getBusinessNo();
-
-                result = orgFinanceDataIncomeService.saveOrgFinanceDataIncome(orgFinanceDataIncome);
-            }
-            else {
-                businessNo = StrUtil.getUUID();
-
-                orgFinanceDataIncome.setBusinessNo(businessNo);
-                orgFinanceDataIncome.setCreateTime(DateUtil.getNowDate());
-                orgFinanceDataIncome.setUpdateTime(DateUtil.getNowDate());
-                result = orgFinanceDataIncomeService.addOrgFinanceDataIncome(orgFinanceDataIncome);
-            }
-
-            if (result > 0) {
-                map.put("businessNo", businessNo);
-            }
-
-            return new ResponseBean(map);
         } catch (MessageException e) {
             e.printStackTrace();
             return new ResponseBean(e.getMessage());
