@@ -12,6 +12,7 @@ public class OrgFinanceLogRequest {
     private int year;
     private int month;
     private int userId;
+    private int tabType;
 
     public int getGoalId() {
         return goalId;
@@ -60,6 +61,13 @@ public class OrgFinanceLogRequest {
     }
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getTabType() {
+        return tabType;
+    }
+    public void setTabType(int tabType) {
+        this.tabType = tabType;
     }
 
     /** 时间 **/

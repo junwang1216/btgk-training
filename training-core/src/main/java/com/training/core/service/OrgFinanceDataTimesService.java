@@ -16,4 +16,6 @@ public interface OrgFinanceDataTimesService {
 
     int queryOrgFinanceDataTimesCount(Integer businessType, Integer venueId, Integer userId, String startTime, String endTime);
 
+    int deleteOrgFinanceDataTimes(String businessNo);
+
 }

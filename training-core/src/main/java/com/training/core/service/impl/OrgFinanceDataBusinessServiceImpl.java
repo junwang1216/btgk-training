@@ -48,6 +48,11 @@ public class OrgFinanceDataBusinessServiceImpl implements OrgFinanceDataBusiness
         return orgFinanceDataBusinessMapper.queryAllCount(businessType, venueId, userId, startTime, endTime);
     }
 
+    @Override
+    public int deleteOrgFinanceDataBusiness(String businessNo) {
+        return orgFinanceDataBusinessMapper.deleteByPrimaryKey(businessNo);
+    }
+
 }
 
 

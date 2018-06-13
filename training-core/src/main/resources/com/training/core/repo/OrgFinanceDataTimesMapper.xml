@@ -26,9 +26,9 @@
     from org_finance_data_times
     where businessNo = #{businessNo,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from org_finance_data_times
-    where id = #{id,jdbcType=INTEGER}
+    where businessNo = #{businessNo,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.training.core.repo.po.OrgFinanceDataTimes">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">

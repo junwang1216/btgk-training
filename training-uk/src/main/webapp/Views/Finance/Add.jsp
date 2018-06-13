@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
                                 <hr>
-                                <div>
+                                <div class="block-training-venue">
                                     <div class="form-group row block-training">
                                         <label class="col-md-3 form-control-label">
                                             <span class="text-danger">*</span> 渠道来源
@@ -272,7 +272,7 @@
                                     <th>业务类型</th>
                                     <th>所属基地</th>
                                     <th>真实姓名</th>
-                                    <th>渠道来源</th>
+                                    <th>收入类型</th>
                                     <th>课单价</th>
                                     <th>确认收入</th>
                                     <th>操作</th>
@@ -296,7 +296,7 @@
                                     <th>业务类型</th>
                                     <th>所属基地</th>
                                     <th>真实姓名</th>
-                                    <th>输入类型</th>
+                                    <th>收入类型</th>
                                     <th>在册数</th>
                                     <th>到课数</th>
                                     <th>操作</th>

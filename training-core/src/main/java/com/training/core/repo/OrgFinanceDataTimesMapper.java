@@ -5,11 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface OrgFinanceDataTimesMapper {
-    int deleteByPrimaryKey(Integer id);
 
     int insert(OrgFinanceDataTimes record);
-
-    OrgFinanceDataTimes selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKey(OrgFinanceDataTimes record);
 
@@ -20,4 +17,6 @@ public interface OrgFinanceDataTimesMapper {
                       @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     OrgFinanceDataTimes selectByPrimaryKey(String businessNo);
+
+    int deleteByPrimaryKey(String businessNo);
 }

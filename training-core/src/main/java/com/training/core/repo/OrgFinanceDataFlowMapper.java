@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface OrgFinanceDataFlowMapper {
 
-    int deleteByPrimaryKey(Integer id);
-
     int insert(OrgFinanceDataFlow record);
 
     int updateByPrimaryKey(OrgFinanceDataFlow record);
@@ -20,5 +18,7 @@ public interface OrgFinanceDataFlowMapper {
                       @Param("startTime") String startTime, @Param("endTime") String endTime);
 
     OrgFinanceDataFlow selectByPrimaryKey(String businessNo);
+
+    int deleteByPrimaryKey(String businessNo);
 
 }

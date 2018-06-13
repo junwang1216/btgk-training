@@ -48,6 +48,11 @@ public class OrgFinanceDataAttendanceServiceImpl implements OrgFinanceDataAttend
         return orgFinanceDataAttendanceMapper.queryAllCount(businessType, venueId, userId, startTime, endTime);
     }
 
+    @Override
+    public int deleteOrgFinanceDataAttendance(String businessNo) {
+        return orgFinanceDataAttendanceMapper.deleteByPrimaryKey(businessNo);
+    }
+
 }
 
 

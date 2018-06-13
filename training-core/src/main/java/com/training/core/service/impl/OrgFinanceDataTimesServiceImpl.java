@@ -48,6 +48,11 @@ public class OrgFinanceDataTimesServiceImpl implements OrgFinanceDataTimesServic
         return orgFinanceDataTimesMapper.queryAllCount(businessType, venueId, userId, startTime, endTime);
     }
 
+    @Override
+    public int deleteOrgFinanceDataTimes(String businessNo) {
+        return orgFinanceDataTimesMapper.deleteByPrimaryKey(businessNo);
+    }
+
 }
 
 

@@ -48,6 +48,11 @@ public class OrgFinanceDataFlowServiceImpl implements OrgFinanceDataFlowService 
         return orgFinanceDataFlowMapper.queryAllCount(businessType, venueId, userId, startTime, endTime);
     }
 
+    @Override
+    public int deleteOrgFinanceDataFlow(String businessNo) {
+        return orgFinanceDataFlowMapper.deleteByPrimaryKey(businessNo);
+    }
+
 }
 
 

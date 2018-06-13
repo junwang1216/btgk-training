@@ -66,6 +66,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         });
     });
 
+    // 时间日期设置
     function setDatePicker() {
         $('input.datepicker').datepicker({
             format: 'yyyy-mm-dd',
@@ -98,25 +99,62 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
         var val = $(this).val();
 
         if (val == 1) {
-            $(".block-training").show().find("input").val("");
-            $(".block-venue").hide().find("input").val("");
+            $(".block-training").show();
+            $(".block-venue").hide();
         } else {
-            $(".block-training").hide().find("input").val("");
-            $(".block-venue").show().find("input").val("");
+            $(".block-training").hide();
+            $(".block-venue").show();
         }
+
+        $(".block-training-venue").find("input").val("");
     });
     $('[name="businessType"]').trigger("change");
 
     // 流水
-    $(".flow-list").on(".btn-delete", function (e) {
+    $(".flow-list").on("click", ".btn-delete", function (e) {
         e.preventDefault();
 
-        jqueryAlert({
-            'icon'      : '/Content/images/icon-error.png',
-            'content'   : "删除流水数据失败，请稍后重试",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
+        var content = this;
+        var businessNo = $(content).attr("data-business");
+        var dialog;
+
+        if (dialog) {
+            return dialog.show();
+        }
+        dialog = jqueryAlert({
+            'title'   : '警告',
+            'content' : '您确定要删除数据？',
+            'modal'   : true,
+            'buttons' : {
+                '确定' : function () {
+                    dialog.close();
+
+                    $.post('/admin/finance/deleteOrgFinanceDataFlow', {businessNo: businessNo}, function (res) {
+                        if (res.code == 1) {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-ok.png',
+                                'content'   : "删除流水数据成功",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+
+                            $(content).parents("tr").remove();
+                        } else {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-error.png',
+                                'content'   : "删除流水数据失败，请稍后重试",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+                        }
+                    });
+                },
+                '取消' : function () {
+                    dialog.close();
+                }
+            }
         });
     });
 
@@ -151,15 +189,50 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     }
 
     // 体验数
-    $(".business-list").on(".btn-delete", function (e) {
+    $(".business-list").on("click", ".btn-delete", function (e) {
         e.preventDefault();
 
-        jqueryAlert({
-            'icon'      : '/Content/images/icon-error.png',
-            'content'   : "删除体验数据失败，请稍后重试",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
+        var content = this;
+        var businessNo = $(content).attr("data-business");
+        var dialog;
+
+        if (dialog) {
+            return dialog.show();
+        }
+        dialog = jqueryAlert({
+            'title'   : '警告',
+            'content' : '您确定要删除数据？',
+            'modal'   : true,
+            'buttons' : {
+                '确定' : function () {
+                    dialog.close();
+
+                    $.post('/admin/finance/deleteOrgFinanceDataBusiness', {businessNo: businessNo}, function (res) {
+                        if (res.code == 1) {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-ok.png',
+                                'content'   : "删除体验数据成功",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+
+                            $(content).parents("tr").remove();
+                        } else {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-error.png',
+                                'content'   : "删除体验数据失败，请稍后重试",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+                        }
+                    });
+                },
+                '取消' : function () {
+                    dialog.close();
+                }
+            }
         });
     });
 
@@ -195,15 +268,50 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     }
 
     // 收入
-    $(".income-list").on(".btn-delete", function (e) {
+    $(".income-list").on("click", ".btn-delete", function (e) {
         e.preventDefault();
 
-        jqueryAlert({
-            'icon'      : '/Content/images/icon-error.png',
-            'content'   : "删除体验数据失败，请稍后重试",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
+        var content = this;
+        var businessNo = $(content).attr("data-business");
+        var dialog;
+
+        if (dialog) {
+            return dialog.show();
+        }
+        dialog = jqueryAlert({
+            'title'   : '警告',
+            'content' : '您确定要删除数据？',
+            'modal'   : true,
+            'buttons' : {
+                '确定' : function () {
+                    dialog.close();
+
+                    $.post('/admin/finance/deleteOrgFinanceDataIncome', {businessNo: businessNo}, function (res) {
+                        if (res.code == 1) {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-ok.png',
+                                'content'   : "删除收入数据成功",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+
+                            $(content).parents("tr").remove();
+                        } else {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-error.png',
+                                'content'   : "删除收入数据失败，请稍后重试",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+                        }
+                    });
+                },
+                '取消' : function () {
+                    dialog.close();
+                }
+            }
         });
     });
 
@@ -239,15 +347,50 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     }
 
     // 签到
-    $(".attendance-list").on(".btn-delete", function (e) {
+    $(".attendance-list").on("click", ".btn-delete", function (e) {
         e.preventDefault();
 
-        jqueryAlert({
-            'icon'      : '/Content/images/icon-error.png',
-            'content'   : "删除体验数据失败，请稍后重试",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
+        var content = this;
+        var businessNo = $(content).attr("data-business");
+        var dialog;
+
+        if (dialog) {
+            return dialog.show();
+        }
+        dialog = jqueryAlert({
+            'title'   : '警告',
+            'content' : '您确定要删除数据？',
+            'modal'   : true,
+            'buttons' : {
+                '确定' : function () {
+                    dialog.close();
+
+                    $.post('/admin/finance/deleteOrgFinanceDataAttendance', {businessNo: businessNo}, function (res) {
+                        if (res.code == 1) {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-ok.png',
+                                'content'   : "删除到课数据成功",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+
+                            $(content).parents("tr").remove();
+                        } else {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-error.png',
+                                'content'   : "删除到课数据失败，请稍后重试",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+                        }
+                    });
+                },
+                '取消' : function () {
+                    dialog.close();
+                }
+            }
         });
     });
 
@@ -283,15 +426,50 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
     }
 
     // 闲忙时
-    $(".times-list").on(".btn-delete", function (e) {
+    $(".times-list").on("click", ".btn-delete", function (e) {
         e.preventDefault();
 
-        jqueryAlert({
-            'icon'      : '/Content/images/icon-error.png',
-            'content'   : "删除体验数据失败，请稍后重试",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
+        var content = this;
+        var businessNo = $(content).attr("data-business");
+        var dialog;
+
+        if (dialog) {
+            return dialog.show();
+        }
+        dialog = jqueryAlert({
+            'title'   : '警告',
+            'content' : '您确定要删除数据？',
+            'modal'   : true,
+            'buttons' : {
+                '确定' : function () {
+                    dialog.close();
+
+                    $.post('/admin/finance/deleteOrgFinanceDataTimes', {businessNo: businessNo}, function (res) {
+                        if (res.code == 1) {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-ok.png',
+                                'content'   : "删除闲忙时段数据成功",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+
+                            $(content).parents("tr").remove();
+                        } else {
+                            jqueryAlert({
+                                'icon'      : '/Content/images/icon-error.png',
+                                'content'   : "删除闲忙时段数据失败，请稍后重试",
+                                'closeTime' : 2000,
+                                'modal'        : true,
+                                'isModalClose' : true
+                            });
+                        }
+                    });
+                },
+                '取消' : function () {
+                    dialog.close();
+                }
+            }
         });
     });
 

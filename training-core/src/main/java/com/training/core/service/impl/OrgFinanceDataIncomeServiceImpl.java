@@ -48,6 +48,11 @@ public class OrgFinanceDataIncomeServiceImpl implements OrgFinanceDataIncomeServ
         return orgFinanceDataIncomeMapper.queryAllCount(businessType, venueId, userId, startTime, endTime);
     }
 
+    @Override
+    public int deleteOrgFinanceDataIncome(String businessNo) {
+        return orgFinanceDataIncomeMapper.deleteByPrimaryKey(businessNo);
+    }
+
 }
 
 

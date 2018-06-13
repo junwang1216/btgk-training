@@ -16,4 +16,5 @@ public interface OrgFinanceDataFlowService {
 
     int queryOrgFinanceDataFlowCount(Integer businessType, Integer venueId, Integer userId, String startTime, String endTime);
 
+    int deleteOrgFinanceDataFlow(String businessNo);
 }
