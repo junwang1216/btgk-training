@@ -25,7 +25,7 @@
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
     <script type="text/javascript" src="Content/js/require.js?v=${static_resource_version}"
-            data-main="Content/js/app/finance/log.js?v=${static_resource_version}"></script>
+            data-main="Content/js/app/finance/list.js?v=${static_resource_version}"></script>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_BODY%>">
@@ -103,9 +103,6 @@
                                             <td>${business.channelName}</td>
                                             <td>${business.pipelineValue}元</td>
                                             <td>
-                                                <a href="javascript:;" class="btn btn-primary btn-sm" title="编辑">
-                                                    <i class="fa fa-pencil"></i> 修改
-                                                </a>
                                                 <a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="${business.businessNo}">
                                                     <i class="fa fa-trash"></i> 删除
                                                 </a>
@@ -142,9 +139,6 @@
                                             <td>${business.accessCount}人</td>
                                             <td>${business.businessCount}人</td>
                                             <td>
-                                                <a href="javascript:;" class="btn btn-primary btn-sm" title="编辑">
-                                                    <i class="fa fa-pencil"></i> 修改
-                                                </a>
                                                 <a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="${business.businessNo}">
                                                     <i class="fa fa-trash"></i> 删除
                                                 </a>
@@ -181,9 +175,6 @@
                                             <td>${business.incomePerValue}元</td>
                                             <td>${business.incomeValue}元</td>
                                             <td>
-                                                <a href="javascript:;" class="btn btn-primary btn-sm" title="编辑">
-                                                    <i class="fa fa-pencil"></i> 修改
-                                                </a>
                                                 <a href="javascript:;" class="btn btn-danger btn-delete" title="删除" data-business="${business.businessNo}">
                                                     <i class="fa fa-trash"></i> 删除
                                                 </a>
@@ -220,9 +211,6 @@
                                             <td>${business.registerCount}人</td>
                                             <td>${business.classCount}人</td>
                                             <td>
-                                                <a href="javascript:;" class="btn btn-primary btn-sm" title="编辑">
-                                                    <i class="fa fa-pencil"></i> 修改
-                                                </a>
                                                 <a href="javascript:;" class="btn btn-danger btn-delete" title="删除" data-business="${business.businessNo}">
                                                     <i class="fa fa-trash"></i> 删除
                                                 </a>
@@ -261,9 +249,6 @@
                                             <td>${business.hotTotalCount}时</td>
                                             <td>${business.hotCount}时</td>
                                             <td>
-                                                <a href="javascript:;" class="btn btn-primary btn-sm" title="编辑">
-                                                    <i class="fa fa-pencil"></i> 修改
-                                                </a>
                                                 <a href="javascript:;" class="btn btn-danger btn-delete" title="删除" data-business="${business.businessNo}">
                                                     <i class="fa fa-trash"></i> 删除
                                                 </a>

@@ -8,6 +8,7 @@ requirejs.config({
 
         "datepicker"    : "bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker",
         "datepicker-zh" : "bower_components/bootstrap-datepicker/dist/locales/bootstrap-datepicker.zh-CN.min",
+        "alert"     : 'utils/jqueryAlert/alert/alert',
 
         "base"      : 'js/widgets/base',
         "override"  : 'js/widgets/override'
@@ -15,6 +16,9 @@ requirejs.config({
     shim: {
         "bootstrap": {
             deps: ["jquery", "override"]
+        },
+        "alert": {
+            deps: ["jquery"]
         },
         "datepicker": {
             deps: ["jquery", "bootstrap"]
@@ -27,7 +31,7 @@ requirejs.config({
     urlArgs: '_=' + new Date().getTime()
 });
 
-require(['jquery', 'override', 'bootstrap', 'base', "datepicker", "datepicker-zh"], function ($) {
+require(['jquery', 'alert', 'override', 'bootstrap', 'base', "datepicker", "datepicker-zh"], function ($, jqueryAlert) {
     'use strict';
 
     function setDatePicker() {
