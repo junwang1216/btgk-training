@@ -145,8 +145,9 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 });
                 var incomeTypes = [];
                 !!data.orgFinanceIncomeList && data.orgFinanceIncomeList.forEach(function (item) {
-                    incomeTypes.push(item);
+                    incomeTypes.push(item.enumNote);
                 });
+                incomeTypes.push("无");
 
                 renderIncomeValueCharts(venueNames, incomeTypes, data.orgFinanceDataIncomeTypeList, data.orgFinanceDataVenueList);
 
@@ -487,6 +488,11 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     stack: '总量',
                     data: incomeValues[3]
                 }, {
+                    name: channelNames[4],
+                    type: 'bar',
+                    stack: '总量',
+                    data: incomeValues[4]
+                }, {
                     name: "目标值",
                     type: 'line',
                     data: venueIncomeTargets
@@ -510,9 +516,10 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                         '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '元</li>' +
                         '<li><label>' + items[2].marker + items[2].seriesName + '</label>: ' + $.moneyFormat(items[2].value, 0, ".", ",") + '元</li>' +
                         '<li><label>' + items[3].marker + items[3].seriesName + '</label>: ' + $.moneyFormat(items[3].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '收入合计</label>: ' + $.moneyFormat((items[0].value + items[1].value + items[2].value + items[3].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '目标值</label>: ' + $.moneyFormat((items[4].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '挑战值</label>: ' + $.moneyFormat((items[5].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + items[4].marker + items[4].seriesName + '</label>: ' + $.moneyFormat(items[4].value, 0, ".", ",") + '元</li>' +
+                        '<li><label>' + '收入合计</label>: ' + $.moneyFormat((items[0].value + items[1].value + items[2].value + items[3].value + items[4].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + '目标值</label>: ' + $.moneyFormat((items[5].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + '挑战值</label>: ' + $.moneyFormat((items[6].value), 0, ".", ",") + '元</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -534,7 +541,8 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     {value : channelIncomeValues[0], name : channelNames[0]},
                     {value : channelIncomeValues[1], name : channelNames[1]},
                     {value : channelIncomeValues[2], name : channelNames[2]},
-                    {value : channelIncomeValues[3], name : channelNames[3]}
+                    {value : channelIncomeValues[3], name : channelNames[3]},
+                    {value : channelIncomeValues[4], name : channelNames[4]}
                 ]
             }, {
                 name :'基地收入',
@@ -582,7 +590,8 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 {value : venueChannelIncomeValues[0], name : channelNames[0]},
                 {value : venueChannelIncomeValues[1], name : channelNames[1]},
                 {value : venueChannelIncomeValues[2], name : channelNames[2]},
-                {value : venueChannelIncomeValues[3], name : channelNames[3]}
+                {value : venueChannelIncomeValues[3], name : channelNames[3]},
+                {value : venueChannelIncomeValues[4], name : channelNames[4]}
             ];
             performanceChart3Option.series[1].data = [
                 {value : venueIncomeValues[0], name : venueNames[0], selected: venueNames[0] == venueName},

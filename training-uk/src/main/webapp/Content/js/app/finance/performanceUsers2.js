@@ -78,137 +78,6 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         }
     };
 
-    function loadOrgFinanceDataChannelData() {
-        var typeTime = $("[name='total_students_type']:checked").val();
-        var busType = $("[name='total_bus_type']:checked").val();
-        var venueId = $("#current_venue_id").val();
-
-        $.getJSON('/admin/finance/getFinancePerformanceChannelForUsers', {typeTime : typeTime, busType : busType, venueId: venueId}, function (res) {
-            var data = res.data;
-
-            if (res.code == 1) {
-                $(".venue-title").text(data.venueName || "所有基地");
-
-                if (!data.orgFinanceUsersList || !data.orgFinanceChannelList || !data.orgFinanceDataChannelList || !data.orgFinanceDataVenueList) {
-                    return jqueryAlert({
-                        'icon'      : '/Content/images/icon-error.png',
-                        'content'   : "加载场馆基地数据失败，请重试",
-                        'closeTime' : 2000,
-                        'modal'        : true,
-                        'isModalClose' : true
-                    });
-                }
-
-                var realNames = [];
-                !!data.orgFinanceUsersList && data.orgFinanceUsersList.forEach(function (item) {
-                    realNames.push(item.realName);
-                });
-                var channelNames = [];
-                !!data.orgFinanceChannelList && data.orgFinanceChannelList.forEach(function (item) {
-                    channelNames.push(item.enumNote);
-                });
-                channelNames.push("无");
-
-                renderPipelineValueCharts(realNames, channelNames, data.orgFinanceDataChannelList, data.orgFinanceDataVenueList);
-
-                renderAccessCountCharts(realNames, data.orgFinanceDataVenueList);
-            } else {
-                jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "加载场馆基地数据错误，请重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
-                });
-            }
-        });
-    }
-    loadOrgFinanceDataChannelData();
-
-    function loadOrgFinanceIncomeData() {
-        var typeTime = $("[name='total_students_type']:checked").val();
-        var busType = $("[name='total_bus_type']:checked").val();
-        var venueId = $("#current_venue_id").val();
-
-        $.getJSON('/admin/finance/getFinancePerformanceIncomeForUsers', {typeTime : typeTime, busType : busType, venueId: venueId}, function (res) {
-            var data = res.data;
-
-            if (res.code == 1) {
-                if (!data.orgFinanceUsersList || !data.orgFinanceIncomeList || !data.orgFinanceDataIncomeTypeList || !data.orgFinanceDataVenueList) {
-                    return jqueryAlert({
-                        'icon'      : '/Content/images/icon-error.png',
-                        'content'   : "加载场馆基地数据失败，请重试",
-                        'closeTime' : 2000,
-                        'modal'        : true,
-                        'isModalClose' : true
-                    });
-                }
-
-                var realNames = [];
-                !!data.orgFinanceUsersList && data.orgFinanceUsersList.forEach(function (item) {
-                    realNames.push(item.realName);
-                });
-                var incomeTypes = [];
-                !!data.orgFinanceIncomeList && data.orgFinanceIncomeList.forEach(function (item) {
-                    incomeTypes.push(item.enumNote);
-                });
-                incomeTypes.push("无");
-
-                renderIncomeValueCharts(realNames, incomeTypes, data.orgFinanceDataIncomeTypeList, data.orgFinanceDataVenueList);
-
-                renderRegisterCountCharts(realNames, data.orgFinanceDataVenueList);
-            } else {
-                jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "加载场馆基地数据错误，请重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
-                });
-            }
-        });
-    }
-    loadOrgFinanceIncomeData();
-
-    function loadOrgFinanceTimesData() {
-        var typeTime = $("[name='total_students_type']:checked").val();
-        var busType = $("[name='total_bus_type']:checked").val();
-        var venueId = $("#current_venue_id").val();
-
-        $.getJSON('/admin/finance/getFinancePerformanceTimesForUsers', {typeTime : typeTime, busType : busType, venueId: venueId}, function (res) {
-            var data = res.data;
-
-            if (res.code == 1) {
-                if (!data.orgFinanceUsersList || !data.orgFinanceDataVenueList) {
-                    return jqueryAlert({
-                        'icon'      : '/Content/images/icon-error.png',
-                        'content'   : "加载场馆基地数据失败，请重试",
-                        'closeTime' : 2000,
-                        'modal'        : true,
-                        'isModalClose' : true
-                    });
-                }
-
-                var realNames = [];
-                !!data.orgFinanceUsersList && data.orgFinanceUsersList.forEach(function (item) {
-                    realNames.push(item.realName);
-                });
-
-                renderNullCountCharts(realNames, data.orgFinanceDataVenueList);
-                renderHotCountCharts(realNames, data.orgFinanceDataVenueList);
-            } else {
-                jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "加载场馆基地数据错误，请重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
-                });
-            }
-        });
-    }
-    loadOrgFinanceTimesData();
-
     // 流水
     function renderPipelineValueCharts(realNames, channelNames, userChannelData, userData) {
         var cnIndex, rnIndex, ucdIndex, udIndex;
@@ -687,7 +556,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
 
         $.sortFloatArrays(percentCounts, [realNames, nullCounts, nullNoCounts]);
 
-        var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart7'), "walden");
+        var performanceChart5 = echarts.init(document.getElementById('finance_performance_chart5'), "walden");
         var performanceChart5Option = {
             title  : chartsOption.setTitle("闲时段占用率排名（百分比）"),
             legend : chartsOption.setLegend(["占用", "未占用"]),
@@ -767,7 +636,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
 
         $.sortFloatArrays(percentCounts, [realNames, hotCounts, hotNoCounts]);
 
-        var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart8'), "walden");
+        var performanceChart6 = echarts.init(document.getElementById('finance_performance_chart6'), "walden");
         var performanceChart6Option = {
             title  : chartsOption.setTitle("忙时段占用率排名（百分比）"),
             legend : chartsOption.setLegend(["占用", "未占用"]),

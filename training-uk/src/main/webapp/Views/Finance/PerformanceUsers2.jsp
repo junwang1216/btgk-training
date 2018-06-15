@@ -174,13 +174,6 @@
                                         <div class="col-md-6 mt-2">
                                             <div id="finance_performance_chart6" class="chart"  style="width: 100%; height:360px;"></div>
                                         </div>
-
-                                        <div class="col-md-6 mt-2">
-                                            <div id="finance_performance_chart7" class="chart"  style="width: 100%; height:360px;"></div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div id="finance_performance_chart8" class="chart"  style="width: 100%; height:360px;"></div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
