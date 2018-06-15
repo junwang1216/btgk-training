@@ -1,6 +1,5 @@
 package com.training.uk.response;
 
-import com.training.core.common.enums.BusinessChannelTypeEnum;
 import com.training.core.common.enums.BusinessTypeEnum;
 
 import java.util.List;
@@ -80,6 +79,7 @@ public class OrgFinanceDataResponse {
 
     // 渠道 BusinessChannelTypeEnum
     private Integer channelType;
+    private String channelName;
 
     public Integer getChannelType() {
         return channelType;
@@ -89,7 +89,19 @@ public class OrgFinanceDataResponse {
     }
 
     public String getChannelName() {
-        return BusinessChannelTypeEnum.forValue(channelType).getDesc();
+        return channelName;
+    }
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    private String incomeType;
+
+    public String getIncomeType() {
+        return incomeType;
+    }
+    public void setIncomeType(String incomeType) {
+        this.incomeType = incomeType;
     }
 
     // 流水

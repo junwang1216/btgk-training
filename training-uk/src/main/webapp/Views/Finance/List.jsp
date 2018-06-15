@@ -61,8 +61,8 @@
                                         <button type="button" class="btn btn-primary search-business">
                                             <i class="fa fa-search"></i> 检 索
                                         </button>
-                                        <a href="/admin/finance/edit" class="btn btn-primary pull-right" title="添加">
-                                            <i class="fa fa-plus"></i> 添加
+                                        <a href="/admin/finance/add" class="btn btn-primary pull-right" title="添加">
+                                            <i class="fa fa-plus"></i> 添 加
                                         </a>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                                             <td>${business.pipelineValue}元</td>
                                             <td>
                                                 <a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="${business.businessNo}">
-                                                    <i class="fa fa-trash"></i> 删除
+                                                    <i class="fa fa-trash"></i> 删 除
                                                 </a>
                                             </td>
                                         </tr>
@@ -140,7 +140,7 @@
                                             <td>${business.businessCount}人</td>
                                             <td>
                                                 <a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="${business.businessNo}">
-                                                    <i class="fa fa-trash"></i> 删除
+                                                    <i class="fa fa-trash"></i> 删 除
                                                 </a>
                                             </td>
                                         </tr>
@@ -176,7 +176,7 @@
                                             <td>${business.incomeValue}元</td>
                                             <td>
                                                 <a href="javascript:;" class="btn btn-danger btn-delete" title="删除" data-business="${business.businessNo}">
-                                                    <i class="fa fa-trash"></i> 删除
+                                                    <i class="fa fa-trash"></i> 删 除
                                                 </a>
                                             </td>
                                         </tr>
@@ -212,7 +212,7 @@
                                             <td>${business.classCount}人</td>
                                             <td>
                                                 <a href="javascript:;" class="btn btn-danger btn-delete" title="删除" data-business="${business.businessNo}">
-                                                    <i class="fa fa-trash"></i> 删除
+                                                    <i class="fa fa-trash"></i> 删 除
                                                 </a>
                                             </td>
                                         </tr>
@@ -250,7 +250,7 @@
                                             <td>${business.hotCount}时</td>
                                             <td>
                                                 <a href="javascript:;" class="btn btn-danger btn-delete" title="删除" data-business="${business.businessNo}">
-                                                    <i class="fa fa-trash"></i> 删除
+                                                    <i class="fa fa-trash"></i> 删 除
                                                 </a>
                                             </td>
                                         </tr>

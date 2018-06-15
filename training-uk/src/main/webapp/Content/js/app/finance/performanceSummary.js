@@ -1,0 +1,84 @@
+requirejs.config({
+    baseUrl: 'Content/',
+    paths: {
+        "jquery"    : 'bower_components/jquery/dist/jquery',
+        "tether"    : 'bower_components/tether/dist/js/tether',
+        "bootstrap" : 'bower_components/bootstrap/dist/js/bootstrap',
+        "pace"      : 'bower_components/pace/pace',
+
+        "base"      : 'js/widgets/base',
+        "override"  : 'js/widgets/override'
+    },
+    shim: {
+        "bootstrap": {
+            deps: ["jquery", "override"]
+        }
+    },  // 依赖关系
+    waitSeconds: 0,
+    urlArgs: '_=' + new Date().getTime()
+});
+
+require(['jquery', 'override', 'bootstrap', 'base'], function ($) {
+    'use strict';
+
+    function setOverflow() {
+        var bodyWidth = $("body").width();
+
+        var sideBarWidth = $(".sidebar").width();
+        if ($("body.sidebar-hidden").length > 0) {
+            sideBarWidth = 0;
+        }
+        var paddingWidth = 15;
+
+        $(".table-overflow").width((bodyWidth - sideBarWidth - paddingWidth * 4) + "px");
+        $(".table-children").width((bodyWidth - sideBarWidth - paddingWidth * 6) + "px");
+    }
+    setOverflow();
+
+    $(".table-overflow").on("scroll", function (e) {
+       e.preventDefault();
+
+        $(".table-children").css({
+            "margin-left": $(this).scrollLeft() + "px"
+        });
+    });
+
+    // $(window).on("scroll", function (e) {
+    //     e.preventDefault();
+    //
+    //     var $header = $(".table-parent-header");
+    //     var $content = $(".table-parent-content");
+    //     if (($content.offset().top - $header.height()) <= $(this).scrollTop()) {
+    //         $header.css({
+    //             "position": "fixed",
+    //             "top": "55px",
+    //             "background": "#EEEEEE"
+    //         });
+    //     } else {
+    //         $header.css({
+    //             "position": "relative",
+    //             "top": "0",
+    //             "background": "#FFFFFF"
+    //         });
+    //     }
+    // });
+
+    window.addEventListener("resize", function (e) {
+        e.preventDefault();
+
+        setOverflow();
+    });
+
+    $("[name='total_students_type']").on("change", function (e) {
+        e.preventDefault();
+
+        window.location.href = "/admin/finance/performanceSummary?typeTime=" +  $("[name='total_students_type']:checked").val() +
+            "&busType=" + $("[name='total_bus_type']:checked").val();
+    });
+
+    $("[name='total_bus_type']").on("change", function (e) {
+        e.preventDefault();
+
+        window.location.href = "/admin/finance/performanceSummary?busType=" + $("[name='total_bus_type']:checked").val();
+    });
+});

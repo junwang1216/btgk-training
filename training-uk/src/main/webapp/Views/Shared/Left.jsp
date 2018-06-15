@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li class="nav-item <c:if test="${param.subMenu == 'record'}">open</c:if>">
-                        <a class="nav-link <c:if test="${param.subMenu == 'record'}">active</c:if>" href="/admin/finance/log">
+                        <a class="nav-link <c:if test="${param.subMenu == 'record'}">active</c:if>" href="/admin/finance/list">
                             <i class="icon-arrow-right"></i> 完成日志
                         </a>
                     </li>
@@ -50,7 +50,7 @@
                             </a>
                         </li>
                         <li class="nav-item <c:if test="${param.subMenu == 'summary'}">open</c:if>">
-                            <a class="nav-link <c:if test="${param.subMenu == 'summary'}">active</c:if>" href="/admin/finance/summary">
+                            <a class="nav-link <c:if test="${param.subMenu == 'summary'}">active</c:if>" href="/admin/finance/performanceSummary">
                                 <i class="icon-arrow-right"></i> 数据汇总
                             </a>
                         </li>
