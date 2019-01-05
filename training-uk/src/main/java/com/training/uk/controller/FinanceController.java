@@ -3,7 +3,6 @@ package com.training.uk.controller;
 import com.training.core.common.annotation.Desc;
 import com.training.core.common.bean.ResponseBean;
 import com.training.core.common.config.WebConfig;
-import com.training.core.common.constant.IPlatformConstant;
 import com.training.core.common.enums.*;
 import com.training.core.common.exception.MessageException;
 import com.training.core.common.util.*;
@@ -14,7 +13,6 @@ import com.training.uk.request.OrgFinanceParamSettingsRequest;
 import com.training.uk.response.*;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.persistence.Access;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
@@ -372,11 +369,6 @@ public class FinanceController extends BaseController {
 
         ModelAndView modelAndView = new ModelAndView("Finance/Settings");
 
-        if (orgFinanceLogRequest.getBusType() == 0) {
-            orgFinanceLogRequest.setBusType(BusinessTypeEnum.TRAINING_YOUNG.getCode());
-        }
-
-        modelAndView.addObject("BusinessTypeEnumList", EnumUtils.getEnumList(BusinessTypeEnum.class));
         modelAndView.addObject("BusinessGoalTypeEnumList", EnumUtils.getEnumList(BusinessGoalTypeEnum.class));
 
         List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
@@ -395,8 +387,9 @@ public class FinanceController extends BaseController {
 
         int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
         List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
-        List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
+
         String userName = "";
+        List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
         for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
             if (orgFinanceUsers.getVenueId() == orgFinanceLogRequest.getVenueId()) {
                 orgFinanceUsersList1.add(orgFinanceUsers);
@@ -407,27 +400,24 @@ public class FinanceController extends BaseController {
         }
         modelAndView.addObject("orgFinanceUsersList", orgFinanceUsersList1);
 
-        List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(),
+        List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(null,
                 orgFinanceLogRequest.getGoalType(), orgFinanceLogRequest.getVenueId(),
                 orgFinanceLogRequest.getYear(), orgFinanceLogRequest.getUserId());
 
         List<OrgFinanceGoalsResponse> flowGoalsList = new ArrayList<>();
         List<OrgFinanceGoalsResponse> incomeGoalsList = new ArrayList<>();
-        Map checkGoals = new HashMap();
+        Map<String, Integer> checkGoals = new HashMap<>();
         int fIndex = 0, iIndex = 0;
         for (OrgFinanceGoals orgFinanceGoals : orgFinanceGoalsList) {
             OrgFinanceGoalsResponse orgFinanceGoalsResponse = new OrgFinanceGoalsResponse();
             String uniqueKey;
 
             if (orgFinanceLogRequest.getUserId() != 0) {
-                uniqueKey = "goal_" + orgFinanceGoals.getBusType().toString() + "_" +
-                        orgFinanceGoals.getGoalType().toString() + "_" + orgFinanceGoals.getVenueId().toString() + "_" +
-                        orgFinanceGoals.getUserId().toString() + "_" + orgFinanceGoals.getYear().toString() + "_" +
-                        orgFinanceGoals.getMonth().toString();
+                uniqueKey = "goal_" + orgFinanceGoals.getGoalType().toString() + "_" + orgFinanceGoals.getVenueId().toString() + "_" +
+                        orgFinanceGoals.getUserId().toString() + "_" + orgFinanceGoals.getYear().toString() + "_" + orgFinanceGoals.getMonth().toString();
             }
             else {
-                uniqueKey = "goal_" + orgFinanceGoals.getBusType().toString() + "_" +
-                        orgFinanceGoals.getGoalType().toString() + "_" + orgFinanceGoals.getVenueId().toString() + "_" +
+                uniqueKey = "goal_" + orgFinanceGoals.getGoalType().toString() + "_" + orgFinanceGoals.getVenueId().toString() + "_" +
                         orgFinanceGoals.getYear().toString() + "_" + orgFinanceGoals.getMonth().toString();
             }
 
@@ -444,7 +434,6 @@ public class FinanceController extends BaseController {
                 }
             }
             else {
-                orgFinanceGoalsResponse.setBusType(orgFinanceGoals.getBusType());
                 orgFinanceGoalsResponse.setGoalType(orgFinanceGoals.getGoalType());
                 orgFinanceGoalsResponse.setVenueId(orgFinanceGoals.getVenueId());
                 orgFinanceGoalsResponse.setYear(orgFinanceGoals.getYear());
@@ -512,11 +501,10 @@ public class FinanceController extends BaseController {
             if (orgFinanceLogRequest.getGoalId() > 0) {
                 orgFinanceGoals = orgFinanceGoalsService.getOrgFinanceGoals(orgFinanceLogRequest.getGoalId());
             } else {
-                List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(),
+                List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(null,
                         orgFinanceLogRequest.getGoalType(), orgFinanceLogRequest.getVenueId(),
                         orgFinanceLogRequest.getYear(), 0);
 
-                orgFinanceGoals.setBusType(orgFinanceLogRequest.getBusType());
                 orgFinanceGoals.setGoalType(orgFinanceLogRequest.getGoalType());
                 orgFinanceGoals.setVenueId(orgFinanceLogRequest.getVenueId());
                 orgFinanceGoals.setYear(orgFinanceLogRequest.getYear());
@@ -644,7 +632,6 @@ public class FinanceController extends BaseController {
                     for (Integer month : monthList) {
                         OrgFinanceGoals orgFinanceGoals1 = new OrgFinanceGoals();
 
-                        orgFinanceGoals1.setBusType(orgFinanceGoals.getBusType());
                         orgFinanceGoals1.setGoalType(orgFinanceGoals.getGoalType());
                         orgFinanceGoals1.setVenueId(orgFinanceGoals.getVenueId());
                         orgFinanceGoals1.setUserId(userId);
@@ -1386,6 +1373,10 @@ public class FinanceController extends BaseController {
 
         ModelAndView modelAndView = new ModelAndView("Finance/PerformanceSummary");
 
+        if (orgFinanceLogRequest.getShow().equals("fullscreen")) {
+            modelAndView = new ModelAndView("Finance/PerformanceSummaryFull");
+        }
+
         if (orgFinanceLogRequest.getTypeTime() == null) {
             orgFinanceLogRequest.setTypeTime("month");
         }
@@ -1436,16 +1427,7 @@ public class FinanceController extends BaseController {
 
         List<OrgFinanceDataResponse> orgFinanceDataResponseList = new ArrayList<>();
         for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
-            Integer[] financeGoals = getOrgFinanceGoalsForDate(orgFinanceGoalsList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), startTime, typePeriod[2]);
-
             OrgFinanceDataResponse orgFinanceDataResponse = new OrgFinanceDataResponse();
-
-            if (financeGoals != null) {
-                orgFinanceDataResponse.setPipelineTarget(financeGoals[0]);
-                orgFinanceDataResponse.setPipelineChallenge(financeGoals[1]);
-                orgFinanceDataResponse.setIncomeTarget(financeGoals[2]);
-                orgFinanceDataResponse.setIncomeChallenge(financeGoals[3]);
-            }
 
             orgFinanceDataResponse.setVenueId(orgFinanceUsers.getVenueId());
             orgFinanceDataResponse.setVenueName(getVenueName(orgFinanceUsers.getVenueId(), orgFinanceVenuesList));
@@ -1472,7 +1454,16 @@ public class FinanceController extends BaseController {
             orgFinanceDataResponse.setHotCount(timesData[2]);
             orgFinanceDataResponse.setHotTotalCount(timesData[3]);
 
+            if (pipelineData <= 0 && incomeData <= 0 &&
+                    businessData[0] <= 0 && businessData[1] <= 0 &&
+                    attendanceData[0] <= 0 && attendanceData[1] <= 0 &&
+                    timesData[0] <= 0 && timesData[1] <= 0 && timesData[2] <= 0 && timesData[3] <= 0) {
+                continue;
+            }
+
+            // 渠道
             List<OrgFinanceDataResponse> orgFinanceDataResponseList1 = new ArrayList<>();
+
             for (OrgFinanceEnums orgFinanceEnums : orgFinanceChannelEnumsList) {
                 OrgFinanceDataResponse orgFinanceDataChannelResponse = new OrgFinanceDataResponse();
 
@@ -1485,9 +1476,29 @@ public class FinanceController extends BaseController {
                 orgFinanceDataChannelResponse.setAccessCount(businessChannelData[0]);
                 orgFinanceDataChannelResponse.setBusinessCount(businessChannelData[1]);
 
+                if (pipelineChannelData <= 0 && businessChannelData[0] <= 0 && businessChannelData[1] <= 0) {
+                    continue;
+                }
+
                 orgFinanceDataResponseList1.add(orgFinanceDataChannelResponse);
             }
 
+            OrgFinanceDataResponse orgFinanceDataChannelResponse1 = new OrgFinanceDataResponse();
+
+            orgFinanceDataChannelResponse1.setChannelName("无");
+
+            int pipelineChannelData = calOrgFinanceDataFlow(orgFinanceDataFlowList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+            orgFinanceDataChannelResponse1.setPipelineValue(pipelineChannelData);
+
+            int[] businessChannelData = calOrgFinanceDataBusiness(orgFinanceDataBusinessList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+            orgFinanceDataChannelResponse1.setAccessCount(businessChannelData[0]);
+            orgFinanceDataChannelResponse1.setBusinessCount(businessChannelData[1]);
+
+            if (pipelineChannelData > 0 || businessChannelData[0] > 0 || businessChannelData[1] > 0) {
+                orgFinanceDataResponseList1.add(orgFinanceDataChannelResponse1);
+            }
+
+            // 收入
             for (OrgFinanceEnums orgFinanceEnums : orgFinanceIncomeEnumsList) {
                 OrgFinanceDataResponse orgFinanceDataIncomeResponse = new OrgFinanceDataResponse();
 
@@ -1500,13 +1511,47 @@ public class FinanceController extends BaseController {
                 orgFinanceDataIncomeResponse.setRegisterCount(attendanceChannelData[0]);
                 orgFinanceDataIncomeResponse.setClassCount(attendanceChannelData[1]);
 
+                if (incomeChannelData <= 0 && attendanceChannelData[0] <= 0 && attendanceChannelData[1] <= 0) {
+                    continue;
+                }
+
                 orgFinanceDataResponseList1.add(orgFinanceDataIncomeResponse);
+            }
+
+            OrgFinanceDataResponse orgFinanceDataIncomeResponse1 = new OrgFinanceDataResponse();
+
+            orgFinanceDataIncomeResponse1.setIncomeType("无");
+
+            int incomeChannelData = calOrgFinanceDataIncome(orgFinanceDataIncomeList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+            orgFinanceDataIncomeResponse1.setIncomeValue(incomeChannelData);
+
+            int[] attendanceChannelData = calOrgFinanceDataAttendance(orgFinanceDataAttendanceList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+            orgFinanceDataIncomeResponse1.setRegisterCount(attendanceChannelData[0]);
+            orgFinanceDataIncomeResponse1.setClassCount(attendanceChannelData[1]);
+
+            if (incomeChannelData > 0 || attendanceChannelData[0] > 0 || attendanceChannelData[1] > 0) {
+                orgFinanceDataResponseList1.add(orgFinanceDataIncomeResponse1);
             }
 
             orgFinanceDataResponse.setOrgFinanceDataResponseChannelList(orgFinanceDataResponseList1);
 
+            // 目标
+            Integer[] financeGoals = getOrgFinanceGoalsForDate(orgFinanceGoalsList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), startTime, typePeriod[2]);
+            if (financeGoals != null) {
+                orgFinanceDataResponse.setPipelineTarget(financeGoals[0]);
+                orgFinanceDataResponse.setPipelineChallenge(financeGoals[1]);
+                orgFinanceDataResponse.setIncomeTarget(financeGoals[2]);
+                orgFinanceDataResponse.setIncomeChallenge(financeGoals[3]);
+            }
+
             orgFinanceDataResponseList.add(orgFinanceDataResponse);
         }
+
+        Collections.sort(orgFinanceDataResponseList, new Comparator<OrgFinanceDataResponse> () {
+            public int compare(OrgFinanceDataResponse arg0, OrgFinanceDataResponse arg1) {
+                return arg0.getVenueId().compareTo(arg1.getVenueId());
+            }
+        });
 
         modelAndView.addObject("orgFinanceDataResponseList", orgFinanceDataResponseList);
 
@@ -1547,6 +1592,7 @@ public class FinanceController extends BaseController {
 
             if (isTotal) {
                 total += orgFinanceDataFlow.getPipelineValue();
+                isTotal = false;
             }
         }
 
@@ -1587,6 +1633,7 @@ public class FinanceController extends BaseController {
 
             if (isTotal) {
                 total += orgFinanceDataIncome.getIncomeValue();
+                isTotal = false;
             }
         }
 
@@ -1628,6 +1675,7 @@ public class FinanceController extends BaseController {
             if (isTotal) {
                 totalAccessCount += orgFinanceDataBusiness.getAccessCount();
                 totalBusinessCount += orgFinanceDataBusiness.getBusinessCount();
+                isTotal = false;
             }
         }
 
@@ -1669,6 +1717,7 @@ public class FinanceController extends BaseController {
             if (isTotal) {
                 totalRegisterCount += orgFinanceDataAttendance.getRegisterCount();
                 totalClassCount += orgFinanceDataAttendance.getClassCount();
+                isTotal = false;
             }
         }
 
@@ -1698,10 +1747,280 @@ public class FinanceController extends BaseController {
                 totalNullTotalCount += orgFinanceDataTimes.getNullTotalCount();
                 totalHotCount += orgFinanceDataTimes.getHotCount();
                 totalHotTotalCount += orgFinanceDataTimes.getHotTotalCount();
+                isTotal = false;
             }
         }
 
         return new int[]{totalNullCount, totalNullTotalCount, totalHotCount, totalHotTotalCount};
+    }
+
+    /**
+     * 导出运营报表
+     * @return
+     */
+    @RequestMapping(value = "/performanceSummary/export")
+    @ResponseBody
+    public void exportPerformanceSummary(OrgFinanceLogRequest orgFinanceLogRequest, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String[] sheetTitle = {
+                "基地名字", "姓名",
+                "流水完成", "流水目标", "流水挑战目标",
+                "确认收入完成", "确认收入目标", "确认收入挑战目标",
+                "在册人数", "到课人数",
+                "个人渠道体验数", "个人渠道成交数", "个人渠道转化率",
+                "转介绍渠道体验数", "转介绍渠道成交数", "转介绍渠道转化率",
+                "非公司渠转化率",
+                "公司渠道体验数", "公司渠道成交数", "公司渠道转化率",
+                "整体转化率",
+                "闲时段数", "闲时段总数",
+                "忙时段数", "忙时段总数"};
+
+        String sheetName = "财务数据";
+
+        if (orgFinanceLogRequest.getTypeTime() == null) {
+            orgFinanceLogRequest.setTypeTime("month");
+        }
+
+        List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
+
+        int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
+        List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
+
+        String typePeriod[] = getStartEndTime(orgFinanceLogRequest.getTypeTime());
+        String startTime = typePeriod[0].substring(0, 10);
+        String endTime = typePeriod[1].substring(0, 10);
+
+        List<OrgFinanceEnums> orgFinanceChannelEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CHANNEL");
+
+        List<OrgFinanceEnums> orgFinanceIncomeEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CINCOME");
+
+        // 流水
+        int flowTotal = orgFinanceDataFlowService.queryOrgFinanceDataFlowCount(0, 0, 0, startTime, endTime);
+        List<OrgFinanceDataFlow> orgFinanceDataFlowList = orgFinanceDataFlowService.queryOrgFinanceDataFlowList(0, 0, 0, startTime, endTime, 0, flowTotal);
+
+        // 体验成交
+        int businessTotal = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessCount(0, 0, 0, startTime, endTime);
+        List<OrgFinanceDataBusiness> orgFinanceDataBusinessList = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessList(0, 0, 0, startTime, endTime, 0, businessTotal);
+
+        // 确认收入
+        int incomeTotal = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeCount(0, 0, 0, startTime, endTime);
+        List<OrgFinanceDataIncome> orgFinanceDataIncomeList = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeList(0, 0, 0, startTime, endTime, 0, incomeTotal);
+
+        // 签到
+        int attendanceTotal = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceCount(0, 0, 0, startTime, endTime);
+        List<OrgFinanceDataAttendance> orgFinanceDataAttendanceList = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceList(0, 0, 0, startTime, endTime, 0, attendanceTotal);
+
+        // 闲忙
+        int timesTotal = orgFinanceDataTimesService.queryOrgFinanceDataTimesCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
+        List<OrgFinanceDataTimes> orgFinanceDataTimesList = orgFinanceDataTimesService.queryOrgFinanceDataTimesList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, timesTotal);
+
+        // 目标
+        List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(0, 0, 0, 0, 0);
+
+        List<OrgFinanceDataResponse> orgFinanceDataResponseList = new ArrayList<>();
+        for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+            OrgFinanceDataResponse orgFinanceDataResponse = new OrgFinanceDataResponse();
+
+            orgFinanceDataResponse.setVenueId(orgFinanceUsers.getVenueId());
+            orgFinanceDataResponse.setVenueName(getVenueName(orgFinanceUsers.getVenueId(), orgFinanceVenuesList));
+            orgFinanceDataResponse.setRealName(orgFinanceUsers.getRealName());
+
+            int pipelineData = calOrgFinanceDataFlow(orgFinanceDataFlowList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), null);
+            orgFinanceDataResponse.setPipelineValue(pipelineData);
+
+            int incomeData = calOrgFinanceDataIncome(orgFinanceDataIncomeList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), null);
+            orgFinanceDataResponse.setIncomeValue(incomeData);
+
+            int[] businessData = calOrgFinanceDataBusiness(orgFinanceDataBusinessList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), null);
+            orgFinanceDataResponse.setAccessCount(businessData[0]);
+            orgFinanceDataResponse.setBusinessCount(businessData[1]);
+
+            int[] attendanceData = calOrgFinanceDataAttendance(orgFinanceDataAttendanceList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), null);
+            orgFinanceDataResponse.setRegisterCount(attendanceData[0]);
+            orgFinanceDataResponse.setClassCount(attendanceData[1]);
+
+            int[] timesData = calOrgFinanceDataTimes(orgFinanceDataTimesList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId());
+            orgFinanceDataResponse.setNullCount(timesData[0]);
+            orgFinanceDataResponse.setNullTotalCount(timesData[1]);
+            orgFinanceDataResponse.setHotCount(timesData[2]);
+            orgFinanceDataResponse.setHotTotalCount(timesData[3]);
+
+            if (pipelineData <= 0 && incomeData <= 0 &&
+                    businessData[0] <= 0 && businessData[1] <= 0 &&
+                    attendanceData[0] <= 0 && attendanceData[1] <= 0 &&
+                    timesData[0] <= 0 && timesData[1] <= 0 && timesData[2] <= 0 && timesData[3] <= 0) {
+                continue;
+            }
+
+            // 渠道
+            List<OrgFinanceDataResponse> orgFinanceDataResponseList1 = new ArrayList<>();
+
+            for (OrgFinanceEnums orgFinanceEnums : orgFinanceChannelEnumsList) {
+                OrgFinanceDataResponse orgFinanceDataChannelResponse = new OrgFinanceDataResponse();
+
+                orgFinanceDataChannelResponse.setChannelName(orgFinanceEnums.getEnumNote());
+
+                int[] businessChannelData = calOrgFinanceDataBusiness(orgFinanceDataBusinessList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), orgFinanceEnums.getEnumNote());
+                orgFinanceDataChannelResponse.setAccessCount(businessChannelData[0]);
+                orgFinanceDataChannelResponse.setBusinessCount(businessChannelData[1]);
+
+                if (businessChannelData[0] <= 0 && businessChannelData[1] <= 0) {
+                    continue;
+                }
+
+                orgFinanceDataResponseList1.add(orgFinanceDataChannelResponse);
+            }
+
+            OrgFinanceDataResponse orgFinanceDataChannelResponse1 = new OrgFinanceDataResponse();
+
+            orgFinanceDataChannelResponse1.setChannelName("无");
+
+            int[] businessChannelData = calOrgFinanceDataBusiness(orgFinanceDataBusinessList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+            orgFinanceDataChannelResponse1.setAccessCount(businessChannelData[0]);
+            orgFinanceDataChannelResponse1.setBusinessCount(businessChannelData[1]);
+
+            if (businessChannelData[0] > 0 || businessChannelData[1] > 0) {
+                orgFinanceDataResponseList1.add(orgFinanceDataChannelResponse1);
+            }
+
+            orgFinanceDataResponse.setOrgFinanceDataResponseChannelList(orgFinanceDataResponseList1);
+
+            // 目标
+            Integer[] financeGoals = getOrgFinanceGoalsForDate(orgFinanceGoalsList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), startTime, typePeriod[2]);
+            if (financeGoals != null) {
+                orgFinanceDataResponse.setPipelineTarget(financeGoals[0]);
+                orgFinanceDataResponse.setPipelineChallenge(financeGoals[1]);
+                orgFinanceDataResponse.setIncomeTarget(financeGoals[2]);
+                orgFinanceDataResponse.setIncomeChallenge(financeGoals[3]);
+            }
+
+            orgFinanceDataResponseList.add(orgFinanceDataResponse);
+        }
+
+        Collections.sort(orgFinanceDataResponseList, new Comparator<OrgFinanceDataResponse> () {
+            public int compare(OrgFinanceDataResponse arg0, OrgFinanceDataResponse arg1) {
+                return arg0.getVenueId().compareTo(arg1.getVenueId());
+            }
+        });
+
+        int j = 0;
+        String [][]trainingContent = new String[orgFinanceDataResponseList.size()][sheetTitle.length];
+        for (OrgFinanceDataResponse orgFinanceDataResponse : orgFinanceDataResponseList) {
+            trainingContent[j][0] = orgFinanceDataResponse.getVenueName();
+            trainingContent[j][1] = orgFinanceDataResponse.getRealName();
+            trainingContent[j][2] = orgFinanceDataResponse.getPipelineValue().toString();
+            trainingContent[j][3] = orgFinanceDataResponse.getPipelineTarget().toString() + "，" + StrUtil.roundKeepTwo(orgFinanceDataResponse.getPipelineTargetPercent() * 100) + "%";
+            trainingContent[j][4] = orgFinanceDataResponse.getPipelineChallenge().toString() + "，" + StrUtil.roundKeepTwo(orgFinanceDataResponse.getPipelineChallengePercent() * 100) + "%";
+            trainingContent[j][5] = orgFinanceDataResponse.getIncomeValue().toString();
+            trainingContent[j][6] = orgFinanceDataResponse.getIncomeTarget().toString() + "，" + StrUtil.roundKeepTwo(orgFinanceDataResponse.getIncomeTargetPercent() * 100) + "%";
+            trainingContent[j][7] = orgFinanceDataResponse.getIncomeChallenge().toString() + "，" + StrUtil.roundKeepTwo(orgFinanceDataResponse.getIncomeChallengePercent() * 100) + "%";
+            trainingContent[j][8] = orgFinanceDataResponse.getRegisterCount().toString();
+            trainingContent[j][9] = orgFinanceDataResponse.getClassCount().toString();
+
+            Integer accessCountPerson = 0, businessCountPerson = 0;
+            trainingContent[j][10] = "0";
+            trainingContent[j][11] = "0";
+            trainingContent[j][12] = "0.00%";
+
+            Integer accessCountFriend = 0, businessCountFriend = 0;
+            trainingContent[j][13] = "0";
+            trainingContent[j][14] = "0";
+            trainingContent[j][15] = "0.00%";
+
+            Integer accessCountMember = 0, businessCountMember = 0;
+
+            trainingContent[j][17] = "0";
+            trainingContent[j][18] = "0";
+            trainingContent[j][19] = "0.00%";
+            for (OrgFinanceDataResponse orgFinanceDataResponse1 : orgFinanceDataResponse.getOrgFinanceDataResponseChannelList()) {
+                if (orgFinanceDataResponse1.getChannelName().equals("个人")) {
+                    accessCountPerson = orgFinanceDataResponse1.getAccessCount();
+                    businessCountPerson = orgFinanceDataResponse1.getBusinessCount();
+
+                    trainingContent[j][10] = orgFinanceDataResponse1.getAccessCount() + "";
+                    trainingContent[j][11] = orgFinanceDataResponse1.getBusinessCount() + "";
+                    trainingContent[j][12] = StrUtil.roundKeepTwo(orgFinanceDataResponse1.getBusinessCountPercent() * 100) + "%";
+                }
+                if (orgFinanceDataResponse1.getChannelName().equals("转介绍")) {
+                    accessCountFriend = orgFinanceDataResponse1.getAccessCount();
+                    businessCountFriend = orgFinanceDataResponse1.getBusinessCount();
+
+                    trainingContent[j][13] = orgFinanceDataResponse1.getAccessCount() + "";
+                    trainingContent[j][14] = orgFinanceDataResponse1.getBusinessCount() + "";
+                    trainingContent[j][15] = StrUtil.roundKeepTwo(orgFinanceDataResponse1.getBusinessCountPercent() * 100) + "%";
+                }
+                if (orgFinanceDataResponse1.getChannelName().equals("续费")) {
+                    accessCountMember = orgFinanceDataResponse1.getAccessCount();
+                    businessCountMember = orgFinanceDataResponse1.getBusinessCount();
+                }
+                if (orgFinanceDataResponse1.getChannelName().equals("公司")) {
+                    trainingContent[j][17] = orgFinanceDataResponse1.getAccessCount() + "";
+                    trainingContent[j][18] = orgFinanceDataResponse1.getBusinessCount() + "";
+                    trainingContent[j][19] = StrUtil.roundKeepTwo(orgFinanceDataResponse1.getBusinessCountPercent() * 100) + "%";
+                }
+            }
+
+            trainingContent[j][16] = "0.00%";
+            if ((accessCountFriend + accessCountMember + accessCountPerson) > 0) {
+                trainingContent[j][16] = StrUtil.roundKeepTwo(((double)(businessCountPerson + businessCountFriend + businessCountMember) / (accessCountFriend + accessCountMember + accessCountPerson)) * 100) + "%";
+            }
+
+            trainingContent[j][20] = StrUtil.roundKeepTwo(orgFinanceDataResponse.getBusinessCountPercent() * 100) + "%";
+
+            trainingContent[j][21] = orgFinanceDataResponse.getNullCount().toString();
+            trainingContent[j][22] = orgFinanceDataResponse.getNullTotalCount().toString() + "，" + StrUtil.roundKeepTwo(orgFinanceDataResponse.getNullCountPercent() * 100) + "%";
+            trainingContent[j][23] = orgFinanceDataResponse.getHotCount().toString();
+            trainingContent[j][24] = orgFinanceDataResponse.getHotTotalCount().toString() + "，" + StrUtil.roundKeepTwo(orgFinanceDataResponse.getHotCountPercent() * 100) + "%";
+
+            j++;
+        }
+
+        HSSFWorkbook trainingBook = ExcelUtil.getHSSFWorkbook(sheetName, sheetTitle, trainingContent, null);
+
+        // 文件名
+        String fileName = "运营财务报表_" + typePeriod[2] + "_" + System.currentTimeMillis() + ".xls";
+
+        //响应到客户端
+        try {
+            this.setResponseHeader(response, fileName);
+
+            OutputStream os = response.getOutputStream();
+
+            trainingBook.write(os);
+
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*** 图表 start ***/
+
+    @Desc("个人业绩统计")
+    @RequestMapping(value = "/performance", method = RequestMethod.GET)
+    public ModelAndView renderFinancePerformance(OrgFinanceLogRequest orgFinanceLogRequest) {
+
+        if (orgFinanceLogRequest.getTypeTime() == null) {
+            orgFinanceLogRequest.setTypeTime("month");
+        }
+
+        ModelAndView modelAndView;
+        if (orgFinanceLogRequest.getVenueId() == -1) {
+            modelAndView = new ModelAndView("Finance/PerformanceVenues");
+        }
+        else {
+            modelAndView = new ModelAndView("Finance/PerformanceUsers");
+        }
+
+        modelAndView.addObject("conditions", orgFinanceLogRequest);
+
+        List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
+        modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
+
+        modelAndView.addObject("BusinessTypeEnumList", EnumUtils.getEnumList(BusinessTypeEnum.class));
+        modelAndView.addObject("BusinessTypeEnum", EnumUtils.getEnumMap(BusinessTypeEnum.class));
+
+        return setModelAndView(modelAndView);
     }
 
     @Desc("场馆业绩渠道相关")
@@ -1724,14 +2043,14 @@ public class FinanceController extends BaseController {
 
             // 流水
             int flowTotal = orgFinanceDataFlowService.queryOrgFinanceDataFlowCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
-            List<OrgFinanceDataFlow> orgFinanceDataFlowList = orgFinanceDataFlowService.queryOrgFinanceDataFlowList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, flowTotal);
+            List<OrgFinanceDataFlow> orgFinanceDataFlowList = orgFinanceDataFlowService.queryOrgFinanceDataFlowList(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime, 0, flowTotal);
             for (OrgFinanceDataFlow orgFinanceDataFlow : orgFinanceDataFlowList) {
                 orgFinanceDataFlow.setUserId(-1);
             }
 
             // 体验成交
             int businessTotal = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
-            List<OrgFinanceDataBusiness> orgFinanceDataBusinessList = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, businessTotal);
+            List<OrgFinanceDataBusiness> orgFinanceDataBusinessList = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessList(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime, 0, businessTotal);
             for (OrgFinanceDataBusiness orgFinanceDataBusiness : orgFinanceDataBusinessList) {
                 orgFinanceDataBusiness.setUserId(-1);
             }
@@ -1789,6 +2108,24 @@ public class FinanceController extends BaseController {
 
                     orgFinanceDataChannelList.add(orgFinanceDataChannelResponse);
                 }
+
+                OrgFinanceDataChannelResponse orgFinanceDataChannelResponse1 = new OrgFinanceDataChannelResponse();
+
+                orgFinanceDataChannelResponse1.setVenueId(orgFinanceVenues.getId());
+                orgFinanceDataChannelResponse1.setVenueName(orgFinanceVenues.getVenueName());
+
+                orgFinanceDataChannelResponse1.setChannelName("无");
+
+                int pipelineData = calOrgFinanceDataFlow(orgFinanceDataFlowList, orgFinanceVenues.getId(), 0, "无");
+                orgFinanceDataChannelResponse1.setPipelineValue(pipelineData);
+
+                int[] businessChannelData = calOrgFinanceDataBusiness(orgFinanceDataBusinessList, orgFinanceVenues.getId(), 0, "无");
+                orgFinanceDataChannelResponse1.setAccessCount(businessChannelData[0]);
+                orgFinanceDataChannelResponse1.setBusinessCount(businessChannelData[1]);
+
+                if (pipelineData > 0 || businessChannelData[0] > 0 || businessChannelData[1] > 0) {
+                    orgFinanceDataChannelList.add(orgFinanceDataChannelResponse1);
+                }
             }
 
             map.put("orgFinanceVenuesList", orgFinanceVenuesList);
@@ -1811,17 +2148,14 @@ public class FinanceController extends BaseController {
     @RequestMapping(value = "/getFinancePerformanceIncomeForVenues", method = RequestMethod.GET)
     public ResponseBean getFinancePerformanceIncomeForVenues(OrgFinanceLogRequest orgFinanceLogRequest) {
         try {
-            Map map = new HashMap();
+            Map<String, Object> map = new HashMap<String, Object>();
 
             if (orgFinanceLogRequest.getTypeTime() == null) {
                 orgFinanceLogRequest.setTypeTime("month");
             }
 
             List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
-            map.put("orgFinanceVenuesList", orgFinanceVenuesList);
-
             List<OrgFinanceEnums> orgFinanceIncomeEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CINCOME");
-            map.put("orgFinanceIncomeList", orgFinanceIncomeEnumsList);
 
             String typePeriod[] = getStartEndTime(orgFinanceLogRequest.getTypeTime());
             String startTime = typePeriod[0].substring(0, 10);
@@ -1829,14 +2163,14 @@ public class FinanceController extends BaseController {
 
             // 确认收入
             int incomeTotal = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
-            List<OrgFinanceDataIncome> orgFinanceDataIncomeList = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, incomeTotal);
+            List<OrgFinanceDataIncome> orgFinanceDataIncomeList = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeList(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime, 0, incomeTotal);
             for (OrgFinanceDataIncome orgFinanceDataIncome : orgFinanceDataIncomeList) {
                 orgFinanceDataIncome.setUserId(-1);
             }
 
             // 签到
             int attendanceTotal = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
-            List<OrgFinanceDataAttendance> orgFinanceDataAttendanceList = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, attendanceTotal);
+            List<OrgFinanceDataAttendance> orgFinanceDataAttendanceList = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceList(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime, 0, attendanceTotal);
             for (OrgFinanceDataAttendance orgFinanceDataAttendance : orgFinanceDataAttendanceList) {
                 orgFinanceDataAttendance.setUserId(-1);
             }
@@ -1894,8 +2228,28 @@ public class FinanceController extends BaseController {
 
                     orgFinanceDataIncomeTypeList.add(orgFinanceDataChannelResponse);
                 }
+
+                OrgFinanceDataIncomeResponse orgFinanceDataChannelResponse1 = new OrgFinanceDataIncomeResponse();
+
+                orgFinanceDataChannelResponse1.setVenueId(orgFinanceVenues.getId());
+                orgFinanceDataChannelResponse1.setVenueName(orgFinanceVenues.getVenueName());
+
+                orgFinanceDataChannelResponse1.setIncomeType("无");
+
+                int incomeChannelData = calOrgFinanceDataIncome(orgFinanceDataIncomeList, orgFinanceVenues.getId(), 0, "无");
+                orgFinanceDataChannelResponse1.setIncomeValue(incomeChannelData);
+
+                int[] attendanceChannelData = calOrgFinanceDataAttendance(orgFinanceDataAttendanceList, orgFinanceVenues.getId(), 0, "无");
+                orgFinanceDataChannelResponse1.setRegisterCount(attendanceChannelData[0]);
+                orgFinanceDataChannelResponse1.setClassCount(attendanceChannelData[1]);
+
+                if (incomeChannelData > 0 || attendanceChannelData[0] > 0 || attendanceChannelData[1] > 0) {
+                    orgFinanceDataIncomeTypeList.add(orgFinanceDataChannelResponse1);
+                }
             }
 
+            map.put("orgFinanceVenuesList", orgFinanceVenuesList);
+            map.put("orgFinanceIncomeList", orgFinanceIncomeEnumsList);
             map.put("orgFinanceDataVenueList", orgFinanceDataVenueList);
             map.put("orgFinanceDataIncomeTypeList", orgFinanceDataIncomeTypeList);
 
@@ -1979,6 +2333,15 @@ public class FinanceController extends BaseController {
 
             int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
             List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
+            List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
+            for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+                orgFinanceUsersList1.add(orgFinanceUsers);
+            }
+            map.put("orgFinanceUsersList", orgFinanceUsersList1);
+
             List<OrgFinanceEnums> orgFinanceChannelEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CHANNEL");
 
             String typePeriod[] = getStartEndTime(orgFinanceLogRequest.getTypeTime());
@@ -1986,24 +2349,22 @@ public class FinanceController extends BaseController {
             String endTime = typePeriod[1].substring(0, 10);
 
             // 流水
-            int flowTotal = orgFinanceDataFlowService.queryOrgFinanceDataFlowCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
+            int flowTotal = orgFinanceDataFlowService.queryOrgFinanceDataFlowCount(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime);
             List<OrgFinanceDataFlow> orgFinanceDataFlowList = orgFinanceDataFlowService.queryOrgFinanceDataFlowList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, flowTotal);
-            for (OrgFinanceDataFlow orgFinanceDataFlow : orgFinanceDataFlowList) {
-                orgFinanceDataFlow.setUserId(-1);
-            }
 
             // 体验成交
-            int businessTotal = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
+            int businessTotal = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessCount(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime);
             List<OrgFinanceDataBusiness> orgFinanceDataBusinessList = orgFinanceDataBusinessService.queryOrgFinanceDataBusinessList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, businessTotal);
-            for (OrgFinanceDataBusiness orgFinanceDataBusiness : orgFinanceDataBusinessList) {
-                orgFinanceDataBusiness.setUserId(-1);
-            }
 
             // 目标
-            List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(), 0, 0, 0, 0);
+            List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(), 0, orgFinanceLogRequest.getVenueId(), 0, 0);
 
             List<OrgFinanceDataChannelResponse> orgFinanceDataVenueList = new ArrayList<>();
             for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+
                 OrgFinanceDataChannelResponse orgFinanceDataResponse = new OrgFinanceDataChannelResponse();
 
                 orgFinanceDataResponse.setUserId(orgFinanceUsers.getId());
@@ -2031,6 +2392,10 @@ public class FinanceController extends BaseController {
 
             List<OrgFinanceDataChannelResponse> orgFinanceDataChannelList = new ArrayList<>();
             for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+
                 for (OrgFinanceEnums orgFinanceEnums : orgFinanceChannelEnumsList) {
                     OrgFinanceDataChannelResponse orgFinanceDataChannelResponse = new OrgFinanceDataChannelResponse();
 
@@ -2052,9 +2417,26 @@ public class FinanceController extends BaseController {
 
                     orgFinanceDataChannelList.add(orgFinanceDataChannelResponse);
                 }
+
+                OrgFinanceDataChannelResponse orgFinanceDataChannelResponse1 = new OrgFinanceDataChannelResponse();
+
+                orgFinanceDataChannelResponse1.setUserId(orgFinanceUsers.getId());
+                orgFinanceDataChannelResponse1.setRealName(orgFinanceUsers.getRealName());
+
+                orgFinanceDataChannelResponse1.setChannelName("无");
+
+                int pipelineData = calOrgFinanceDataFlow(orgFinanceDataFlowList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+                orgFinanceDataChannelResponse1.setPipelineValue(pipelineData);
+
+                int[] businessChannelData = calOrgFinanceDataBusiness(orgFinanceDataBusinessList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+                orgFinanceDataChannelResponse1.setAccessCount(businessChannelData[0]);
+                orgFinanceDataChannelResponse1.setBusinessCount(businessChannelData[1]);
+
+                if (pipelineData > 0 || businessChannelData[0] > 0) {
+                    orgFinanceDataChannelList.add(orgFinanceDataChannelResponse1);
+                }
             }
 
-            map.put("orgFinanceUsersList", orgFinanceUsersList);
             map.put("orgFinanceChannelList", orgFinanceChannelEnumsList);
             map.put("orgFinanceDataVenueList", orgFinanceDataVenueList);
             map.put("orgFinanceDataChannelList", orgFinanceDataChannelList);
@@ -2082,7 +2464,14 @@ public class FinanceController extends BaseController {
 
             int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
             List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
-            map.put("orgFinanceUsersList", orgFinanceUsersList);
+            List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
+            for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+                orgFinanceUsersList1.add(orgFinanceUsers);
+            }
+            map.put("orgFinanceUsersList", orgFinanceUsersList1);
 
             List<OrgFinanceEnums> orgFinanceIncomeEnumsList = orgFinanceEnumsService.queryOrgFinanceEnumsList("GROUP_CINCOME");
             map.put("orgFinanceIncomeList", orgFinanceIncomeEnumsList);
@@ -2092,24 +2481,22 @@ public class FinanceController extends BaseController {
             String endTime = typePeriod[1].substring(0, 10);
 
             // 确认收入
-            int incomeTotal = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
+            int incomeTotal = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeCount(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime);
             List<OrgFinanceDataIncome> orgFinanceDataIncomeList = orgFinanceDataIncomeService.queryOrgFinanceDataIncomeList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, incomeTotal);
-            for (OrgFinanceDataIncome orgFinanceDataIncome : orgFinanceDataIncomeList) {
-                orgFinanceDataIncome.setUserId(-1);
-            }
 
             // 签到
-            int attendanceTotal = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
+            int attendanceTotal = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceCount(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime);
             List<OrgFinanceDataAttendance> orgFinanceDataAttendanceList = orgFinanceDataAttendanceService.queryOrgFinanceDataAttendanceList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, attendanceTotal);
-            for (OrgFinanceDataAttendance orgFinanceDataAttendance : orgFinanceDataAttendanceList) {
-                orgFinanceDataAttendance.setUserId(-1);
-            }
 
             // 目标
-            List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(), 0, 0, 0, 0);
+            List<OrgFinanceGoals> orgFinanceGoalsList = orgFinanceGoalsService.queryOrgFinanceGoalsList(orgFinanceLogRequest.getBusType(), 0, orgFinanceLogRequest.getVenueId(), 0, 0);
 
             List<OrgFinanceDataIncomeResponse> orgFinanceDataVenueList = new ArrayList<>();
             for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+
                 OrgFinanceDataIncomeResponse orgFinanceDataResponse = new OrgFinanceDataIncomeResponse();
 
                 orgFinanceDataResponse.setUserId(orgFinanceUsers.getId());
@@ -2137,6 +2524,10 @@ public class FinanceController extends BaseController {
 
             List<OrgFinanceDataIncomeResponse> orgFinanceDataIncomeTypeList = new ArrayList<>();
             for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+
                 for (OrgFinanceEnums orgFinanceEnums : orgFinanceIncomeEnumsList) {
                     OrgFinanceDataIncomeResponse orgFinanceDataChannelResponse = new OrgFinanceDataIncomeResponse();
 
@@ -2157,6 +2548,24 @@ public class FinanceController extends BaseController {
                     }
 
                     orgFinanceDataIncomeTypeList.add(orgFinanceDataChannelResponse);
+                }
+
+                OrgFinanceDataIncomeResponse orgFinanceDataChannelResponse1 = new OrgFinanceDataIncomeResponse();
+
+                orgFinanceDataChannelResponse1.setUserId(orgFinanceUsers.getId());
+                orgFinanceDataChannelResponse1.setRealName(orgFinanceUsers.getRealName());
+
+                orgFinanceDataChannelResponse1.setIncomeType("无");
+
+                int incomeChannelData = calOrgFinanceDataIncome(orgFinanceDataIncomeList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+                orgFinanceDataChannelResponse1.setIncomeValue(incomeChannelData);
+
+                int[] attendanceChannelData = calOrgFinanceDataAttendance(orgFinanceDataAttendanceList, orgFinanceUsers.getVenueId(), orgFinanceUsers.getId(), "无");
+                orgFinanceDataChannelResponse1.setRegisterCount(attendanceChannelData[0]);
+                orgFinanceDataChannelResponse1.setClassCount(attendanceChannelData[1]);
+
+                if (incomeChannelData > 0 || attendanceChannelData[0] > 0 || attendanceChannelData[1] > 0) {
+                    orgFinanceDataIncomeTypeList.add(orgFinanceDataChannelResponse1);
                 }
             }
 
@@ -2186,21 +2595,29 @@ public class FinanceController extends BaseController {
 
             int count = orgFinanceUsersService.queryOrgFinanceUsersCount();
             List<OrgFinanceUsers> orgFinanceUsersList = orgFinanceUsersService.queryOrgFinanceUsersList(0, count);
-            map.put("orgFinanceUsersList", orgFinanceUsersList);
+            List<OrgFinanceUsers> orgFinanceUsersList1 = new ArrayList<>();
+            for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+                orgFinanceUsersList1.add(orgFinanceUsers);
+            }
+            map.put("orgFinanceUsersList", orgFinanceUsersList1);
 
             String typePeriod[] = getStartEndTime(orgFinanceLogRequest.getTypeTime());
             String startTime = typePeriod[0].substring(0, 10);
             String endTime = typePeriod[1].substring(0, 10);
 
             // 闲忙
-            int timesTotal = orgFinanceDataTimesService.queryOrgFinanceDataTimesCount(orgFinanceLogRequest.getBusType(), 0, 0, startTime, endTime);
+            int timesTotal = orgFinanceDataTimesService.queryOrgFinanceDataTimesCount(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime);
             List<OrgFinanceDataTimes> orgFinanceDataTimesList = orgFinanceDataTimesService.queryOrgFinanceDataTimesList(orgFinanceLogRequest.getBusType(), orgFinanceLogRequest.getVenueId(), 0, startTime, endTime, 0, timesTotal);
-            for (OrgFinanceDataTimes orgFinanceDataTimes : orgFinanceDataTimesList) {
-                orgFinanceDataTimes.setUserId(-1);
-            }
 
             List<OrgFinanceDataTimesResponse> orgFinanceDataVenueList = new ArrayList<>();
             for (OrgFinanceUsers orgFinanceUsers : orgFinanceUsersList) {
+                if (orgFinanceLogRequest.getVenueId() > 0 && orgFinanceLogRequest.getVenueId() != orgFinanceUsers.getVenueId()) {
+                    continue;
+                }
+
                 OrgFinanceDataTimesResponse orgFinanceDataResponse = new OrgFinanceDataTimesResponse();
 
                 orgFinanceDataResponse.setUserId(orgFinanceUsers.getId());
@@ -2406,39 +2823,6 @@ public class FinanceController extends BaseController {
     }
 
     // TODO
-
-    /*** 图表 start ***/
-
-    @Desc("个人业绩统计")
-    @RequestMapping(value = "/performance", method = RequestMethod.GET)
-    public ModelAndView renderFinancePerformance(OrgFinanceLogRequest orgFinanceLogRequest) {
-
-//        if (orgFinanceLogRequest.getBusType() == 0) {
-//            orgFinanceLogRequest.setBusType(BusinessTypeEnum.TRAINING_YOUNG.getCode());
-//        }
-
-        if (orgFinanceLogRequest.getTypeTime() == null) {
-            orgFinanceLogRequest.setTypeTime("month");
-        }
-
-        ModelAndView modelAndView;
-        if (orgFinanceLogRequest.getVenueId() == -1) {
-            modelAndView = new ModelAndView("Finance/PerformanceVenues");
-        }
-        else {
-            modelAndView = new ModelAndView("Finance/PerformanceUsers");
-        }
-
-        modelAndView.addObject("conditions", orgFinanceLogRequest);
-
-        List<OrgFinanceVenues> orgFinanceVenuesList = orgFinanceVenuesService.queryOrgFinanceVenuesList();
-        modelAndView.addObject("orgFinanceVenuesList", orgFinanceVenuesList);
-
-        modelAndView.addObject("BusinessTypeEnumList", EnumUtils.getEnumList(BusinessTypeEnum.class));
-        modelAndView.addObject("BusinessTypeEnum", EnumUtils.getEnumMap(BusinessTypeEnum.class));
-
-        return setModelAndView(modelAndView);
-    }
 
 //    @Desc("场馆业绩")
 //    @ResponseBody

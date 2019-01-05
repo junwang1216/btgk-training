@@ -113,4 +113,13 @@ public class OrgFinanceLogRequest {
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
     }
+
+    /** 全屏 **/
+    private String show = "default";
+    public String getShow() {
+        return show;
+    }
+    public void setShow(String show) {
+        this.show = show;
+    }
 }

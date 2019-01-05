@@ -215,7 +215,6 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 for (vcdIndex = 0; vcdIndex < venueChannelData.length; vcdIndex++) {
                     if (venueChannelData[vcdIndex].venueName == venueNames[vnIndex] && venueChannelData[vcdIndex].channelName == channelNames[cnIndex]) {
                         pipelineValueChannels[vnIndex] += (venueChannelData[vcdIndex].pipelineValue);
-                        break;
                     }
                 }
             }
@@ -234,7 +233,6 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     venuePipelineValues[vnIndex] += venueData[vdIndex].pipelineValue;
                     venuePipelineTargets[vnIndex] += venueData[vdIndex].pipelineTarget;
                     venuePipelineChallenges[vnIndex] += venueData[vdIndex].pipelineChallenge;
-                    break;
                 }
             }
         }
@@ -245,63 +243,45 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
             for (vcdIndex = 0; vcdIndex < venueChannelData.length; vcdIndex++) {
                 if (venueChannelData[vcdIndex].channelName == channelNames[cnIndex]) {
                     channelPipelineValues[cnIndex] += venueChannelData[vcdIndex].pipelineValue;
-                    break;
                 }
             }
         }
 
-        console.log("===== 流水情况 =====");
-        console.log(venueNames);
-        console.log(channelNames);
-        console.log(pipelineValues);
-        console.log(venuePipelineValues);
-        console.log(venuePipelineTargets);
-        console.log(venuePipelineChallenges);
-        console.log(channelPipelineValues);
+        // console.log("===== 流水情况 =====");
+        // console.log(venueNames);
+        // console.log(channelNames);
+        // console.log(pipelineValues);
+        // console.log(venuePipelineValues);
+        // console.log(venuePipelineTargets);
+        // console.log(venuePipelineChallenges);
+        // console.log(channelPipelineValues);
 
+        var channelTargetNames = ["目标值", "挑战值"];
+        var channelTargetValues = [venuePipelineTargets, venuePipelineChallenges];
+        var channelSeries = [];
+        for (var cn = 0; cn < channelNames.length; cn++) {
+            channelSeries.push({
+                name: channelNames[cn],
+                type: 'bar',
+                stack: '总量',
+                data: pipelineValues[cn]
+            });
+        }
+        for (var ctn = 0; ctn < channelTargetNames.length; ctn++) {
+            channelSeries.push({
+                name: channelTargetNames[ctn],
+                type: 'line',
+                data: channelTargetValues[ctn]
+            });
+        }
         var performanceChart1 = echarts.init(document.getElementById('finance_performance_chart1'), "walden");
         var performanceChart1Option = {
             title  : chartsOption.setTitle("流水情况（元）"),
-            legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
+            legend : chartsOption.setLegend(channelNames.concat(channelTargetNames)),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
             yAxis  : chartsOption.setYAxis(venueNames),
-            series : chartsOption.setSeries(
-                [{
-                    name: channelNames[0],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[0]
-                }, {
-                    name: channelNames[1],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[1]
-                }, {
-                    name: channelNames[2],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[2]
-                }, {
-                    name: channelNames[3],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[3]
-                }, {
-                    name: channelNames[4],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[4]
-                }, {
-                    name: "目标值",
-                    type: 'line',
-                    data: venuePipelineTargets
-                }, {
-                    name: "挑战值",
-                    type: 'line',
-                    data: venuePipelineChallenges
-                }]
-            ),
+            series : chartsOption.setSeries(channelSeries),
             tooltip : {
                 trigger     : 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -309,17 +289,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 },
                 formatter   : function (items) {
                     var showFormatter = "";
+                    var total = 0;
 
                     showFormatter += '<div class="charts-title">' + items[0].name + '</div>';
-                    showFormatter += '<ul class="charts-content">' +
-                        '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[2].marker + items[2].seriesName + '</label>: ' + $.moneyFormat(items[2].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[3].marker + items[3].seriesName + '</label>: ' + $.moneyFormat(items[3].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[4].marker + items[4].seriesName + '</label>: ' + $.moneyFormat(items[4].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '流水合计</label>: ' + $.moneyFormat((items[0].value + items[1].value + items[2].value + items[3].value + items[4].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '目标值</label>: ' + $.moneyFormat((items[5].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '挑战值</label>: ' + $.moneyFormat((items[6].value), 0, ".", ",") + '元</li>' +
+                    showFormatter += '<ul class="charts-content">';
+                    for (var cn = 0; cn < items.length - 2; cn++) {
+                        showFormatter += '<li><label>' + items[cn].marker + items[cn].seriesName + '</label>: ' + $.moneyFormat(items[cn].value, 0, ".", ",") + '元</li>';
+                        total += items[cn].value;
+                    }
+                    showFormatter += '<li><label>' + '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#FF0000;"></span>' + '合计</label>: ' + $.moneyFormat(total, 0, ".", ",") + '元</li>';
+                    showFormatter += '<li><label>' + items[items.length - 2].marker + items[items.length - 2].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 2].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + items[items.length - 1].marker + items[items.length - 1].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 1].value), 0, ".", ",") + '元</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -328,22 +308,24 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         };
         performanceChart1.setOption(performanceChart1Option);
 
+        var channelSeriesData = [];
+        for (var dcn = 0; dcn < channelNames.length; dcn++) {
+            channelSeriesData.push({value : channelPipelineValues[dcn], name : channelNames[dcn]});
+        }
+        var venueSeriesData = [];
+        for (var dvn = 0; dvn < venueNames.length; dvn++) {
+            venueSeriesData.push({value : venuePipelineValues[dvn], name : venueNames[dvn]});
+        }
         var performanceChart4 = echarts.init(document.getElementById('finance_performance_chart4'), "walden");
         var performanceChart4Option = {
             title  : chartsOption.setTitle("流水情况占比", "基地/渠道（百分比）"),
             legend : chartsOption.setLegend(venueNames.concat(channelNames), 'vertical'),
             grid   : chartsOption.setGrid(),
             series : [{
-                name :'渠道流水',
+                name :'渠道来源',
                 type :'pie',
                 radius : ['60%', '80%'],
-                data : [
-                    {value : channelPipelineValues[0], name : channelNames[0]},
-                    {value : channelPipelineValues[1], name : channelNames[1]},
-                    {value : channelPipelineValues[2], name : channelNames[2]},
-                    {value : channelPipelineValues[3], name : channelNames[3]},
-                    {value : channelPipelineValues[4], name : channelNames[4]}
-                ]
+                data : channelSeriesData
             }, {
                 name :'基地流水',
                 type :'pie',
@@ -354,17 +336,12 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                         position : 'inner'
                     }
                 },
-                data : [
-                    {value : venuePipelineValues[0], name : venueNames[0]},
-                    {value : venuePipelineValues[1], name : venueNames[1]},
-                    {value : venuePipelineValues[2], name : venueNames[2]},
-                    {value : venuePipelineValues[3], name : venueNames[3]}
-                ]
+                data : venueSeriesData
             }],
             tooltip : {
                 trigger: 'item',
                 formatter: function (items) {
-                    return items.seriesName + "<br />" + items.marker + items.name + ": " + items.value + " (" + items.percent + "%)";
+                    return items.seriesName + "<br />" + items.marker + items.name + ": " +  $.moneyFormat(items.value, 0, ".", ",") + "元 (" + items.percent + "%)";
                 }
             }
         };
@@ -381,24 +358,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 for (vcdIndex = 0; vcdIndex < venueChannelData.length; vcdIndex++) {
                     if (venueChannelData[vcdIndex].channelName == channelNames[cnIndex] && (!venueName || venueChannelData[vcdIndex].venueName == venueName)) {
                         venueChannelPipelineValues[cnIndex] += venueChannelData[vcdIndex].pipelineValue;
-                        break;
                     }
                 }
             }
 
-            performanceChart4Option.series[0].data = [
-                {value : venueChannelPipelineValues[0], name : channelNames[0]},
-                {value : venueChannelPipelineValues[1], name : channelNames[1]},
-                {value : venueChannelPipelineValues[2], name : channelNames[2]},
-                {value : venueChannelPipelineValues[3], name : channelNames[3]},
-                {value : venueChannelPipelineValues[4], name : channelNames[4]}
-            ];
-            performanceChart4Option.series[1].data = [
-                {value : venuePipelineValues[0], name : venueNames[0], selected: venueNames[0] == venueName},
-                {value : venuePipelineValues[1], name : venueNames[1], selected: venueNames[1] == venueName},
-                {value : venuePipelineValues[2], name : venueNames[2], selected: venueNames[2] == venueName},
-                {value : venuePipelineValues[3], name : venueNames[3], selected: venueNames[3] == venueName}
-            ];
+            var channelSeriesData1 = [];
+            for (var dcn = 0; dcn < channelNames.length; dcn++) {
+                channelSeriesData1.push({value : venueChannelPipelineValues[dcn], name : channelNames[dcn]});
+            }
+            var venueSeriesData1 = [];
+            for (var dvn = 0; dvn < venueNames.length; dvn++) {
+                venueSeriesData1.push({value : venuePipelineValues[dvn], name : venueNames[dvn], selected: venueNames[dvn] == venueName});
+            }
+            performanceChart4Option.series[0].data = channelSeriesData1;
+            performanceChart4Option.series[1].data = venueSeriesData1;
             performanceChart4.setOption(performanceChart4Option);
         });
     }
@@ -413,9 +386,8 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
             for (vnIndex = 0; vnIndex < venueNames.length; vnIndex++) {
                 incomeValueChannels.push(0);
                 for (vcdIndex = 0; vcdIndex < venueChannelData.length; vcdIndex++) {
-                    if (venueChannelData[vcdIndex].venueName == venueNames[vnIndex] && venueChannelData[vcdIndex].channelName == channelNames[cnIndex]) {
+                    if (venueChannelData[vcdIndex].venueName == venueNames[vnIndex] && venueChannelData[vcdIndex].incomeType == channelNames[cnIndex]) {
                         incomeValueChannels[vnIndex] += (venueChannelData[vcdIndex].incomeValue);
-                        break;
                     }
                 }
             }
@@ -434,7 +406,6 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     venueIncomeValues[vnIndex] += venueData[vdIndex].incomeValue;
                     venueIncomeTargets[vnIndex] += venueData[vdIndex].incomeTarget;
                     venueIncomeChallenges[vnIndex] += venueData[vdIndex].incomeChallenge;
-                    break;
                 }
             }
         }
@@ -443,65 +414,47 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         for (cnIndex = 0; cnIndex < channelNames.length; cnIndex++) {
             channelIncomeValues.push(0);
             for (vcdIndex = 0; vcdIndex < venueChannelData.length; vcdIndex++) {
-                if (venueChannelData[vcdIndex].channelName == channelNames[cnIndex]) {
+                if (venueChannelData[vcdIndex].incomeType == channelNames[cnIndex]) {
                     channelIncomeValues[cnIndex] += venueChannelData[vcdIndex].incomeValue;
-                    break;
                 }
             }
         }
 
-        console.log("===== 确认收入情况 =====");
-        console.log(venueNames);
-        console.log(channelNames);
-        console.log(incomeValues);
-        console.log(venueIncomeValues);
-        console.log(venueIncomeTargets);
-        console.log(venueIncomeChallenges);
-        console.log(channelIncomeValues);
+        // console.log("===== 确认收入情况 =====");
+        // console.log(venueNames);
+        // console.log(channelNames);
+        // console.log(incomeValues);
+        // console.log(venueIncomeValues);
+        // console.log(venueIncomeTargets);
+        // console.log(venueIncomeChallenges);
+        // console.log(channelIncomeValues);
 
+        var channelTargetNames = ["目标值", "挑战值"];
+        var channelTargetValues = [venueIncomeTargets, venueIncomeChallenges];
+        var channelSeries = [];
+        for (var cn = 0; cn < channelNames.length; cn++) {
+            channelSeries.push({
+                name: channelNames[cn],
+                type: 'bar',
+                stack: '总量',
+                data: incomeValues[cn]
+            });
+        }
+        for (var ctn = 0; ctn < channelTargetNames.length; ctn++) {
+            channelSeries.push({
+                name: channelTargetNames[ctn],
+                type: 'line',
+                data: channelTargetValues[ctn]
+            });
+        }
         var performanceChart2 = echarts.init(document.getElementById('finance_performance_chart2'), "walden");
         var performanceChart2Option = {
             title  : chartsOption.setTitle("确认收入情况（元）"),
-            legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
+            legend : chartsOption.setLegend(channelNames.concat(channelTargetNames)),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
             yAxis  : chartsOption.setYAxis(venueNames),
-            series : chartsOption.setSeries(
-                [{
-                    name: channelNames[0],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[0]
-                }, {
-                    name: channelNames[1],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[1]
-                }, {
-                    name: channelNames[2],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[2]
-                }, {
-                    name: channelNames[3],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[3]
-                }, {
-                    name: channelNames[4],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[4]
-                }, {
-                    name: "目标值",
-                    type: 'line',
-                    data: venueIncomeTargets
-                }, {
-                    name: "挑战值",
-                    type: 'line',
-                    data: venueIncomeChallenges
-                }]
-            ),
+            series : chartsOption.setSeries(channelSeries),
             tooltip : {
                 trigger     : 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -509,17 +462,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 },
                 formatter   : function (items) {
                     var showFormatter = "";
+                    var total = 0;
 
                     showFormatter += '<div class="charts-title">' + items[0].name + '</div>';
-                    showFormatter += '<ul class="charts-content">' +
-                        '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[2].marker + items[2].seriesName + '</label>: ' + $.moneyFormat(items[2].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[3].marker + items[3].seriesName + '</label>: ' + $.moneyFormat(items[3].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[4].marker + items[4].seriesName + '</label>: ' + $.moneyFormat(items[4].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '收入合计</label>: ' + $.moneyFormat((items[0].value + items[1].value + items[2].value + items[3].value + items[4].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '目标值</label>: ' + $.moneyFormat((items[5].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '挑战值</label>: ' + $.moneyFormat((items[6].value), 0, ".", ",") + '元</li>' +
+                    showFormatter += '<ul class="charts-content">';
+                    for (var cn = 0; cn < items.length - 2; cn++) {
+                        showFormatter += '<li><label>' + items[cn].marker + items[cn].seriesName + '</label>: ' + $.moneyFormat(items[cn].value, 0, ".", ",") + '元</li>';
+                        total += items[cn].value;
+                    }
+                    showFormatter += '<li><label>' + '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#FF0000;"></span>' + '合计</label>: ' + $.moneyFormat(total, 0, ".", ",") + '元</li>';
+                    showFormatter += '<li><label>' + items[items.length - 2].marker + items[items.length - 2].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 2].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + items[items.length - 1].marker + items[items.length - 1].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 1].value), 0, ".", ",") + '元</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -528,22 +481,24 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         };
         performanceChart2.setOption(performanceChart2Option);
 
+        var channelSeriesData = [];
+        for (var dcn = 0; dcn < channelNames.length; dcn++) {
+            channelSeriesData.push({value : channelIncomeValues[dcn], name : channelNames[dcn]});
+        }
+        var venueSeriesData = [];
+        for (var dvn = 0; dvn < venueNames.length; dvn++) {
+            venueSeriesData.push({value : venueIncomeValues[dvn], name : venueNames[dvn]});
+        }
         var performanceChart3 = echarts.init(document.getElementById('finance_performance_chart3'), "walden");
         var performanceChart3Option = {
-            title  : chartsOption.setTitle("确认收入情况占比", "基地/渠道（百分比）"),
+            title  : chartsOption.setTitle("确认收入情况占比", "基地/类型（百分比）"),
             legend : chartsOption.setLegend(venueNames.concat(channelNames), 'vertical'),
             grid   : chartsOption.setGrid(),
             series : [{
-                name :'渠道收入',
+                name :'收入类型',
                 type :'pie',
                 radius : ['60%', '80%'],
-                data : [
-                    {value : channelIncomeValues[0], name : channelNames[0]},
-                    {value : channelIncomeValues[1], name : channelNames[1]},
-                    {value : channelIncomeValues[2], name : channelNames[2]},
-                    {value : channelIncomeValues[3], name : channelNames[3]},
-                    {value : channelIncomeValues[4], name : channelNames[4]}
-                ]
+                data : channelSeriesData
             }, {
                 name :'基地收入',
                 type :'pie',
@@ -554,23 +509,20 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                         position : 'inner'
                     }
                 },
-                data : [
-                    {value : venueIncomeValues[0], name : venueNames[0]},
-                    {value : venueIncomeValues[1], name : venueNames[1]},
-                    {value : venueIncomeValues[2], name : venueNames[2]},
-                    {value : venueIncomeValues[3], name : venueNames[3]}
-                ]
+                data : venueSeriesData
             }],
             tooltip : {
                 trigger: 'item',
                 formatter: function (items) {
-                    return items.seriesName + "<br />" + items.marker + items.name + ": " + items.value + " (" + items.percent + "%)";
+                    return items.seriesName + "<br />" + items.marker + items.name + ": " + $.moneyFormat(items.value, 0, ".", ",") + " (" + items.percent + "%)";
                 }
             }
         };
         performanceChart3.setOption(performanceChart3Option);
+
         performanceChart3.on('click', function (params) {
             var venueName = params.name;
+
             if (params.data.selected) {
                 venueName = "";
             }
@@ -579,26 +531,23 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
             for (cnIndex = 0; cnIndex < channelNames.length; cnIndex++) {
                 venueChannelIncomeValues.push(0);
                 for (vcdIndex = 0; vcdIndex < venueChannelData.length; vcdIndex++) {
-                    if (venueChannelData[vcdIndex].channelName == channelNames[cnIndex] && (!venueName || venueChannelData[vcdIndex].venueName == venueName)) {
+                    if (venueChannelData[vcdIndex].incomeType == channelNames[cnIndex] && (!venueName || venueChannelData[vcdIndex].venueName == venueName)) {
                         venueChannelIncomeValues[cnIndex] += venueChannelData[vcdIndex].incomeValue;
-                        break;
                     }
                 }
             }
 
-            performanceChart3Option.series[0].data = [
-                {value : venueChannelIncomeValues[0], name : channelNames[0]},
-                {value : venueChannelIncomeValues[1], name : channelNames[1]},
-                {value : venueChannelIncomeValues[2], name : channelNames[2]},
-                {value : venueChannelIncomeValues[3], name : channelNames[3]},
-                {value : venueChannelIncomeValues[4], name : channelNames[4]}
-            ];
-            performanceChart3Option.series[1].data = [
-                {value : venueIncomeValues[0], name : venueNames[0], selected: venueNames[0] == venueName},
-                {value : venueIncomeValues[1], name : venueNames[1], selected: venueNames[1] == venueName},
-                {value : venueIncomeValues[2], name : venueNames[2], selected: venueNames[2] == venueName},
-                {value : venueIncomeValues[3], name : venueNames[3], selected: venueNames[3] == venueName}
-            ];
+            var channelSeriesData1 = [];
+            for (var dcn = 0; dcn < channelNames.length; dcn++) {
+                channelSeriesData1.push({value : venueChannelIncomeValues[dcn], name : channelNames[dcn]});
+            }
+            var venueSeriesData1 = [];
+            for (var dvn = 0; dvn < venueNames.length; dvn++) {
+                venueSeriesData1.push({value : venueIncomeValues[dvn], name : venueNames[dvn], selected: venueNames[dvn] == venueName});
+            }
+            performanceChart3Option.series[0].data = channelSeriesData1;
+            performanceChart3Option.series[1].data = venueSeriesData1;
+
             performanceChart3.setOption(performanceChart3Option);
         });
     }
@@ -617,16 +566,15 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     classCounts[vnIndex] += (venueData[vdIndex].classCount);
                     classNoCounts[vnIndex] += -(venueData[vdIndex].registerCount - venueData[vdIndex].classCount);
                     registerCounts[vnIndex] += (venueData[vdIndex].registerCount);
-                    break;
                 }
             }
         }
 
-        console.log("===== 在册人数情况 =====");
-        console.log(venueNames);
-        console.log(classCounts);
-        console.log(classNoCounts);
-        console.log(registerCounts);
+        // console.log("===== 在册人数情况 =====");
+        // console.log(venueNames);
+        // console.log(classCounts);
+        // console.log(classNoCounts);
+        // console.log(registerCounts);
 
         var percentCounts = [];
         for (var i = 0; i < registerCounts.length; i++) {
@@ -697,16 +645,15 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     businessCounts[vnIndex] += (venueData[vdIndex].businessCount);
                     businessNoCounts[vnIndex] += -(venueData[vdIndex].accessCount - venueData[vdIndex].businessCount);
                     accessCounts[vnIndex] += (venueNames[vdIndex].accessCount);
-                    break;
                 }
             }
         }
 
-        console.log("===== 访问人数情况 =====");
-        console.log(venueNames);
-        console.log(businessCounts);
-        console.log(businessNoCounts);
-        console.log(accessCounts);
+        // console.log("===== 访问人数情况 =====");
+        // console.log(venueNames);
+        // console.log(businessCounts);
+        // console.log(businessNoCounts);
+        // console.log(accessCounts);
 
         var percentCounts = [];
         for (var i = 0; i < accessCounts.length; i++) {
@@ -777,16 +724,15 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     nullCounts[vnIndex] += (venueData[vdIndex].nullCount);
                     nullNoCounts[vnIndex] += -(venueData[vdIndex].nullTotalCount - venueData[vdIndex].nullCount);
                     nullTotalCounts[vnIndex] += (venueData[vdIndex].nullTotalCount);
-                    break;
                 }
             }
         }
 
-        console.log("===== 空闲场地情况 =====");
-        console.log(venueNames);
-        console.log(nullCounts);
-        console.log(nullNoCounts);
-        console.log(nullTotalCounts);
+        // console.log("===== 空闲场地情况 =====");
+        // console.log(venueNames);
+        // console.log(nullCounts);
+        // console.log(nullNoCounts);
+        // console.log(nullTotalCounts);
 
         var percentCounts = [];
         for (var i = 0; i < nullTotalCounts.length; i++) {
@@ -857,16 +803,15 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                     hotCounts[vnIndex] += (venueData[vdIndex].hotCount);
                     hotNoCounts[vnIndex] += -(venueData[vdIndex].hotTotalCount - venueData[vdIndex].hotCount);
                     hotTotalCounts[vnIndex] += (venueData[vdIndex].hotTotalCount);
-                    break;
                 }
             }
         }
 
-        console.log("===== 访问人数情况 =====");
-        console.log(venueNames);
-        console.log(hotCounts);
-        console.log(hotNoCounts);
-        console.log(hotTotalCounts);
+        // console.log("===== 访问人数情况 =====");
+        // console.log(venueNames);
+        // console.log(hotCounts);
+        // console.log(hotNoCounts);
+        // console.log(hotTotalCounts);
 
         var percentCounts = [];
         for (var i = 0; i < hotTotalCounts.length; i++) {

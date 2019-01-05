@@ -44,6 +44,7 @@
                                 <div class="form-group row">
                                     <div class="col-md-2">
                                         <select class="form-control" name="busType">
+                                            <option value="-1">全部业务类型</option>
                                             <c:forEach var="business" items="${BusinessTypeEnumList}">
                                                 <option value="${business.code}" <c:if test="${business.code == conditions.busType}">selected</c:if> >${business.desc}</option>
                                             </c:forEach>
@@ -101,7 +102,7 @@
                                             <td>${business.businessTitle}</td>
                                             <td>${business.realName}</td>
                                             <td>${business.channelName}</td>
-                                            <td>${business.pipelineValue}元</td>
+                                            <td><fmt:formatNumber value="${business.pipelineValue}" type="currency" maxFractionDigits="0" /></td>
                                             <td>
                                                 <a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="${business.businessNo}">
                                                     <i class="fa fa-trash"></i> 删 除

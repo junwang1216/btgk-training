@@ -28,8 +28,8 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <strong>收入类型</strong>
-                            <small>Income Type</small>
+                            <strong>收入类型设置</strong>
+                            <small>Income Type Settings</small>
                         </div>
                         <div class="card-block">
                             <form id="income_form" class="form-horizontal" novalidate onsubmit="return false;">
@@ -45,12 +45,12 @@
                                             </button>
                                             <c:if test="${loop.last}">
                                                 <button type="button" class="btn btn-primary add-settings">
-                                                    <i class="fa fa-trash"></i> 添加
+                                                    <i class="fa fa-plus"></i> 添加
                                                 </button>
                                             </c:if>
                                             <c:if test="${!loop.last}">
                                                 <button type="button" class="btn btn-primary add-settings" style="display: none;">
-                                                    <i class="fa fa-trash"></i> 添加
+                                                    <i class="fa fa-plus"></i> 添加
                                                 </button>
                                             </c:if>
                                         </div>
@@ -66,7 +66,7 @@
                                                 <i class="fa fa-trash"></i> 删除
                                             </button>
                                             <button type="button" class="btn btn-primary add-settings">
-                                                <i class="fa fa-trash"></i> 添加
+                                                <i class="fa fa-plus"></i> 添加
                                             </button>
                                         </div>
                                     </div>
@@ -83,8 +83,8 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <strong>流水渠道</strong>
-                            <small>Flow Channel</small>
+                            <strong>流水渠道设置</strong>
+                            <small>Pipeline Channel Setting</small>
                         </div>
                         <div class="card-block">
                             <form id="expend_form" class="form-horizontal" novalidate onsubmit="return false;">
@@ -100,12 +100,12 @@
                                             </button>
                                             <c:if test="${loop.last}">
                                                 <button type="button" class="btn btn-primary add-settings">
-                                                    <i class="fa fa-trash"></i> 添加
+                                                    <i class="fa fa-plus"></i> 添加
                                                 </button>
                                             </c:if>
                                             <c:if test="${!loop.last}">
                                                 <button type="button" class="btn btn-primary add-settings" style="display: none;">
-                                                    <i class="fa fa-trash"></i> 添加
+                                                    <i class="fa fa-plus"></i> 添加
                                                 </button>
                                             </c:if>
                                         </div>
@@ -121,7 +121,7 @@
                                                 <i class="fa fa-trash"></i> 删除
                                             </button>
                                             <button type="button" class="btn btn-primary add-settings">
-                                                <i class="fa fa-trash"></i> 添加
+                                                <i class="fa fa-plus"></i> 添加
                                             </button>
                                         </div>
                                     </div>

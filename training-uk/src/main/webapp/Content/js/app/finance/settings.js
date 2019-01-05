@@ -120,7 +120,6 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
 
         var id = $(this).attr("data-id");
         var venueId = $(this).attr("data-venue");
-        var busType = $(this).attr("data-busType");
         var goalType = $(this).attr("data-goalType");
         var year = $(this).attr("data-year");
         var month = $(this).attr("data-month");
@@ -128,7 +127,6 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base'], function ($, jquer
         $.getJSON('/admin/finance/getGoalsByMonth', {
             goalId: id,
             venueId: venueId,
-            busType: busType,
             goalType: goalType,
             year: year,
             month: month

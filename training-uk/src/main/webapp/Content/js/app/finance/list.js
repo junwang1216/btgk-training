@@ -78,6 +78,9 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', "datepicker", "date
                             });
 
                             $(content).parents("tr").remove();
+                            window.setTimeout(function () {
+                                window.location.reload();
+                            }, 1000);
                         } else {
                             jqueryAlert({
                                 'icon'      : '/Content/images/icon-error.png',

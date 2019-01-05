@@ -170,7 +170,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                         '<td>' + business.venueName +'</td>' +
                         '<td>' + business.realName +'</td>' +
                         '<td>' + business.channelName +'</td>' +
-                        '<td>' + business.pipelineValue +'</td>' +
+                        '<td>$' + $.moneyFormat(business.pipelineValue, 0, ".", ",") +'</td>' +
                         '<td>' +
                         '<a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="' + business.businessNo + '">' +
                         '<i class="fa fa-trash"></i> 删除</a>' +
@@ -327,8 +327,8 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                     '<td>' + business.venueName +'</td>' +
                     '<td>' + business.realName +'</td>' +
                     '<td>' + business.incomeType +'</td>' +
-                    '<td>' + (business.incomePerValue || "--") +'</td>' +
-                    '<td>' + business.incomeValue +'</td>' +
+                    '<td>$' + (business.incomePerValue || "--") +'</td>' +
+                    '<td>$' + $.moneyFormat(business.incomeValue, 0, ".", ",") + '</td>' +
                     '<td>' +
                     '<a href="javascript:;" class="btn btn-danger btn-sm btn-delete" title="删除" data-business="' + business.businessNo + '">' +
                     '<i class="fa fa-trash"></i> 删除</a>' +
@@ -584,6 +584,7 @@ require(['jquery', 'alert', 'override', 'bootstrap', 'base', 'jquery.validate', 
                 if (data.resultTimes > 0) {
                     getOrgFinanceDataTimesList(data.businessNo)
                 }
+                $(".block-training-venue").find("input").val("");
             } else {
                 jqueryAlert({
                     'icon'      : '/Content/images/icon-error.png',

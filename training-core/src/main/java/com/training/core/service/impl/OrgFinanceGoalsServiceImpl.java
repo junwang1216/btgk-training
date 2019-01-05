@@ -31,13 +31,12 @@ public class OrgFinanceGoalsServiceImpl implements OrgFinanceGoalsService {
 
     @Override
     public List<OrgFinanceGoals> queryOrgFinanceGoalsList(Integer busType, Integer goalType, Integer venueId, Integer year, Integer userId) {
-        busType = busType > 0 ? busType : null;
         goalType = goalType > 0 ? goalType : null;
         venueId = venueId > 0 ? venueId : null;
         year = year > 0 ? year : null;
         userId = userId > 0 ? userId : null;
 
-        return orgFinanceGoalsMapper.queryAll(busType, goalType, venueId, year, userId);
+        return orgFinanceGoalsMapper.queryAll(null, goalType, venueId, year, userId);
     }
 
     @Override

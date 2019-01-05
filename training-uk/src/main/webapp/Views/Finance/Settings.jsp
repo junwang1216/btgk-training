@@ -225,24 +225,7 @@
                     <div class="card">
                         <div class="card-header">
                             <strong>流水指标设置</strong>
-                            <small>Operation Finance Settings</small>
-
-                            <div class="card-actions">
-                                <a href="#" class="btn-options-vertical dropdown-toggle" title="切换类型" data-toggle="dropdown">
-                                    <i class="icon-options-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <c:forEach var="type" items="${BusinessTypeEnumList}">
-                                        <c:if test="${type.code == conditions.busType}">
-                                            <a class="dropdown-item active" href="javascript:;">${type.desc}</a>
-                                        </c:if>
-                                        <c:if test="${type.code != conditions.busType}">
-                                            <a class="dropdown-item"
-                                               href="/admin/finance/settings?busType=${type.code}&goalType=${conditions.goalType}&venueId=${conditions.venueId}&year=${conditions.year}">${type.desc}</a>
-                                        </c:if>
-                                    </c:forEach>
-                                </div>
-                            </div>
+                            <small>Pipeline Goals Settings</small>
                         </div>
                         <div class="card-block">
                             <form id="finance_flow_query_form" class="form-horizontal row" novalidate onsubmit="return false;">
@@ -401,25 +384,8 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <strong>确认收入指标设置</strong>
-                            <small>Operation Finance Settings</small>
-
-                            <div class="card-actions">
-                                <a href="#" class="btn-options-vertical dropdown-toggle" title="切换类型" data-toggle="dropdown">
-                                    <i class="icon-options-vertical"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <c:forEach var="type" items="${BusinessTypeEnumList}">
-                                        <c:if test="${type.code == conditions.busType}">
-                                            <a class="dropdown-item active" href="javascript:;">${type.desc}</a>
-                                        </c:if>
-                                        <c:if test="${type.code != conditions.busType}">
-                                            <a class="dropdown-item"
-                                               href="/admin/finance/settings?busType=${type.code}&goalType=${conditions.goalType}&venueId=${conditions.venueId}&year=${conditions.year}">${type.desc}</a>
-                                        </c:if>
-                                    </c:forEach>
-                                </div>
-                            </div>
+                            <strong>收入指标设置</strong>
+                            <small>Income Goals Settings</small>
                         </div>
                         <div class="card-block">
                             <form id="finance_income_query_form" class="form-horizontal row" novalidate onsubmit="return false;">

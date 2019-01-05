@@ -261,44 +261,32 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         // console.log(userPipelineChallenges);
         // console.log(channelPipelineValues);
 
+        var channelTargetNames = ["目标值", "挑战值"];
+        var channelTargetValues = [userPipelineTargets, userPipelineChallenges];
+        var channelSeries = [];
+        for (var cn = 0; cn < channelNames.length; cn++) {
+            channelSeries.push({
+                name: channelNames[cn],
+                type: 'bar',
+                stack: '总量',
+                data: pipelineValues[cn]
+            });
+        }
+        for (var ctn = 0; ctn < channelTargetNames.length; ctn++) {
+            channelSeries.push({
+                name: channelTargetNames[ctn],
+                type: 'line',
+                data: channelTargetValues[ctn]
+            });
+        }
         var performanceChart1 = echarts.init(document.getElementById('finance_performance_chart1'), "walden");
         var performanceChart1Option = {
             title  : chartsOption.setTitle("流水情况（元）"),
-            legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
+            legend : chartsOption.setLegend(channelNames.concat(channelTargetNames)),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
             yAxis  : chartsOption.setYAxis(realNames),
-            series : chartsOption.setSeries(
-                [{
-                    name: channelNames[0],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[0]
-                }, {
-                    name: channelNames[1],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[1]
-                }, {
-                    name: channelNames[2],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[2]
-                }, {
-                    name: channelNames[3],
-                    type: 'bar',
-                    stack: '总量',
-                    data: pipelineValues[3]
-                }, {
-                    name: "目标值",
-                    type: 'line',
-                    data: userPipelineTargets
-                }, {
-                    name: "挑战值",
-                    type: 'line',
-                    data: userPipelineChallenges
-                }]
-            ),
+            series : chartsOption.setSeries(channelSeries),
             tooltip : {
                 trigger     : 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -306,16 +294,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 },
                 formatter   : function (items) {
                     var showFormatter = "";
+                    var total = 0;
 
                     showFormatter += '<div class="charts-title">' + items[0].name + '</div>';
-                    showFormatter += '<ul class="charts-content">' +
-                        '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[2].marker + items[2].seriesName + '</label>: ' + $.moneyFormat(items[2].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[3].marker + items[3].seriesName + '</label>: ' + $.moneyFormat(items[3].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '流水合计</label>: ' + $.moneyFormat((items[0].value + items[1].value + items[2].value + items[3].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '目标值</label>: ' + $.moneyFormat((items[4].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '挑战值</label>: ' + $.moneyFormat((items[5].value), 0, ".", ",") + '元</li>' +
+                    showFormatter += '<ul class="charts-content">';
+                    for (var cn = 0; cn < items.length - 2; cn++) {
+                        showFormatter += '<li><label>' + items[cn].marker + items[cn].seriesName + '</label>: ' + $.moneyFormat(items[cn].value, 0, ".", ",") + '元</li>';
+                        total += items[cn].value;
+                    }
+                    showFormatter += '<li><label>' + '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#FF0000;"></span>' + '合计</label>: ' + $.moneyFormat(total, 0, ".", ",") + '元</li>';
+                    showFormatter += '<li><label>' + items[items.length - 2].marker + items[items.length - 2].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 2].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + items[items.length - 1].marker + items[items.length - 1].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 1].value), 0, ".", ",") + '元</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -324,6 +313,10 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         };
         performanceChart1.setOption(performanceChart1Option);
 
+        var channelSeriesData = [];
+        for (var dcn = 0; dcn < channelNames.length; dcn++) {
+            channelSeriesData.push({value : channelPipelineValues[dcn], name : channelNames[dcn]});
+        }
         var performanceChart4 = echarts.init(document.getElementById('finance_performance_chart4'), "walden");
         var performanceChart4Option = {
             title  : chartsOption.setTitle("流水情况占比", "来源渠道（百分比）"),
@@ -332,17 +325,12 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 name :'渠道流水',
                 type :'pie',
                 radius : ['50%', '80%'],
-                data : [
-                    {value : channelPipelineValues[0], name : channelNames[0]},
-                    {value : channelPipelineValues[1], name : channelNames[1]},
-                    {value : channelPipelineValues[2], name : channelNames[2]},
-                    {value : channelPipelineValues[3], name : channelNames[3]}
-                ]
+                data : channelSeriesData
             }],
             tooltip : {
                 trigger: 'item',
                 formatter: function (items) {
-                    return items.seriesName + "<br />" + items.marker + items.name + ": " + items.value + " (" + items.percent + "%)";
+                    return items.seriesName + "<br />" + items.marker + items.name + ": " + $.moneyFormat(items.value, 0, ".", ",") + "元 (" + items.percent + "%)";
                 }
             }
         };
@@ -359,7 +347,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
             for (rnIndex = 0; rnIndex < realNames.length; rnIndex++) {
                 incomeValueChannels.push(0);
                 for (ucdIndex = 0; ucdIndex < userChannelData.length; ucdIndex++) {
-                    if (userChannelData[ucdIndex].realName == realNames[rnIndex] && userChannelData[ucdIndex].channelName == channelNames[cnIndex]) {
+                    if (userChannelData[ucdIndex].realName == realNames[rnIndex] && userChannelData[ucdIndex].incomeType == channelNames[cnIndex]) {
                         incomeValueChannels[rnIndex] += (userChannelData[ucdIndex].incomeValue);
                         break;
                     }
@@ -386,7 +374,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         for (cnIndex = 0; cnIndex < channelNames.length; cnIndex++) {
             channelIncomeValues.push(0);
             for (ucdIndex = 0; ucdIndex < userChannelData.length; ucdIndex++) {
-                if (userChannelData[ucdIndex].channelName == channelNames[cnIndex]) {
+                if (userChannelData[ucdIndex].incomeType == channelNames[cnIndex]) {
                     channelIncomeValues[cnIndex] += userChannelData[ucdIndex].incomeValue;
                     break;
                 }
@@ -401,44 +389,32 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         // console.log(userIncomeChallenges);
         // console.log(channelIncomeValues);
 
+        var channelTargetNames = ["目标值", "挑战值"];
+        var channelTargetValues = [userIncomeTargets, userIncomeChallenges];
+        var channelSeries = [];
+        for (var cn = 0; cn < channelNames.length; cn++) {
+            channelSeries.push({
+                name: channelNames[cn],
+                type: 'bar',
+                stack: '总量',
+                data: incomeValues[cn]
+            });
+        }
+        for (var ctn = 0; ctn < channelTargetNames.length; ctn++) {
+            channelSeries.push({
+                name: channelTargetNames[ctn],
+                type: 'line',
+                data: channelTargetValues[ctn]
+            });
+        }
         var performanceChart2 = echarts.init(document.getElementById('finance_performance_chart2'), "walden");
         var performanceChart2Option = {
             title  : chartsOption.setTitle("确认收入情况（元）"),
-            legend : chartsOption.setLegend(channelNames.concat["目标值", "挑战值"]),
+            legend : chartsOption.setLegend(channelNames.concat(channelTargetNames)),
             grid   : chartsOption.setGrid(),
             xAxis  : chartsOption.setXAxis(),
             yAxis  : chartsOption.setYAxis(realNames),
-            series : chartsOption.setSeries(
-                [{
-                    name: channelNames[0],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[0]
-                }, {
-                    name: channelNames[1],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[1]
-                }, {
-                    name: channelNames[2],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[2]
-                }, {
-                    name: channelNames[3],
-                    type: 'bar',
-                    stack: '总量',
-                    data: incomeValues[3]
-                }, {
-                    name: "目标值",
-                    type: 'line',
-                    data: userIncomeTargets
-                }, {
-                    name: "挑战值",
-                    type: 'line',
-                    data: userIncomeChallenges
-                }]
-            ),
+            series : chartsOption.setSeries(channelSeries),
             tooltip : {
                 trigger     : 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -446,16 +422,17 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 },
                 formatter   : function (items) {
                     var showFormatter = "";
+                    var total = 0;
 
                     showFormatter += '<div class="charts-title">' + items[0].name + '</div>';
-                    showFormatter += '<ul class="charts-content">' +
-                        '<li><label>' + items[0].marker + items[0].seriesName + '</label>: ' + $.moneyFormat(items[0].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[1].marker + items[1].seriesName + '</label>: ' + $.moneyFormat(items[1].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[2].marker + items[2].seriesName + '</label>: ' + $.moneyFormat(items[2].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + items[3].marker + items[3].seriesName + '</label>: ' + $.moneyFormat(items[3].value, 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '收入合计</label>: ' + $.moneyFormat((items[0].value + items[1].value + items[2].value + items[3].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '目标值</label>: ' + $.moneyFormat((items[4].value), 0, ".", ",") + '元</li>' +
-                        '<li><label>' + '挑战值</label>: ' + $.moneyFormat((items[5].value), 0, ".", ",") + '元</li>' +
+                    showFormatter += '<ul class="charts-content">';
+                    for (var cn = 0; cn < items.length - 2; cn++) {
+                        showFormatter += '<li><label>' + items[cn].marker + items[cn].seriesName + '</label>: ' + $.moneyFormat(items[cn].value, 0, ".", ",") + '元</li>';
+                        total += items[cn].value;
+                    }
+                    showFormatter += '<li><label>' + '<span style="display:inline-block;margin-right:5px;border-radius:10px;width:10px;height:10px;background-color:#FF0000;"></span>' + '合计</label>: ' + $.moneyFormat(total, 0, ".", ",") + '元</li>';
+                    showFormatter += '<li><label>' + items[items.length - 2].marker + items[items.length - 2].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 2].value), 0, ".", ",") + '元</li>' +
+                        '<li><label>' + items[items.length - 1].marker + items[items.length - 1].seriesName + '</label>: ' + $.moneyFormat((items[items.length - 1].value), 0, ".", ",") + '元</li>' +
                         '</ul>';
 
                     return showFormatter;
@@ -464,6 +441,10 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         };
         performanceChart2.setOption(performanceChart2Option);
 
+        var channelSeriesData = [];
+        for (var dcn = 0; dcn < channelNames.length; dcn++) {
+            channelSeriesData.push({value : channelIncomeValues[dcn], name : channelNames[dcn]});
+        }
         var performanceChart3 = echarts.init(document.getElementById('finance_performance_chart3'), "walden");
         var performanceChart3Option = {
             title  : chartsOption.setTitle("确认收入情况占比", "来源渠道（百分比）"),
@@ -472,12 +453,7 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
                 name :'渠道收入',
                 type :'pie',
                 radius : ['50%', '80%'],
-                data : [
-                    {value : channelIncomeValues[0], name : channelNames[0]},
-                    {value : channelIncomeValues[1], name : channelNames[1]},
-                    {value : channelIncomeValues[2], name : channelNames[2]},
-                    {value : channelIncomeValues[3], name : channelNames[3]}
-                ]
+                data : channelSeriesData
             }],
             tooltip : {
                 trigger: 'item',
@@ -808,69 +784,6 @@ require(['jquery', 'echarts', 'alert', 'bootstrap', 'pace', 'base', 'override', 
         };
         performanceChart6.setOption(performanceChart6Option);
     }
-
-    function loadFinanceUserData() {
-        var typeTime = $("[name='total_students_type']:checked").val();
-        var busType = $("[name='total_bus_type']:checked").val();
-        var venueId = $("#current_venue_id").val();
-
-        var loadingTips = jqueryAlert({
-            'icon'      : '/Content/images/icon-loading.gif',
-            'content'   : "正在加载数据...",
-            'closeTime' : 2000,
-            'modal'        : true,
-            'isModalClose' : true
-        });
-
-        $.getJSON('/admin/finance/getFinancePerformanceForUsers', {typeTime : typeTime, busType : busType, venueId: venueId}, function (res) {
-            loadingTips.close();
-
-            var data = res.data;
-
-            if (res.code == 1) {
-                $(".venue-title").text(data.venueName || "所有基地");
-
-                if (!data.orgFinanceUsersList || !data.orgFinanceChannelList || !data.orgFinanceDataChannelList || !data.orgFinanceDataUserList) {
-                    return jqueryAlert({
-                        'icon'      : '/Content/images/icon-error.png',
-                        'content'   : "加载场馆基地数据失败，请重试",
-                        'closeTime' : 2000,
-                        'modal'        : true,
-                        'isModalClose' : true
-                    });
-                }
-
-                var realNames = [];
-                !!data.orgFinanceUsersList && data.orgFinanceUsersList.forEach(function (item) {
-                    realNames.push(item.realName);
-                });
-                var channelNames = [];
-                !!data.orgFinanceChannelList && data.orgFinanceChannelList.forEach(function (item) {
-                    channelNames.push(item);
-                });
-
-                renderPipelineValueCharts(realNames, channelNames, data.orgFinanceDataChannelList, data.orgFinanceDataUserList);
-                renderIncomeValueCharts(realNames, channelNames, data.orgFinanceDataChannelList, data.orgFinanceDataUserList);
-
-                if (busType == 1) {
-                    renderRegisterCountCharts(realNames, data.orgFinanceDataUserList);
-                    renderAccessCountCharts(realNames, data.orgFinanceDataUserList);
-                } else {
-                    renderNullCountCharts(realNames, data.orgFinanceDataUserList);
-                    renderHotCountCharts(realNames, data.orgFinanceDataUserList);
-                }
-            } else {
-                jqueryAlert({
-                    'icon'      : '/Content/images/icon-error.png',
-                    'content'   : "加载场馆基地数据错误，请重试",
-                    'closeTime' : 2000,
-                    'modal'        : true,
-                    'isModalClose' : true
-                });
-            }
-        });
-    }
-    loadFinanceUserData();
 
     $("[name='total_students_type']").on("change", function (e) {
         e.preventDefault();

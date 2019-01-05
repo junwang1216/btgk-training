@@ -10,7 +10,7 @@
             <c:if test="${Admin.roleId <= 999}">
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/dashboard/index">
-                        <i class="icon-graph"></i> 工作面板
+                        <i class="icon-graph"></i> 营业面板
                     </a>
                 </li>
                 <li class="nav-item nav-dropdown <c:if test="${param.menu == 'venue'}">open</c:if>">
@@ -135,9 +135,27 @@
                     </ul>
                 </li>
 
+                <li class="nav-item nav-dropdown <c:if test="${param.menu == 'marketing'}">open</c:if>">
+                    <a class="nav-link nav-dropdown-toggle" href="javascript:;">
+                        <i class="icon-present"></i> 市场营销
+                    </a>
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item <c:if test="${param.subMenu == 'potentialStu'}">open</c:if>">
+                            <a class="nav-link <c:if test="${param.subMenu == 'potentialStu'}">active</c:if>" href="/admin/marketing/potential/students">
+                                <i class="icon-arrow-right"></i> 潜在学员
+                            </a>
+                        </li>
+                        <li class="nav-item <c:if test="${param.subMenu == 'add'}">open</c:if>">
+                            <a class="nav-link <c:if test="${param.subMenu == 'add'}">active</c:if>" href="/admin/marketing/potential/students/change">
+                                <i class="icon-arrow-right"></i> 转化分析
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="nav-item nav-dropdown <c:if test="${param.menu == 'data'}">open</c:if>">
                     <a class="nav-link nav-dropdown-toggle" href="javascript:;">
-                        <i class="icon-chart"></i> 数据统计
+                        <i class="icon-chart"></i> 财务数据
                     </a>
                     <ul class="nav-dropdown-items">
                         <li class="nav-item <c:if test="${param.subMenu == 'finance' || param.subMenu == 'finance_log' || param.subMenu == 'finance_edit' || param.subMenu == 'finance_chart' || param.subMenu == 'finance_settings'}">open</c:if>">

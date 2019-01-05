@@ -6,8 +6,7 @@
 <%@ taglib uri="http://www.sports.com/tags/tag" prefix="layout" %>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_CSS%>">
-    <style type="text/css">
-    </style>
+    <style type="text/css"></style>
 </layout:override>
 
 <layout:override name="<%=Blocks.BLOCK_HEADER_SCRIPTS%>">
@@ -112,7 +111,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <strong>财务组织关系</strong>
+                            <strong>组织关系</strong>
                             <small>Organization Relationship</small>
                         </div>
                         <div class="card-block">

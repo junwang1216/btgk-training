@@ -156,7 +156,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div>
+                                <div class="block-training-venue">
                                     <div class="form-group row block-venue">
                                         <label class="col-md-3 form-control-label">
                                             <span class="text-danger">*</span> 确认收入

@@ -19,11 +19,13 @@
                 <c:when test="${param.subMenu == 'settings'}">
                     <li class="breadcrumb-item active">指标设置</li>
                 </c:when>
+                <c:when test="${param.subMenu == 'params'}">
+                    <li class="breadcrumb-item active">参数设置</li>
+                </c:when>
                 <c:when test="${param.subMenu == 'log'}">
                     <li class="breadcrumb-item active">完成日志</li>
                 </c:when>
-                <c:when test="${param.subMenu == 'edit'}">
-                    <li class="breadcrumb-item"><a href="/admin/finance/log">完成日志</a></li>
+                <c:when test="${param.subMenu == 'add'}">
                     <li class="breadcrumb-item active">编辑数据</li>
                 </c:when>
                 <c:when test="${param.subMenu == 'performance'}">

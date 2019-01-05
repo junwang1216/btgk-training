@@ -41,12 +41,10 @@
                         <div class="card-header">
                             <strong>运营财务报表</strong>
                             <small>Operation Finance Summary</small>
+
                             <div class="card-actions">
                                 <a href="/admin/finance/performanceSummary/export?typeTime=${typeTime}" class="btn-cloud-download" title="导出数据" target="_blank">
                                     <i class="icon-cloud-download"></i>
-                                </a>
-                                <a href="/admin/finance/performanceSummary?typeTime=${typeTime}&show=fullscreen" class="btn-cloud-fullscreen" title="全屏" target="_blank">
-                                    <i class="icon-size-fullscreen"></i>
                                 </a>
                             </div>
                         </div>
@@ -278,7 +276,7 @@
     </div>
 </layout:override>
 
-<c:import url="../Shared/GeneralLayout.jsp">
+<c:import url="../Shared/Layout.jsp">
     <c:param name="menu" value="finance"/>
     <c:param name="subMenu" value="summary"/>
 </c:import>
